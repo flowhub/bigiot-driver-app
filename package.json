@@ -1,0 +1,36 @@
+{
+  "name": "bigiot-driver-app",
+  "description": "",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/flowhub/bigiot-driver-app.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "noflo": "^1.0.0",
+    "noflo-core": "^0.5.0",
+    "noflo-dom": "^0.3.0",
+    "noflo-interaction": "^0.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.0.0",
+    "grunt": "^1.0.1",
+    "grunt-coffeelint": "^0.0.16",
+    "grunt-contrib-coffee": "^2.0.0",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-gh-pages": "^2.0.0",
+    "grunt-mocha-phantomjs": "^4.0.0",
+    "grunt-mocha-test": "^0.13.2",
+    "grunt-noflo-browser": "^1.5.0",
+    "mocha": "^5.0.0",
+    "noflo-runtime-postmessage": "^0.10.0"
+  },
+  "keywords": [
+    "noflo"
+  ]
+}
