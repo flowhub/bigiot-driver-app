@@ -19,6 +19,14 @@ function rdfTypes(fields) {
   return obj;
 }
 
+function check(results) {
+  for (var offering of results) {
+    const fetchError = offering.errorMessage;
+    
+    console.log(offering.offeringId, '\t\t\t', offering.errorMessage);
+  }
+}
+
 // Return relevant data about the offering
 function processResults(fetchResults, category) {
 
@@ -41,8 +49,9 @@ function processResults(fetchResults, category) {
   });
 }
 
+
+
 // TODO: support inputs
-// TODO: check outputs
 function subscribeAndFetch(consumer, category) {
 
   const inputs = {};
@@ -99,7 +108,7 @@ const knownCategories = [
 
 function main() {
 
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   const config = {
     id: process.env.BIGIOT_CONSUMER_ID,
@@ -123,6 +132,10 @@ function main() {
     console.error('error', err);
     process.exit(1);
   });
+}
+
+module.exports = {
+  check: check,
 }
 
 if (!module.parent) { main() }
