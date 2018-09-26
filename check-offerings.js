@@ -19,12 +19,57 @@ function rdfTypes(fields) {
   return obj;
 }
 
+function htmlElement(type, attributes={}, children=[]) {
+    if (attributes.className) {
+        attributes.class = attributes.className;
+        delete attributes.className;
+    }
+
+    if (!Array.isArray(children)) {
+        children = [ children ];
+    }
+
+    const attrValues = Object.keys(attributes).map((a) => `${a}=${attributes[a].toString()}`);
+    const attrs = attrValues.length ? ' ' + attrs.join(' ') : '';
+    const childs = children.map((c) => c.toString()).join('\n');
+    return `<${type} ${attrs}>${childs}</${type}>`
+}
+
 function check(results) {
+  
+  var rows = []; 
+
+  const tr = (a, c) => htmlElement('tr', a, c)
+  const td = (a, c) => htmlElement('td', a, c)
+  const table = (a, c) => htmlElement('table', a, c)
+  const thead = (a, c) => htmlElement('thead', a, c)
+  const tds = (a, vals) => vals.map((v) => td(a, v))
+  const e = htmlElement;
+
+  const header = thead({},
+                  tr({}, tds({}, ['Offering', 'Error']))
+  );
+
+  console.log('h', header)
+
+  // TODO: show organization, offering name in separate rows
+  // TODO: show SSL, CORS, error, fields separately
   for (var offering of results) {
-    const fetchError = offering.errorMessage;
-    
-    console.log(offering.offeringId, '\t\t\t', offering.errorMessage);
+    const fetchError = offering.errorMessage || '';
+    const name = offering.offeringId;
+
+    console.log('fo', offering);
+
+    const row = tr({}, tds({}, [name, fetchError]));
+    rows.push(row);
+
+
+    //console.log(offering.offeringId, '\t\t\t', offering.errorMessage);
   }
+
+  const contents = table({}, [ header, e('tbody', {}, rows) ]);
+
+  return e('html', {}, [e('head', {}, []), e('body', {}, contents) ]); 
 }
 
 // Return relevant data about the offering
