@@ -1,0 +1,38 @@
+---
+name: "State calculation"
+topic: "bigiot-driver-app/NextState"
+cases:
+-
+  name: 'initialize event from empty state'
+  assertion: 'it should authenticate and subscribe to offerings'
+  inputs:
+    event: { type: 'init' }
+  expect:
+    out:
+    -
+      path: '$._consumer.secret'
+      type: 'string'
+    -
+      path: '$.subscribedOfferings.length'
+      above: 1
+    -
+      path: '$.parkingData.length'
+      equals: 0
+-
+  name: 'update event'
+  assertion: 'should load data'
+  inputs:
+    -
+      event: { type: 'init' }
+    -
+      event: { type: 'update' }
+  expect:
+    -
+      out:
+        path: '$.parkingData.length'
+        equals: 0
+    -
+      out:
+        path: '$.parkingData.length'
+        above: 2
+

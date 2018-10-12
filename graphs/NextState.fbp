@@ -1,0 +1,40 @@
+INPORT=state.IN:PREVIOUS
+INPORT=event.IN:EVENT
+OUTPORT=out:OUT
+OUTPORT=errors.OUT:ERROR
+
+event(core/Repeat)
+state(core/Repeat)
+out(core/Repeat)
+
+# Initialization flows
+consumer(bigiot/CreateConsumer)
+'Flowhub_UG-TestConsumer' -> ID consumer
+'pgnAB5gpT5CyOdjydOzu1w==' -> SECRET consumer
+
+consumer -> CONSUMER auth(bigiot/AuthenticateConsumer)
+'urn:big-iot:ParkingSpaceCategory' -> CATEGORY query(bigiot/OfferingQuery)
+auth -> CONSUMER discover(bigiot/DiscoverOfferings)
+query -> QUERY discover
+
+# TODO: store consumer
+auth ->
+
+auth -> CONSUMER sub(bigiot/SubscribeOfferings)
+
+
+discover -> OFFERINGS sub OUT 
+
+
+# TODO: store subscriptions
+
+auth -> CONSUMER access(bigiot/AccessSubscriptions)
+SUBSCRIPTIONS access OUT -> (core/Output)
+
+
+consumer ERROR -> errors
+auth ERROR -> errors
+discover ERROR -> errors
+query ERROR -> errors
+sub ERROR -> errors
+access ERROR -> errors
