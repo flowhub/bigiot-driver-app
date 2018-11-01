@@ -7,3 +7,5 @@
 flowhub.json
 *~
 gh-pages/
+LICENSE-MIT
+*.entry.js

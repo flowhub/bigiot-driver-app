@@ -13,13 +13,16 @@
   },
   "dependencies": {
     "bigiot-js": "^0.6.3",
+    "get-function-params": "^2.0.6",
     "noflo": "^1.0.0",
     "noflo-core": "^0.5.0",
     "noflo-dom": "^0.3.0",
-    "noflo-interaction": "^0.3.0"
+    "noflo-interaction": "^0.3.0",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0"
   },
   "devDependencies": {
-    "chai": "^4.0.0",
+    "chai": "^4.2.0",
     "eslint": "^4.18.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
@@ -27,12 +30,12 @@
     "grunt-coffeelint": "^0.0.16",
     "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-gh-pages": "^2.0.0",
+    "grunt-gh-pages": "^2.1.0",
     "grunt-mocha-phantomjs": "^4.0.0",
     "grunt-mocha-test": "^0.13.2",
     "grunt-noflo-browser": "^1.5.0",
     "mocha": "^5.0.0",
-    "noflo-runtime-postmessage": "^0.10.0"
+    "noflo-runtime-postmessage": "^0.10.1"
   },
   "keywords": [
     "noflo"

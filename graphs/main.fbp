@@ -1,0 +1,7 @@
+
+'#thing' -> ID mount(EnsureMountpoint) -> MOUNT render(ReactTest)
+
+
+mount ERROR -> out(core/Output)
+render ERROR -> out
+
