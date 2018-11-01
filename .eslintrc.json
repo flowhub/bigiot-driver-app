@@ -1,0 +1,10 @@
+{
+  "extends": "airbnb-base",
+  "globals": {
+    "fetch": false,
+    "window": false
+  },
+  "rules": {
+    "class-methods-use-this": 1
+  }
+}
