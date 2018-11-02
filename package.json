@@ -15,6 +15,7 @@
     "bigiot-js": "^0.6.3",
     "get-function-params": "^2.0.6",
     "noflo": "^1.0.0",
+    "noflo-bigiot": "0.0.2",
     "noflo-core": "^0.5.0",
     "noflo-dom": "^0.3.0",
     "noflo-interaction": "^0.3.0",

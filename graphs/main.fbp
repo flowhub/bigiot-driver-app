@@ -1,7 +1,8 @@
 
 '#thing' -> ID mount(EnsureMountpoint) -> MOUNT render(ReactTest)
 
+'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData) -> out(core/Output)
 
-mount ERROR -> out(core/Output)
-render ERROR -> out
+mount ERROR -> errors(core/Output)
+render ERROR -> errors
 
