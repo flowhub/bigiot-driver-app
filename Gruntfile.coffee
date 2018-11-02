@@ -22,6 +22,11 @@ module.exports = ->
       build:
         options:
           debug: true
+          heads: [
+                '<style>#map { width: 100%; height: 100%; } </style>',
+                '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">',
+                '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css">',
+          ]
         files:
           "browser/<%=pkg.name%>.js": ['package.json']
 

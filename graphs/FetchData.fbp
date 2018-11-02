@@ -9,7 +9,7 @@ errors(core/Repeat)
 
 consumer(bigiot/CreateConsumer)
 'Flowhub_UG-TestConsumer' -> ID consumer
-'' -> SECRET consumer
+'==' -> SECRET consumer
 'https://bigiot-cors.herokuapp.com' -> CORS consumer 
 
 consumer -> CONSUMER auth(bigiot/AuthenticateConsumer)
