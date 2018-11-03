@@ -32,8 +32,10 @@ exports.getComponent = () => {
     required: true,
   });
   c.inPorts.add('n', {
-    datatype: 'object',
-    required: true,
+    datatype: 'int',
+    required: false,
+    control: true,
+    default: 10,
   });
   c.outPorts.add('out', {
     datatype: 'array',
