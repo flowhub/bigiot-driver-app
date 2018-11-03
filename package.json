@@ -13,7 +13,7 @@
     "postinstall": "noflo-cache-preheat",
     "pretest": "npm run lint && npm run build",
     "start": "webpack-dev-server",
-    "test": "fbp-spec --address ws://localhost:3569 --command \"noflo-runtime-headless -f dist/app.js\" spec/*.yaml"
+    "test": "fbp-spec --address ws://localhost:3569 --command \"noflo-runtime-headless -f dist/app.js\" spec/"
   },
   "dependencies": {
     "bigiot-js": "^0.6.3",
