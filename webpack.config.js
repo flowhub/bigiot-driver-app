@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   entry: './webpack.entry.js',
   output: {
@@ -67,5 +69,10 @@ module.exports = {
   node: {
     child_process: 'empty',
     fs: 'empty',
+  },
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    host: '0.0.0.0',
+    port: 8080,
   },
 };
