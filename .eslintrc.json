@@ -3,7 +3,8 @@
   "globals": {
     "fetch": false,
     "document": false,
-    "window": false
+    "window": false,
+    "navigator": false
   },
   "rules": {
     "class-methods-use-this": 1
