@@ -9,18 +9,18 @@ function isSortedByDistance(sites) {
 }
 
 function bestN(sites, n) {
-    if (sites.length < 2) {
-      throw new Error('Expected more than 2 parking sites');
-    }
-    if (!isSortedByDistance(sites)) {
-      throw new Error('Parking sites are not sorted by distance');
-    }
+  if (sites.length < 2) {
+    throw new Error('Expected more than 2 parking sites');
+  }
+  if (!isSortedByDistance(sites)) {
+    throw new Error('Parking sites are not sorted by distance');
+  }
 
-    const best = sites.filter(siteHasVacantSpots).slice(0, n);
-    if (best.length !== n) {
-      throw new Error('Postcondition failed. Length should be == n');
-    }
-    return best;
+  const best = sites.filter(siteHasVacantSpots).slice(0, n);
+  if (best.length !== n) {
+    throw new Error('Postcondition failed. Length should be == n');
+  }
+  return best;
 }
 
 exports.getComponent = () => {

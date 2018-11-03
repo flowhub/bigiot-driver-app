@@ -10,6 +10,7 @@
   "scripts": {
     "build": "webpack",
     "lint": "eslint components/*.js",
+    "lint-fix": "eslint --fix components/*.js",
     "postinstall": "noflo-cache-preheat",
     "pretest": "npm run lint && npm run build",
     "start": "webpack-dev-server",
