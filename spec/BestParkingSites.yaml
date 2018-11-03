@@ -1,0 +1,59 @@
+topic: 'bigiot-driver-app/BestParkingSites'
+cases:
+-
+  name: 'with items sorted by increasing distance'
+  assertion: 'should return best N'
+  inputs:
+    n: 3
+    in:
+      - name: first
+        distance: 10
+        vacant: 30
+      - name: second
+        distance: 20
+        vacant: 30
+      - name: third
+        distance: 30
+        vacant: 30
+      - name: fourth
+        distance: 40
+        vacant: 30
+  expect:
+    out:
+      - path: '$.length'
+        equals: 3
+      - path: '$[0].name'
+        equals: first
+      - path: '$[1].name'
+        equals: second
+      - path: '$[2].name'
+        equals: third
+-
+  name: 'with items occupied slots'
+  assertion: 'should return best N of non-occupied'
+  inputs:
+    n: 3
+    in:
+      - name: first
+        distance: 10
+        vacant: 10
+      - name: occupied
+        distance: 20
+        vacant: 0
+      - name: third
+        distance: 30
+        vacant: 10
+      - name: fourth
+        distance: 40
+        vacant: 10
+  expect:
+    out:
+      - path: '$.length'
+        equals: 3
+      - path: '$[0].name'
+        equals: first
+      - path: '$[1].name'
+        equals: third
+      - path: '$[1].name'
+        equals: fourth
+
