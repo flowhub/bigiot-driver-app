@@ -2,5 +2,6 @@
 /dist/
 /components/*/
 flowhub.json
+fbp.json
 *~
 LICENSE-MIT
