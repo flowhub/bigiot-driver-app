@@ -1,0 +1,14 @@
+topic: 'bigiot-driver-app/GetCurrentPosition'
+cases:
+-
+  name: 'getting current location'
+  assertion: 'should send an object with latitude and longitude'
+  skip: 'not available in headless Chrome'
+  inputs:
+    in: true
+  expect:
+    out:
+      - path: '$.latitude'
+        type: number
+      - path: '$.longitude'
+        type: number
