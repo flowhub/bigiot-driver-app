@@ -20,17 +20,24 @@
     "noflo-core": "^0.5.0",
     "noflo-dom": "^0.3.0",
     "noflo-interaction": "^0.3.0",
+    "noflo-runtime-postmessage": "^0.10.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-leaflet": "^2.1.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
     "eslint": "^4.18.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
+    "fbp-loader": "^0.1.2",
     "mocha": "^5.0.0",
-    "noflo-runtime-postmessage": "^0.10.1"
+    "noflo-component-loader": "^0.3.2",
+    "webpack": "^4.24.0",
+    "webpack-cli": "^3.1.2"
   },
   "keywords": [
     "noflo"
