@@ -11,6 +11,7 @@ fetch -> IN sortSites OUT -> out(core/Output)
 fetch -> out
 sortSites -> SITES map
 sortSites -> best(BestParkingSites) -> SITES details
+10 -> N best
 
 map ERROR -> errors(core/Output)
 details ERROR -> errors

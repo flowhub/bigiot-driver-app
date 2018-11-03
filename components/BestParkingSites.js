@@ -17,8 +17,8 @@ function bestN(sites, n) {
   }
 
   const best = sites.filter(siteHasVacantSpots).slice(0, n);
-  if (best.length !== n) {
-    throw new Error('Postcondition failed. Length should be == n');
+  if (best.length <= n) {
+    throw new Error('Postcondition failed. Length should be <= n');
   }
   return best;
 }
@@ -33,8 +33,7 @@ exports.getComponent = () => {
   });
   c.inPorts.add('n', {
     datatype: 'object',
-    required: false,
-    default: 10,
+    required: true,
   });
   c.outPorts.add('out', {
     datatype: 'array',
