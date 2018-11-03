@@ -1,0 +1,20 @@
+topic: 'bigiot-driver-app/SortEntriesByDistance'
+cases:
+-
+  name: 'with two locations'
+  assertion: 'should return them sorted correctly'
+  inputs:
+    in:
+      - name: EFHK
+        latitude: 60.317222
+        longitude: 24.963333
+      - name: EFHF
+        latitude: 60.254558
+        longitude: 25.042828
+    location:
+      latitude: 60.233333
+      longitude: 25.016667
+  expect:
+    out:
+      - path: '$[0].name'
+        equals: EFHF
