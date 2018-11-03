@@ -70,7 +70,6 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: 'assets/*.html',
-        to: 'dist/',
         flatten: true,
       },
     ]),
