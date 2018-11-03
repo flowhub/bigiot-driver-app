@@ -19,3 +19,7 @@ cases:
     out:
       - path: '$[0].name'
         equals: EFHF
+      - path: '$[0].bearing'
+        equals: 31
+      - path: '$[0].distance'
+        equals: 2800
