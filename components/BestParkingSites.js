@@ -17,7 +17,7 @@ function bestN(sites, n) {
   }
 
   const best = sites.filter(siteHasVacantSpots).slice(0, n);
-  if (best.length <= n) {
+  if (best.length > n) {
     throw new Error('Postcondition failed. Length should be <= n');
   }
   return best;
