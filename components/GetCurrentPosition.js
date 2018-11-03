@@ -32,7 +32,9 @@ exports.getComponent = () => {
           accuracy: pos.coords.accuracy,
         },
       });
-    }, output.done);
+    }, (err) => {
+      output.done(new Error(err.message));
+    });
   });
   return c;
 };
