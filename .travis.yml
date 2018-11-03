@@ -2,12 +2,11 @@ language: node_js
 node_js:
 - 'lts/*'
 deploy:
-  provider: script
+  provider: pages
+  github-token: $GITHUB_TOKEN
+  local-dir: dist
+  keep-history: true
   skip_cleanup: true
-  script: grunt gh-pages
+  committer-from-gh: true
   on:
     tags: true
-    repo: flowhub/bigiot-driver-app
-env:
-  global:
-    secure: asjCE+KpyVtXLMiKStXk2EU43CltRR7YlJhRHnTPxqmvXboE0FLy0aCD7bVmqRbhxwkIGWXC8IFDRuu0SNsi8e1FFlQZY9OkkiGMnIfZ/8W2LFxQNVtHEg2DbThXhpKYIEphuZBTtZXwZyh+t7Hwmuqu5CPRMnGBVp8FzDkCKp0=
