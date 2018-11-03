@@ -30,7 +30,7 @@ exports.getComponent = () => {
       const point = new where.Point(entry.latitude, entry.longitude);
       return {
         ...entry,
-        distance: current.distanceTo(point),
+        distance: current.distanceTo(point) * 1000,
         bearing: current.bearingTo(point),
       };
     });
@@ -43,7 +43,6 @@ exports.getComponent = () => {
       }
       return 0;
     });
-    console.log(withDistance);
     output.sendDone(withDistance);
   });
   return c;
