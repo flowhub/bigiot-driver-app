@@ -1,7 +1,9 @@
 const postMessage = require('noflo-runtime-postmessage');
+const noflo = require('noflo');
 
 const exported = {
   'noflo-runtime-postmessage': postMessage,
+  'noflo': noflo,
 };
 
 if (window) {
