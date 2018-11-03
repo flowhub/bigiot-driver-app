@@ -20,7 +20,6 @@ module.exports = {
               manifest: {
                 runtimes: ['noflo'],
                 discover: true,
-                recursive: false,
               },
               runtimes: [
                 'noflo',

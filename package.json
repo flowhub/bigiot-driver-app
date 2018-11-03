@@ -33,6 +33,8 @@
     "@babel/preset-env": "^7.1.0",
     "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.3.2",
     "eslint": "^4.18.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
