@@ -54,6 +54,6 @@ cases:
         equals: first
       - path: '$[1].name'
         equals: third
-      - path: '$[1].name'
+      - path: '$[2].name'
         equals: fourth
 
