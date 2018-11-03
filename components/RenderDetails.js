@@ -12,7 +12,7 @@ function siteListItem(site) {
   const key = `${site.latitude}-${site.longitude}`;
 
   const item = e(ListItem, { key }, [
-    e(ListItemText, { primary: `${site.distance} meters`, secondary: `${site.vacant} free parking spaces` }),
+    e(ListItemText, { key: 'text', primary: `${site.distance} meters`, secondary: `${site.vacant} free parking spaces` }),
   ]);
 
   return item;
@@ -21,10 +21,8 @@ function siteListItem(site) {
 function render(mount, sites) {
   const e = React.createElement;
 
-  const items = sites.map(siteListItem);
-
   const details =
-    e(List, { }, items);
+    e(List, { }, sites.map(siteListItem));
 
   return ReactDOM.render(details, mount);
 }
