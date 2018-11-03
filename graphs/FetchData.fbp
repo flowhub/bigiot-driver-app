@@ -21,7 +21,7 @@ auth -> CONSUMER sub(bigiot/SubscribeOfferings)
 discover -> OFFERINGS sub 
 
 auth -> CONSUMER access(bigiot/AccessSubscriptions)
-sub OUT -> SUBSCRIPTIONS access OUT -> out
+sub OUT -> SUBSCRIPTIONS access OUT -> ARRAY flatten(Flatten) -> out
 
 consumer ERROR -> errors
 auth ERROR -> errors
@@ -29,3 +29,4 @@ discover ERROR -> errors
 query ERROR -> errors
 sub ERROR -> errors
 access ERROR -> errors
+flatten ERROR ->  errors

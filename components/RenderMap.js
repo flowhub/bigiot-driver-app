@@ -21,19 +21,16 @@ function parkingSiteMarker(site) {
   return marker;
 }
 
-function render(mount, data) {
+
+// # TODO: render a marker for current location
+function render(mount, sites, center) {
   const e = React.createElement;
 
-  console.log('data', data);
-
-  const position = [50.9375, 6.9603];
-
-  const parkingSites = data.reduce((sites, site) => sites.concat(site), []);
-
-  const markers = parkingSites.map(parkingSiteMarker);
+  const centerLatLon = [center.latitude, center.longitude];
+  const markers = sites.map(parkingSiteMarker);
 
   const map =
-    e(Map, { center: position, zoom: 13 }, [
+    e(Map, { center: centerLatLon, zoom: 13 }, [
       e(TileLayer, {
         key: 'layer',
         url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -41,7 +38,6 @@ function render(mount, data) {
       }),
     ].concat(markers));
 
-  // const component = React.createElement('h1', null, 'Hello World');
   return ReactDOM.render(map, mount);
 }
 

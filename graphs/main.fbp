@@ -1,10 +1,10 @@
 
-'map' -> ID mount(EnsureMountpoint) -> MOUNT render(ReactTest)
+'map' -> ID mount(EnsureMountpoint) -> MOUNT map(RenderMap)
 
-'true' -> location(GetCurrentPosition) -> out
+'true' -> location(GetCurrentPosition) -> CENTER map()
 
 'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData) -> out(core/Output)
-fetch -> DATA render
+fetch -> SITES map
 
 mount ERROR -> errors(core/Output)
 render ERROR -> errors
