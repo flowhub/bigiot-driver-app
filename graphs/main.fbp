@@ -1,9 +1,21 @@
 
-'map' -> ID mount(EnsureMountpoint) -> MOUNT render(ReactTest)
+'map' -> ID (EnsureMountpoint) -> MOUNT map(RenderMap)
+'details' -> ID (EnsureMountpoint) -> MOUNT details(RenderDetails)
 
-'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData) -> out(core/Output)
-fetch -> DATA render
+'true' -> location(GetCurrentPosition) -> CENTER map
+location OUT -> LOCATION sortSites(SortEntriesByDistance)
+location OUT -> out
 
-mount ERROR -> errors(core/Output)
-render ERROR -> errors
+'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData)
+fetch -> IN sortSites OUT -> out(core/Output)
+fetch -> out
+sortSites -> SITES map
+sortSites -> best(BestParkingSites) -> SITES details
+
+map ERROR -> errors(core/Output)
+details ERROR -> errors
+fetch ERROR -> errors
+location ERROR -> errors
+best ERROR -> errors
+sortSites ERROR -> errors
 
