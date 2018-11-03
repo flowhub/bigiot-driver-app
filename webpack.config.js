@@ -4,8 +4,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: './webpack.entry.js',
   output: {
-    path: __dirname,
-    filename: 'dist/app.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
+    filename: 'app.js',
   },
   mode: 'development',
   devtool: 'source-map',
@@ -85,5 +86,6 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     host: process.env.HOST || 'localhost',
     port: 8080,
+    inline: true,
   },
 };
