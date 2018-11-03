@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './webpack.entry.js',
@@ -62,6 +63,15 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      {
+        from: 'assets/*.html',
+        to: 'dist/',
+        flatten: true,
+      },
+    ]),
+  ],
   resolve: {
     extensions: ['.coffee', '.js'],
   },
