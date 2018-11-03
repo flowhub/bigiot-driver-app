@@ -1,5 +1,5 @@
 
-'#map' -> ID mount(EnsureMountpoint) -> MOUNT render(ReactTest)
+'map' -> ID mount(EnsureMountpoint) -> MOUNT render(ReactTest)
 
 'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData) -> out(core/Output)
 fetch -> DATA render

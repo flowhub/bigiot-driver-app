@@ -9,12 +9,12 @@ function parkingSiteMarker(site) {
 
   const icon = new Leaflet.DivIcon({
     className: 'parking-site-icon',
-    html: `<span>${site.vacant}</span>`,
+    html: `${site.vacant}`,
   });
 
   const marker = e(Marker, {
-    position: [site.longitude, site.latitude],
-    key: `parking-site-${site.longitude}-${site.latitude}`,
+    position: [site.latitude, site.longitude],
+    key: `parking-site-${site.latitude}-${site.longitude}`,
     icon,
   }, []);
 
@@ -28,10 +28,7 @@ function render(mount, data) {
 
   const position = [50.9375, 6.9603];
 
-  var parkingSites = [];
-  for (var d of data) {
-    parkingSites = parkingSites.concat(d);
-  }
+  const parkingSites = data.reduce((sites, site) => sites.concat(site), []);
 
   const markers = parkingSites.map(parkingSiteMarker);
 
