@@ -2,7 +2,7 @@ topic: 'bigiot-driver-app/SortEntriesByDistance'
 cases:
 -
   name: 'with two locations'
-  assertion: 'should return them sorted correctly'
+  assertion: 'should return them the closest first'
   inputs:
     in:
       - name: EFHK
@@ -12,6 +12,7 @@ cases:
         latitude: 60.254558
         longitude: 25.042828
     location:
+      name: 'Viikki, closer to Malmi airport'
       latitude: 60.233333
       longitude: 25.016667
   expect:
