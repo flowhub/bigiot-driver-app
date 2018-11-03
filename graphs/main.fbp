@@ -1,11 +1,20 @@
 
-'map' -> ID mount(EnsureMountpoint) -> MOUNT map(RenderMap)
+'map' -> ID (EnsureMountpoint) -> MOUNT map(RenderMap)
+'details' -> ID (EnsureMountpoint) -> MOUNT details(RenderDetails)
 
-'true' -> location(GetCurrentPosition) -> CENTER map()
+'true' -> location(GetCurrentPosition) -> CENTER map
+location OUT -> LOCATION sortSites(SortEntriesByDistance)
+location OUT -> out
 
-'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData) -> out(core/Output)
-fetch -> SITES map
+'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData)
+fetch -> IN sortSites OUT -> out(core/Output)
+fetch -> out
+sortSites -> SITES map
+sortSites -> SITES details
 
-mount ERROR -> errors(core/Output)
-render ERROR -> errors
+map ERROR -> errors(core/Output)
+details ERROR -> errors
+fetch ERROR -> errors
 location ERROR -> errors
+sortSites ERROR -> errors
+
