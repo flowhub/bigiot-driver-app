@@ -28,10 +28,7 @@ function render(mount, data) {
 
   const position = [50.9375, 6.9603];
 
-  var parkingSites = [];
-  for (var d of data) {
-    parkingSites = parkingSites.concat(d);
-  }
+  const parkingSites = data.reduce((sites, site) => sites.concat(site), []);
 
   const markers = parkingSites.map(parkingSiteMarker);
 
