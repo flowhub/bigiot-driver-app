@@ -7,6 +7,8 @@ module.exports = {
     path: __dirname,
     filename: 'dist/app.js',
   },
+  mode: 'development',
+  devtool: 'source-map',
   module: {
     rules: [
       {
