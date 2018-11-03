@@ -33,7 +33,7 @@ exports.getComponent = () => {
         },
       });
     }, (err) => {
-      output.done(new Error(err.message));
+      output.done(new Error(err.message || 'Failed to acquire position'));
     });
   });
   return c;
