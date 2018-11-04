@@ -18,7 +18,7 @@ enrichedSites -> best(BestParkingSites) -> SITES details
 details EVENT -> out
 details EVENT -> event(SwitchEvent)
 event NAVIGATE -> out
-event SELECT -> out
+event SELECT -> CENTER map
 
 map ERROR -> errors(core/Output)
 details ERROR -> errors
