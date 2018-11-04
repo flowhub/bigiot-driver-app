@@ -1,6 +1,5 @@
-const noflo = require('noflo');
 const postMessageRuntime = require('noflo-runtime-postmessage');
-const pkg = require('./package.json');
+const noflo = require('noflo');
 
 const defaultPermissions = [
   'protocol:graph',
@@ -11,43 +10,28 @@ const defaultPermissions = [
   'component:setsource',
 ];
 
-module.exports = (graphName, options = {}) => new Promise((resolve, reject) => {
-  const loader = new noflo.ComponentLoader(pkg.name);
-  loader.load(`${pkg.name}/${graphName}`, (err, instance) => {
-    if (err) {
-      reject(err);
+module.exports = (graph, options = {}) => new Promise((resolve, reject) => {
+  const runtimeOptions = {
+    baseDir: options.baseDir,
+    defaultPermissions,
+    defaultGraph: options.noLoad ? null : graph,
+  };
+  switch (options.protocol) {
+    case 'opener': {
+      if (!options.debugButton) {
+        reject(new Error('No debug button defined'));
+        return;
+      }
+      options.debugButton.classList.replace('nodebug', 'debug');
+      resolve(postMessageRuntime.opener(runtimeOptions, options.debugButton));
       return;
     }
-    instance.on('ready', () => {
-      const { graph } = instance.network;
-      let rt;
-      const runtimeOptions = {
-        baseDir: pkg.name,
-        defaultPermissions,
-        defaultGraph: options.noLoad ? null : graph,
-      };
-      switch (options.protocol) {
-        case 'opener': {
-          if (!options.debugButton) {
-            reject(new Error('No debug button defined'));
-            return;
-          }
-          options.debugButton.classList.replace('nodebug', 'debug');
-          rt = postMessageRuntime.opener(runtimeOptions, options.debugButton);
-          break;
-        }
-        case 'iframe': {
-          rt = postMessageRuntime.iframe(runtimeOptions);
-          break;
-        }
-        default: {
-          reject(new Error(`Unknown FBP protocol ${options.protocol}`));
-          return;
-        }
-      }
-      rt.network.once('addnetwork', (network) => {
-        resolve(network);
-      });
-    });
-  });
+    case 'iframe': {
+      resolve(postMessageRuntime.iframe(runtimeOptions));
+      return;
+    }
+    default: {
+      reject(new Error(`Unknown FBP protocol ${options.protocol}`));
+    }
+  }
 });
