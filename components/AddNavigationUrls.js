@@ -3,19 +3,14 @@ const noflo = require('noflo');
 // Format a directions URL for Google Maps
 // https://developers.google.com/maps/documentation/urls/guide#directions-action
 function navUrl(location) {
-  const destination = `${location.latitude},${location.longitude}`;
-  const mode = 'driving';
-  const base = 'https://www.google.com/maps/dir/?api=1';
-  const url = `${base}&destination=${destination}&travelmode=${mode}`;
-  return url;
+  const url = new URL('maps/dir/?api=1', 'https://www.google.com');
+  url.searchParams.set('travelmode', 'driving');
+  url.searchParams.set('destination', `${location.latitude},${location.longitude}`);
+  return url.toString();
 }
 
 function addNavigationUrls(sites) {
-  const withNav = sites.map((s) => {
-    const o = s; // XXX: no copy
-    o.navigationUrl = navUrl(s);
-    return o;
-  });
+  const withNav = sites.map(s => ({ ...s, navigationUrl: navUrl(s) }));
   return withNav;
 }
 
