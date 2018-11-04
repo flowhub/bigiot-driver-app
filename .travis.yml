@@ -1,9 +1,10 @@
 language: node_js
 node_js:
-- 'lts/*'
+- lts/*
 deploy:
   provider: pages
-  github-token: $GITHUB_TOKEN
+  github-token:
+    secure: LtEhQNN89tATBIrZYLkasgJtiel1CI2eqKJokV1bHj+wUIk6brPrhbnWRQ53HjImHALTU1tVyEwBkNz/Fe1QVLSbm17TitLMJ5VZHCSi9FIMuziO0AYzJaARZbN6odI3iGKG2lzZ8z4xpuNEv4CzFxFYrF/vXHuJ3rTfCM/j4n77y9k3WJWvExk7yeJB6PLGzGozdX2bq5fsG//oPIxnMT7eCf9KoPvIyl46ncZ6AlnUj1ZrKV7p01zpiKV8CKfFKMzi1zbZzy9XACCY9zpse6dCVbFIoSkw3stmkor9VdTXRNqOU0hBdkDFJFqu3u3V07SqsxKoQmxWPIX/jbvi5ZZrduyiJ+uKz+ObNtPXehNVAJ4Xq/OrxgdqPfgNNJDK1HcFhQ3pJEBX0AuZasNQjmMteP9MvJFXyOzToNw9VMiEfQD6wM1L5sK5loiorpFxKtqZ93uJ95vkZdQGqXNg/0PU7yid9EPwAySRlJSCwGAcTz0se524hXRoGpJWl442wL8TOyY4ZjHUej/NSSec/zER2h6PGTQwd1IH/YMZKqlNKRhkfriRgJAmG9sORztQLyKNwH/7P6J3s/iztdjqXzGZAkGJwqveAcE/3LjW2i6i9G8K+mJ4wJLeaOOAcBEDBnLk7reBwCcszjeXXMsTM5n1o41nrfhTt7qvNR8SNq4=
   local-dir: dist
   keep-history: true
   skip_cleanup: true
