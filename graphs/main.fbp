@@ -9,10 +9,16 @@ location OUT -> out
 
 'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData)
 fetch -> IN sortSites OUT -> out(core/Output)
+sortSites OUT -> SITES enrichedSites(AddNavigationUrls)
 fetch -> out
-sortSites -> SITES map
-sortSites -> best(BestParkingSites) -> SITES details
+enrichedSites -> SITES map
+enrichedSites -> best(BestParkingSites) -> SITES details
 best -> HideSplash
+
+details EVENT -> out
+details EVENT -> event(SwitchEvent)
+event NAVIGATE -> out
+event SELECT -> out
 
 map ERROR -> errors(core/Output)
 details ERROR -> errors
@@ -20,5 +26,7 @@ fetch ERROR -> errors
 location ERROR -> errors
 best ERROR -> errors
 sortSites ERROR -> errors
+enrichedSites ERROR -> errors
+event ERROR -> errors
 
 errors -> showerrors
