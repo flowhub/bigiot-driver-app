@@ -1,7 +1,39 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
+
+#app_splash {
+  z-index: 999;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: hsl(210, 98%, 46%);
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+#app_splash h1 {
+  font-size: 20vh;
+}
+#app_splash a {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.0;
+  }
+}
+#app_splash h2 {
+  animation: blink 3s linear 0s infinite;
+}
+
 #map {
   width: 100vw;
   height: 70vh;
@@ -23,7 +55,7 @@ body {
 #flowhub_debug_url.debug {
   display: block;
   position: fixed;
-  z-index: 999;
+  z-index: 500;
   width: 20em;
   height: 1.5em;
   right: -6.5em;
@@ -40,3 +72,8 @@ body {
   transform: rotate(45deg);
 }
 
+@media (orientation: portrait) {
+  #app_splash h1 {
+    font-size: 20vw;
+  }
+}
