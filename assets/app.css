@@ -16,6 +16,7 @@ body {
   flex-direction: column;
   justify-content: center;
   text-align: center;
+  transition: background-color 0.5s ease;
 }
 #app_splash h1 {
   font-size: 20vh;
@@ -32,6 +33,13 @@ body {
 }
 #app_splash h2 {
   animation: blink 3s linear 0s infinite;
+}
+#app_splash.error {
+  background-color: hsl(210, 98%, 5%);
+}
+#app_splash.error h2 {
+  animation: none;
+  color: hsl(0, 98%, 46%);
 }
 
 #map {
