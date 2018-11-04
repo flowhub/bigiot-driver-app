@@ -7,6 +7,9 @@ function main() {
   return runtime(graph, {
     runtimeOptions: {
       baseDir: pkg.name,
+      label: pkg.name,
+      namespace: pkg.name,
+      repository: pkg.repository ? pkg.repository.url : null,
     },
     debugButton: document.getElementById('flowhub_debug_url'),
   });
