@@ -25,5 +25,10 @@ window.require = (moduleName) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  main();
+  main()
+    .catch((err) => {
+      const message = document.querySelector('#app_splash h2');
+      message.innerHTML = `ERROR: ${err.message}`;
+      message.parentElement.classList.add('error');
+    });
 });
