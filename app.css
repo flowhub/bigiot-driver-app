@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#app_splash {
+  position: fixed;
+  z-index: 500;
+  width: 100vw;
+  height: 100vh;
+  background-color: hsl(210, 98%, 46%);
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  transition: background-color 0.5s ease;
+}
+#app_splash h1 {
+  font-size: 20vh;
+}
+#app_splash a {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.0;
+  }
+}
+#app_splash h2 {
+  animation: blink 3s linear 0s infinite;
+}
+#app_splash.error {
+  background-color: hsl(210, 98%, 5%);
+}
+#app_splash.error h2 {
+  animation: none;
+  color: hsl(0, 98%, 46%);
+}
+
+#map {
+  width: 100vw;
+  height: 70vh;
+}
+#map .leaflet-container {
+  width: 100vw;
+  height: 70vh;
+}
+#details {
+  top: 70vh;
+  width: 100vw;
+  height: 30vh;
+  overflow-y: scroll;
+}
+
+#flowhub_debug_url.nodebug {
+  display: none;
+}
+#flowhub_debug_url.debug {
+  display: block;
+  position: fixed;
+  z-index: 999;
+  width: 20em;
+  height: 1.5em;
+  right: -6.5em;
+  top: 3em;
+  text-align: center;
+  background-color: hsla(210, 98%, 46%, .8) !important;
+  border-color: hsl(210, 98%, 46%) !important;
+  color: white !important;
+  text-decoration: none;
+  padding: 1em;
+  box-sizing: content-box;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  transform: rotate(45deg);
+}
+
+@media (orientation: portrait) {
+  #app_splash h1 {
+    font-size: 20vw;
+  }
+}
+
+.parking-site-icon {
+  width: 3vw;
+  height: 3vh;
+}
+.parking-site-icon svg {
+  margin-bottom: 12px;
+  fill: grey;
+}
+.parking-site-icon.parking-available svg {
+  fill: green;
+}
+.parking-site-icon.parking-low svg {
+  fill: yellow;
+}
+.parking-site-icon.parking-unavailable svg {
+  fill: red;
+}
+
+.current-location-icon {
+  width: 3vw;
+}
