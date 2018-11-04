@@ -20,3 +20,5 @@ location ERROR -> errors
 best ERROR -> errors
 sortSites ERROR -> errors
 
+'#app_splash h2' -> SELECTOR showerrors(ShowError)
+errors -> showerrors
