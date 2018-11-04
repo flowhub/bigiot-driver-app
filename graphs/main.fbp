@@ -1,4 +1,4 @@
-
+'app_splash' -> ID HideSplash(HideElement)
 'map' -> ID (EnsureMountpoint) -> MOUNT map(RenderMap)
 'details' -> ID (EnsureMountpoint) -> MOUNT details(RenderDetails)
 
@@ -9,6 +9,7 @@ location OUT -> out
 'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData)
 fetch -> IN sortSites OUT -> out(core/Output)
 fetch -> out
+fetch -> HideSplash
 sortSites -> SITES map
 sortSites -> best(BestParkingSites) -> SITES details
 

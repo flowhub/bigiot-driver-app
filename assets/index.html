@@ -2,57 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>BIG IoT Driver</title>
+    <title>Park My Car</title>
     <script src="app.js"></script>
-    <style>
-    #flowhub_debug_url.nodebug {
-      display: none;
-    }
-    #flowhub_debug_url.debug {
-      display: block;
-      position: fixed;
-      z-index: 999;
-      width: 20em;
-      height: 1.5em;
-      right: -6.5em;
-      top: 3em;
-      text-align: center;
-      background-color: hsla(210, 98%, 46%, .8) !important;
-      border-color: hsl(210, 98%, 46%) !important;
-      color: white !important;
-      text-decoration: none;
-      padding: 1em;
-      box-sizing: content-box;
-      cursor: pointer;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-      transform: rotate(45deg);
-    }
-    </style>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        width: 100vw;
-        height: 70vh;
-      }
-      #map .leaflet-container {
-        width: 100vw;
-        height: 70vh;
-      }
-      #details {
-        top: 70vh;
-        width: 100vw;
-        height: 30vh;
-        overflow-y: scroll;
-      }
-    </style>
+    <link rel="stylesheet" href="app.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css">
     
   </head>
   <body>
-    <a id='flowhub_debug_url' target="_blank" class='nodebug'>Debug in Flowhub</a>
+    <section id="app_splash">
+      <h1>Park My Car</h1>
+      <h2>Loading...</h2>
+      <p>Powered by <a href="https://flowhub.io">Flowhub</a> and <a href="https://big-iiot.eu">BIG IoT</a></p>
+    </section>
+
+    <a id="flowhub_debug_url" target="_blank" class='nodebug'>Debug in Flowhub</a>
     
     <script>
       var noflo = require('noflo');

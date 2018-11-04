@@ -72,6 +72,10 @@ module.exports = {
         from: 'assets/*.html',
         flatten: true,
       },
+      {
+        from: 'assets/*.css',
+        flatten: true,
+      },
     ]),
   ],
   resolve: {
