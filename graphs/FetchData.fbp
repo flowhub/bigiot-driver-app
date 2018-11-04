@@ -10,7 +10,7 @@ errors(core/Repeat)
 consumer(bigiot/CreateConsumer)
 'Flowhub_UG-DriverAppDev' -> ID consumer
 '3XBgTcqTRA2k72JxSKS45g==' -> SECRET consumer
-'https://bigiot-cors.herokuapp.com' -> CORS consumer 
+'https://bigiot-cors.herokuapp.com' -> CORS consumer
 
 consumer -> CONSUMER auth(bigiot/AuthenticateConsumer)
 auth -> CONSUMER discover(bigiot/DiscoverOfferings)

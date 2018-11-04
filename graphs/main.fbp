@@ -8,6 +8,8 @@ location OUT -> LOCATION sortSites(SortEntriesByDistance)
 location OUT -> out
 location OUT -> HideSplash
 
+'urn:big-iot:ParkingSpaceCategory' -> CATEGORY fetchSpaces(FetchData) -> out
+
 'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData)
 fetch -> IN sortSites OUT -> out(core/Output)
 sortSites OUT -> SITES enrichedSites(AddNavigationUrls)
@@ -28,5 +30,6 @@ best ERROR -> errors
 sortSites ERROR -> errors
 enrichedSites ERROR -> errors
 event ERROR -> errors
+fetchSpaces ERROR -> errors
 
 errors -> showerrors
