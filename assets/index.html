@@ -47,6 +47,25 @@
         height: 30vh;
         overflow-y: scroll;
       }
+
+      .parking-site-icon {
+        width: 3vw;
+        height: 3vh;
+      }
+      .parking-site-icon svg {
+        margin-bottom: 12px;
+        fill: grey;
+      }
+      .parking-site-icon.parking-available svg {
+        fill: green;
+      }
+      .parking-site-icon.parking-low svg {
+        fill: yellow;
+      }
+      .parking-site-icon.parking-unavailable svg {
+        fill: red;
+      }
+
     </style>
 
     <link rel="stylesheet" href="./vendor/leaflet/leaflet.css">
