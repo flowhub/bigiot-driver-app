@@ -1,7 +1,7 @@
 {
   "name": "bigiot-driver-app",
   "description": "",
-  "version": "0.2.0",
+  "version": "6.6.6",
   "repository": {
     "type": "git",
     "url": "git://github.com/flowhub/bigiot-driver-app.git"
