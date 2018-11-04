@@ -77,3 +77,25 @@ body {
     font-size: 20vw;
   }
 }
+
+.parking-site-icon {
+  width: 3vw;
+  height: 3vh;
+}
+.parking-site-icon svg {
+  margin-bottom: 12px;
+  fill: grey;
+}
+.parking-site-icon.parking-available svg {
+  fill: green;
+}
+.parking-site-icon.parking-low svg {
+  fill: yellow;
+}
+.parking-site-icon.parking-unavailable svg {
+  fill: red;
+}
+
+.current-location-icon {
+  width: 3vw;
+}

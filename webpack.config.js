@@ -76,6 +76,10 @@ module.exports = {
         from: 'assets/*.css',
         flatten: true,
       },
+      {
+        from: 'node_modules/leaflet/dist/*.css',
+        to: 'vendor/leaflet/',
+      },
     ]),
   ],
   resolve: {
