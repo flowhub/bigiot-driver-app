@@ -5,8 +5,8 @@ body {
 }
 
 #app_splash {
-  z-index: 999;
   position: fixed;
+  z-index: 500;
   width: 100vw;
   height: 100vh;
   background-color: hsl(210, 98%, 46%);
@@ -63,7 +63,7 @@ body {
 #flowhub_debug_url.debug {
   display: block;
   position: fixed;
-  z-index: 500;
+  z-index: 999;
   width: 20em;
   height: 1.5em;
   right: -6.5em;
