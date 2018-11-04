@@ -1,4 +1,3 @@
-const postMessage = require('noflo-runtime-postmessage');
 const runtime = require('./runtime');
 const pkg = require('./package.json');
 const graph = require('./graphs/main.fbp');
@@ -14,18 +13,6 @@ function main() {
     debugButton: document.getElementById('flowhub_debug_url'),
   });
 }
-
-// We need to export require('noflo-runtime-postmessage')
-// for noflo-runtime-headless to work
-const exported = {
-  'noflo-runtime-postmessage': postMessage,
-};
-window.require = (moduleName) => {
-  if (exported[moduleName]) {
-    return exported[moduleName];
-  }
-  throw new Error(`Module ${moduleName} not available`);
-};
 
 document.addEventListener('DOMContentLoaded', () => {
   main()

@@ -2,11 +2,14 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './app.js',
+  entry: {
+    app: './app.js',
+    test: './node_modules/noflo-runtime-headless/spec/build/webpack.entry.js',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    filename: 'app.js',
+    filename: '[name].js',
   },
   mode: 'development',
   devtool: 'source-map',
