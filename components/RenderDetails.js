@@ -18,14 +18,11 @@ function siteListItem(site, emitEvent) {
   function selectSite() {
     emitEvent({ type: 'select', payload: site });
   }
-  function navigateTo() {
-    emitEvent({ type: 'navigate', payload: site });
-  }
 
   const item = e(ListItem, { key, onClick: selectSite }, [
     e(ListItemText, { key: 'text', primary: `${site.distance} meters`, secondary: `${site.vacant} free parking spaces` }),
     e(ListItemSecondaryAction, { key: 'secondary' }, [
-      e(IconButton, { key: 'nav-button', onClick: navigateTo, 'aria-label': 'Navigate to' }, [
+      e(IconButton, { key: 'nav-button', href: site.navigationUrl, 'aria-label': 'Navigate to' }, [
         e(NavigationIcon, { key: 'nav-icon' }),
       ]),
     ]),
@@ -76,5 +73,3 @@ exports.getComponent = () => {
   });
   return c;
 };
-
-
