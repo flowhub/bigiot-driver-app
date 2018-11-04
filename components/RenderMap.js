@@ -69,24 +69,24 @@ const iconSet = `
     </g>
     </defs>
   </svg>
-`
+`;
 
 function svgIcon(name) {
-  const [width, height] = [ 512, 512 ]; // needs to match what is used in original SVG geometry
+  const [width, height] = [512, 512]; // needs to match what is used in original SVG geometry
   const useIcon = `<svg viewBox="0 0 ${width} ${height}"><use xlink:href="#${name}"></use></svg>`;
   return iconSet + useIcon;
 }
 
 function parkingStatus(site) {
-    let status = 'unknown';
-    if (site.vacant === 0) {
-        status = 'unavailable';
-    } else if (site.vacant <= 3) {
-        status = 'low';
-    } else if (site.vacant > 3) {
-        status = 'available';
-    }
-    return status;
+  let status = 'unknown';
+  if (site.vacant === 0) {
+    status = 'unavailable';
+  } else if (site.vacant <= 3) {
+    status = 'low';
+  } else if (site.vacant > 3) {
+    status = 'available';
+  }
+  return status;
 }
 
 function parkingSiteMarker(site) {
@@ -95,7 +95,7 @@ function parkingSiteMarker(site) {
   const icon = new Leaflet.DivIcon({
     className: `parking-site-icon parking-${parkingStatus(site)}`,
     html: svgIcon('parking-site-icon'),
-    iconSize: [ 'use-css', 'use-css' ],
+    iconSize: ['use-css', 'use-css'],
   });
 
   const marker = e(Marker, {
@@ -113,7 +113,7 @@ function currentLocationMarker(location) {
   const icon = new Leaflet.DivIcon({
     className: 'current-location-icon',
     html: svgIcon('car-icon'),
-    iconSize: [ 'use-css', 'use-css' ],
+    iconSize: ['use-css', 'use-css'],
   });
 
   const marker = e(Marker, {
