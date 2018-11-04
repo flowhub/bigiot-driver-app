@@ -10,6 +10,12 @@ const ListItemSecondaryAction = require('@material-ui/core/ListItemSecondaryActi
 const IconButton = require('@material-ui/core/IconButton').default;
 const NavigationIcon = require('@material-ui/icons/Navigation').default;
 
+function prettyDistance(distance) {
+  if (distance > 1999) {
+    return `${distance / 1000} kilometers`;
+  }
+  return `${distance} meters`;
+}
 
 function siteListItem(site, emitEvent) {
   const e = React.createElement;
@@ -20,7 +26,7 @@ function siteListItem(site, emitEvent) {
   }
 
   const item = e(ListItem, { key, onClick: selectSite }, [
-    e(ListItemText, { key: 'text', primary: `${site.distance} meters`, secondary: `${site.vacant} free parking spaces` }),
+    e(ListItemText, { key: 'text', primary: prettyDistance(site.distance), secondary: `${site.vacant} free parking spaces` }),
     e(ListItemSecondaryAction, { key: 'secondary' }, [
       e(IconButton, { key: 'nav-button', href: site.navigationUrl, 'aria-label': 'Navigate to' }, [
         e(NavigationIcon, { key: 'nav-icon' }),

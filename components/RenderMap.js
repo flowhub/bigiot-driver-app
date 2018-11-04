@@ -127,7 +127,7 @@ function currentLocationMarker(location) {
 
 
 // # TODO: render a marker for current location
-function render(mount, sites, center) {
+function render({ mount, sites = [], center }) {
   const e = React.createElement;
 
   const centerLatLon = [center.latitude, center.longitude];
@@ -146,8 +146,50 @@ function render(mount, sites, center) {
 }
 
 exports.getComponent = () => {
-  const c = noflo.asComponent(render, {
-    description: 'Test',
+  const c = new noflo.Component();
+  c.inPorts.add('mount', {
+    datatype: 'object',
+    required: true,
+  });
+  c.inPorts.add('center', {
+    datatype: 'object',
+    required: true,
+  });
+  c.inPorts.add('sites', {
+    datatype: 'array',
+  });
+  c.outPorts.add('out', {
+    datatype: 'object',
+  });
+  c.outPorts.add('error', {
+    datatype: 'object',
+  });
+  c.setUp = (callback) => {
+    c.state = {};
+    callback();
+  };
+  c.tearDown = (callback) => {
+    delete c.state;
+    callback();
+  };
+  c.process((input, output) => {
+    if (!input.hasData('mount') && !c.state.mount) {
+      // We can't render without a mountpoint
+      return;
+    }
+    if (!input.hasData('center') && !c.state.center) {
+      // We can't render without a map center
+      return;
+    }
+    Object.keys(c.inPorts.ports).forEach((port) => {
+      if (!input.hasData(port)) {
+        return;
+      }
+      c.state[port] = input.getData(port);
+    });
+    output.sendDone({
+      out: render(c.state),
+    });
   });
   return c;
 };
