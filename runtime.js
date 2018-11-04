@@ -1,5 +1,4 @@
 const postMessageRuntime = require('noflo-runtime-postmessage');
-const noflo = require('noflo');
 
 const defaultPermissions = [
   'protocol:graph',
