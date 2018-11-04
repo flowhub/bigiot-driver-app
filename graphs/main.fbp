@@ -1,6 +1,7 @@
 'app_splash' -> ID HideSplash(HideElement)
 'map' -> ID (EnsureMountpoint) -> MOUNT map(RenderMap)
 'details' -> ID (EnsureMountpoint) -> MOUNT details(RenderDetails)
+'#app_splash h2' -> SELECTOR showerrors(ShowError)
 
 'true' -> location(GetCurrentPosition) -> CENTER map
 location OUT -> LOCATION sortSites(SortEntriesByDistance)
@@ -20,5 +21,4 @@ location ERROR -> errors
 best ERROR -> errors
 sortSites ERROR -> errors
 
-'#app_splash h2' -> SELECTOR showerrors(ShowError)
 errors -> showerrors
