@@ -6,6 +6,7 @@
 'true' -> location(GetCurrentPosition) -> CENTER map
 location OUT -> LOCATION sortSites(SortEntriesByDistance)
 location OUT -> out
+location OUT -> HideSplash
 
 'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData)
 fetch -> IN sortSites OUT -> out(core/Output)
@@ -13,7 +14,6 @@ sortSites OUT -> SITES enrichedSites(AddNavigationUrls)
 fetch -> out
 enrichedSites -> SITES map
 enrichedSites -> best(BestParkingSites) -> SITES details
-best -> HideSplash
 
 details EVENT -> out
 details EVENT -> event(SwitchEvent)
