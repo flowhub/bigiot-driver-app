@@ -1,5 +1,10 @@
 const path = require('path');
+
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
+
+const PUBLIC_PATH = 'https://flowhub.github.io/bigiot-driver-app/';
 
 module.exports = {
   entry: {
@@ -8,7 +13,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: PUBLIC_PATH,
     filename: '[name].js',
   },
   mode: 'development',
@@ -85,6 +90,31 @@ module.exports = {
         flatten: true,
       },
     ]),
+    new SWPrecacheWebpackPlugin({
+      cacheId: 'flowhub-bigiot-driver-app-cache-id',
+      dontCacheBustUrlsMatching: /\.\w{8}\./,
+      filename: 'service-worker.js',
+      minify: true,
+      navigateFallback: `${PUBLIC_PATH}index.html`,
+      staticFileGlobsIgnorePatterns: [/\.map$/, /manifest\.json$/],
+    }),
+    new WebpackPwaManifest({
+      name: 'Park My Car',
+      short_name: 'ParkMyCar',
+      description: 'Find a parking spot nearby',
+      background_color: '#0275E8',
+      theme_color: '#0275E8',
+      start_url: '/',
+      icons: [
+        {
+          src: path.resolve('assets/appicon.png'),
+          sizes: [96, 128, 192, 256, 384, 512],
+          destination: path.join('icons'),
+        },
+      ],
+      inject: false,
+      fingerprints: false,
+    }),
   ],
   resolve: {
     extensions: ['.coffee', '.js'],

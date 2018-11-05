@@ -2,6 +2,13 @@ const runtime = require('./runtime');
 const pkg = require('./package.json');
 const graph = require('./graphs/main.fbp');
 
+function tryLoadServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js', { scope: '/' })
+      .catch(error => console.log('Service Worker failed:', error));
+  }
+}
+
 function main() {
   return runtime(graph, {
     runtimeOptions: {
@@ -13,6 +20,8 @@ function main() {
     debugButton: document.getElementById('flowhub_debug_url'),
   });
 }
+
+tryLoadServiceWorker();
 
 document.addEventListener('DOMContentLoaded', () => {
   main()
