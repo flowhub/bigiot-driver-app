@@ -94,7 +94,6 @@ module.exports = {
       cacheId: 'flowhub-bigiot-driver-app-cache-id',
       dontCacheBustUrlsMatching: /\.\w{8}\./,
       filename: 'service-worker.js',
-      minify: true,
       navigateFallback: `${PUBLIC_PATH}index.html`,
       staticFileGlobsIgnorePatterns: [/\.map$/, /manifest\.json$/],
     }),
@@ -104,7 +103,7 @@ module.exports = {
       description: 'Find a parking spot nearby',
       background_color: '#0275E8',
       theme_color: '#0275E8',
-      start_url: '/',
+      start_url: 'bigiot-driver-app/',
       icons: [
         {
           src: path.resolve('assets/appicon.png'),
