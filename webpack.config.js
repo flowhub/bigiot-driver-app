@@ -103,7 +103,6 @@ module.exports = {
       description: 'Find a parking spot nearby',
       background_color: '#0275E8',
       theme_color: '#0275E8',
-      start_url: 'bigiot-driver-app/',
       icons: [
         {
           src: path.resolve('assets/appicon.png'),

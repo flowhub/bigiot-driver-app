@@ -4,7 +4,7 @@ const graph = require('./graphs/main.fbp');
 
 function tryLoadServiceWorker() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js', { scope: '/' })
+    navigator.serviceWorker.register('./service-worker.js', { scope: '/bigiot-driver-app/' })
       .catch(error => console.log('Service Worker failed:', error));
   }
 }
