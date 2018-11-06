@@ -26,6 +26,8 @@ Marketplace (un)reliability
 ## Narrative arc
 Parking webapp -> Under the hood -> Challenges
 
+10 min, 10 min, 5 min ?
+
 ### Park My Car
 Scenario
 App demo
@@ -40,8 +42,12 @@ Component example. UI/logic
 Data fetching graph
 noflo-bigiot component example. bigiot-js wrapper
 bigiot-js
+D2. bigiot-js browser support 
 
 ### Challenges
+Browser requirements for APIs
+bigiot-cors
+
 
 
 ## Talkingpoints
