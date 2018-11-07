@@ -1,0 +1,4 @@
+
+'urn:big-iot:ParkingSpaceCategory' -> CATEGORY fetch(FetchData) -> json(strings/Jsonify) -> out(core/Output)
+
+fetch ERROR -> errors(core/Output)
