@@ -10,7 +10,8 @@ location OUT -> HideSplash
 
 'urn:big-iot:ParkingSiteCategory' -> CATEGORY fetch(FetchData)
 fetch -> IN sortSites OUT -> out(core/Output)
-sortSites OUT -> SITES enrichedSites(AddNavigationUrls)
+sortSites OUT -> SITES withnav(AddNavigationUrls)
+withnav -> SITES enrichedSites(NormalizeSites)
 fetch -> out
 enrichedSites -> SITES map
 enrichedSites -> best(BestParkingSites) -> SITES details
