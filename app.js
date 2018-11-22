@@ -77,7 +77,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "https://flowhub.github.io/bigiot-driver-app/";
+/******/ 	__webpack_require__.p = "/";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
@@ -319,8 +319,8 @@ exports.getComponent = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
       output.sendDone({
         out: {
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
+          latitude: 50.9578353,
+          longitude: 6.8272381,
           accuracy: pos.coords.accuracy,
         },
       });
@@ -373,6 +373,38 @@ exports.getComponent = () => {
     output.sendDone({
       out: true,
     });
+  });
+  return c;
+};
+
+
+/***/ }),
+
+/***/ "./components/NormalizeSites.js":
+/*!**************************************!*\
+  !*** ./components/NormalizeSites.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const noflo = __webpack_require__(/*! noflo */ "./node_modules/noflo/lib/NoFlo.js");
+
+function normalizeSite(site) {
+  const normalized = Object.assign({}, site);
+  // Some offerings have .free instead of .vacant
+  if (typeof site.vacant === 'undefined' && typeof site.free === 'number') {
+    normalized.vacant = site.free;
+  }
+  return normalized;
+}
+
+function normalizeSites(sites) {
+  return sites.map(normalizeSite);
+}
+
+exports.getComponent = () => {
+  const c = noflo.asComponent(normalizeSites, {
+    description: 'Normalize different payloads for site',
   });
   return c;
 };
@@ -1117,8 +1149,11 @@ module.exports = {
 		"out": {
 			"component": "core/Output"
 		},
-		"enrichedSites": {
+		"withnav": {
 			"component": "AddNavigationUrls"
+		},
+		"enrichedSites": {
+			"component": "NormalizeSites"
 		},
 		"best": {
 			"component": "BestParkingSites"
@@ -1256,6 +1291,16 @@ module.exports = {
 		{
 			"src": {
 				"process": "sortSites",
+				"port": "out"
+			},
+			"tgt": {
+				"process": "withnav",
+				"port": "sites"
+			}
+		},
+		{
+			"src": {
+				"process": "withnav",
 				"port": "out"
 			},
 			"tgt": {
@@ -4312,7 +4357,7 @@ var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_mod
 
 var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
 
-var _exactProp = _interopRequireDefault(__webpack_require__(/*! ../utils/exactProp */ "./node_modules/@material-ui/core/utils/exactProp.js"));
+var _utils = __webpack_require__(/*! @material-ui/utils */ "./node_modules/@material-ui/utils/index.es.js");
 
 /**
  * NoSsr purposely removes components from the subject of Server Side Rendering (SSR).
@@ -4405,7 +4450,7 @@ NoSsr.propTypes =  true ? {
    */
   fallback: _propTypes.default.node
 } : undefined;
-NoSsr.propTypes =  true ? (0, _exactProp.default)(NoSsr.propTypes) : undefined;
+NoSsr.propTypes =  true ? (0, _utils.exactProp)(NoSsr.propTypes) : undefined;
 NoSsr.defaultProps = {
   defer: false,
   fallback: null
@@ -5642,11 +5687,11 @@ function createGenerateClassName() {
       return "".concat(safePrefix(styleSheet.options.name), "-").concat(rule.key);
     }
 
-    if (false) {}
+    if (false) {} // Help with debuggability.
+
 
     if (styleSheet && styleSheet.options.classNamePrefix) {
-      var prefix = safePrefix(styleSheet.options.classNamePrefix);
-      return "".concat(prefix, "-").concat(rule.key, "-").concat(seed).concat(ruleCounter);
+      return "".concat(safePrefix(styleSheet.options.classNamePrefix), "-").concat(rule.key, "-").concat(seed).concat(ruleCounter);
     }
 
     return "".concat(rule.key, "-").concat(seed).concat(ruleCounter);
@@ -6034,7 +6079,7 @@ var _deepmerge = _interopRequireDefault(__webpack_require__(/*! deepmerge */ "./
 
 var _warning = _interopRequireDefault(__webpack_require__(/*! warning */ "./node_modules/warning/warning.js"));
 
-var _ponyfillGlobal = _interopRequireDefault(__webpack_require__(/*! ../utils/ponyfillGlobal */ "./node_modules/@material-ui/core/utils/ponyfillGlobal.js"));
+var _utils = __webpack_require__(/*! @material-ui/utils */ "./node_modules/@material-ui/utils/index.es.js");
 
 // < 1kb payload overhead when lodash/merge is > 3kb.
 function round(value) {
@@ -6065,7 +6110,7 @@ function createTypography(palette, typography) {
       _ref$htmlFontSize = _ref.htmlFontSize,
       htmlFontSize = _ref$htmlFontSize === void 0 ? 16 : _ref$htmlFontSize,
       _ref$useNextVariants = _ref.useNextVariants,
-      useNextVariants = _ref$useNextVariants === void 0 ? Boolean(_ponyfillGlobal.default.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__) : _ref$useNextVariants,
+      useNextVariants = _ref$useNextVariants === void 0 ? Boolean(_utils.ponyfillGlobal.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__) : _ref$useNextVariants,
       _ref$suppressWarning = _ref.suppressWarning,
       suppressWarning = _ref$suppressWarning === void 0 ? false : _ref$suppressWarning,
       allVariants = _ref.allVariants,
@@ -6388,7 +6433,7 @@ var _extends2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/he
 
 var _warning = _interopRequireDefault(__webpack_require__(/*! warning */ "./node_modules/warning/warning.js"));
 
-var _getDisplayName = _interopRequireDefault(__webpack_require__(/*! ../utils/getDisplayName */ "./node_modules/@material-ui/core/utils/getDisplayName.js"));
+var _utils = __webpack_require__(/*! @material-ui/utils */ "./node_modules/@material-ui/utils/index.es.js");
 
 function mergeClasses() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -6402,8 +6447,10 @@ function mergeClasses() {
 
   var nextClasses = (0, _extends2.default)({}, baseClasses);
   Object.keys(newClasses).forEach(function (key) {
-     true ? (0, _warning.default)(baseClasses[key] || !newClasses[key], ["Material-UI: the key `".concat(key, "` ") + "provided to the classes property is not implemented in ".concat((0, _getDisplayName.default)(Component), "."), "You can only override one of the following: ".concat(Object.keys(baseClasses).join(','), ".")].join('\n')) : undefined;
-     true ? (0, _warning.default)(!newClasses[key] || typeof newClasses[key] === 'string', ["Material-UI: the key `".concat(key, "` ") + "provided to the classes property is not valid for ".concat((0, _getDisplayName.default)(Component), "."), "You need to provide a non empty string instead of: ".concat(newClasses[key], ".")].join('\n')) : undefined;
+    if (Component) {
+       true ? (0, _warning.default)(baseClasses[key] || !newClasses[key], ["Material-UI: the key `".concat(key, "` ") + "provided to the classes property is not implemented in ".concat((0, _utils.getDisplayName)(Component), "."), "You can only override one of the following: ".concat(Object.keys(baseClasses).join(','), ".")].join('\n')) : undefined;
+       true ? (0, _warning.default)(!newClasses[key] || typeof newClasses[key] === 'string', ["Material-UI: the key `".concat(key, "` ") + "provided to the classes property is not valid for ".concat((0, _utils.getDisplayName)(Component), "."), "You need to provide a non empty string instead of: ".concat(newClasses[key], ".")].join('\n')) : undefined;
+    }
 
     if (newClasses[key]) {
       nextClasses[key] = "".concat(baseClasses[key], " ").concat(newClasses[key]);
@@ -6764,7 +6811,7 @@ var _warning = _interopRequireDefault(__webpack_require__(/*! warning */ "./node
 
 var _hoistNonReactStatics = _interopRequireDefault(__webpack_require__(/*! hoist-non-react-statics */ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js"));
 
-var _wrapDisplayName = _interopRequireDefault(__webpack_require__(/*! recompose/wrapDisplayName */ "./node_modules/recompose/wrapDisplayName.js"));
+var _utils = __webpack_require__(/*! @material-ui/utils */ "./node_modules/@material-ui/utils/index.es.js");
 
 var _jss = __webpack_require__(/*! jss */ "./node_modules/jss/lib/index.js");
 
@@ -6784,10 +6831,9 @@ var _createGenerateClassName = _interopRequireDefault(__webpack_require__(/*! ./
 
 var _getStylesCreator = _interopRequireDefault(__webpack_require__(/*! ./getStylesCreator */ "./node_modules/@material-ui/core/styles/getStylesCreator.js"));
 
-var _getDisplayName = _interopRequireDefault(__webpack_require__(/*! ../utils/getDisplayName */ "./node_modules/@material-ui/core/utils/getDisplayName.js"));
-
 var _getThemeProps = _interopRequireDefault(__webpack_require__(/*! ./getThemeProps */ "./node_modules/@material-ui/core/styles/getThemeProps.js"));
 
+/* eslint-disable no-underscore-dangle */
 // Default JSS instance.
 var jss = (0, _jss.create)((0, _jssPreset.default)()); // Use a singleton or the provided one by the context.
 //
@@ -6823,12 +6869,13 @@ function getDefaultTheme() {
     }
   });
   return defaultTheme;
-} // Link a style sheet with a component.
+}
+
+_utils.ponyfillGlobal.__MUI_DEFAULT_THEME__ = getDefaultTheme(); // Link a style sheet with a component.
 // It does not modify the component passed to it;
 // instead, it returns a new component, with a `classes` property.
 
-
-var withStyles = function withStyles(stylesOrCreator) {
+var withStylesOld = function withStylesOld(stylesOrCreator) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return function (Component) {
     var _extends2;
@@ -7023,7 +7070,7 @@ var withStyles = function withStyles(stylesOrCreator) {
 
           if ( true && !meta) {
             // Provide a better DX outside production.
-            meta = (0, _getDisplayName.default)(Component);
+            meta = (0, _utils.getDisplayName)(Component);
              true ? (0, _warning.default)(typeof meta === 'string', ['Material-UI: the component displayName is invalid. It needs to be a string.', "Please fix the following component: ".concat(Component, ".")].join('\n')) : undefined;
           }
 
@@ -7102,7 +7149,7 @@ var withStyles = function withStyles(stylesOrCreator) {
     }, (0, _defineProperty2.default)(_extends2, _reactJssContext.default.jss, _propTypes.default.object), (0, _defineProperty2.default)(_extends2, _reactJssContext.default.sheetOptions, _propTypes.default.object), (0, _defineProperty2.default)(_extends2, _reactJssContext.default.sheetsRegistry, _propTypes.default.object), _extends2), listenToTheme ? _themeListener.default.contextTypes : {});
 
     if (true) {
-      WithStyles.displayName = (0, _wrapDisplayName.default)(Component, 'WithStyles');
+      WithStyles.displayName = "WithStyles(".concat((0, _utils.getDisplayName)(Component), ")");
     }
 
     (0, _hoistNonReactStatics.default)(WithStyles, Component);
@@ -7116,8 +7163,18 @@ var withStyles = function withStyles(stylesOrCreator) {
     return WithStyles;
   };
 };
+/* istanbul ignore if */
 
-var _default = withStyles;
+
+if (!_utils.ponyfillGlobal.__MUI_STYLES__) {
+  _utils.ponyfillGlobal.__MUI_STYLES__ = {};
+}
+
+if (!_utils.ponyfillGlobal.__MUI_STYLES__.withStyles) {
+  _utils.ponyfillGlobal.__MUI_STYLES__.withStyles = withStylesOld;
+}
+
+var _default = _utils.ponyfillGlobal.__MUI_STYLES__.withStyles;
 exports.default = _default;
 
 /***/ }),
@@ -7176,101 +7233,6 @@ function chainPropTypes(propType1, propType2) {
 }
 
 var _default = chainPropTypes;
-exports.default = _default;
-
-/***/ }),
-
-/***/ "./node_modules/@material-ui/core/utils/exactProp.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@material-ui/core/utils/exactProp.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.specialProperty = void 0;
-
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js"));
-
-var _extends3 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/extends.js"));
-
-// This module is based on https://github.com/airbnb/prop-types-exact repository.
-// However, in order to reduce the number of dependencies and to remove some extra safe checks
-// the module was forked.
-// Only exported for test purposes.
-var specialProperty = "exact-prop: \u200B";
-exports.specialProperty = specialProperty;
-
-function exactProp(propTypes) {
-  /* istanbul ignore if */
-  if (false) {}
-
-  return (0, _extends3.default)({}, propTypes, (0, _defineProperty2.default)({}, specialProperty, function (props) {
-    var unsupportedProps = Object.keys(props).filter(function (prop) {
-      return !propTypes.hasOwnProperty(prop);
-    });
-
-    if (unsupportedProps.length > 0) {
-      return new Error("The following properties are not supported: ".concat(unsupportedProps.map(function (prop) {
-        return "`".concat(prop, "`");
-      }).join(', '), ". Please remove them."));
-    }
-
-    return null;
-  }));
-}
-
-var _default = exactProp;
-exports.default = _default;
-
-/***/ }),
-
-/***/ "./node_modules/@material-ui/core/utils/getDisplayName.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@material-ui/core/utils/getDisplayName.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getFunctionName = getFunctionName;
-exports.default = void 0;
-// Fork of recompose/getDisplayName with added IE 11 support
-// Simplified polyfill for IE 11 support
-// https://github.com/JamesMGreene/Function.name/blob/58b314d4a983110c3682f1228f845d39ccca1817/Function.name.js#L3
-var fnNameMatchRegex = /^\s*function(?:\s|\s*\/\*.*\*\/\s*)+([^(\s/]*)\s*/;
-
-function getFunctionName(fn) {
-  var match = "".concat(fn).match(fnNameMatchRegex);
-  var name = match && match[1];
-  return name || '';
-}
-
-function getDisplayName(Component) {
-  if (typeof Component === 'string') {
-    return Component;
-  }
-
-  if (!Component) {
-    return undefined;
-  }
-
-  return Component.displayName || Component.name || getFunctionName(Component) || 'Component';
-}
-
-var _default = getDisplayName;
 exports.default = _default;
 
 /***/ }),
@@ -7427,29 +7389,6 @@ function ownerWindow(node) {
 }
 
 var _default = ownerWindow;
-exports.default = _default;
-
-/***/ }),
-
-/***/ "./node_modules/@material-ui/core/utils/ponyfillGlobal.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@material-ui/core/utils/ponyfillGlobal.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/* eslint-disable */
-// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var _default = typeof window != 'undefined' && window.Math == Math ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
-
 exports.default = _default;
 
 /***/ }),
@@ -7841,6 +7780,154 @@ function createSvgIcon(path, displayName) {
 
 ;
 var _default = createSvgIcon;
+exports.default = _default;
+
+/***/ }),
+
+/***/ "./node_modules/@material-ui/utils/exactProp.js":
+/*!******************************************************!*\
+  !*** ./node_modules/@material-ui/utils/exactProp.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.specialProperty = void 0;
+
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js"));
+
+var _extends3 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/extends.js"));
+
+// This module is based on https://github.com/airbnb/prop-types-exact repository.
+// However, in order to reduce the number of dependencies and to remove some extra safe checks
+// the module was forked.
+// Only exported for test purposes.
+var specialProperty = "exact-prop: \u200B";
+exports.specialProperty = specialProperty;
+
+function exactProp(propTypes) {
+  /* istanbul ignore if */
+  if (false) {}
+
+  return (0, _extends3.default)({}, propTypes, (0, _defineProperty2.default)({}, specialProperty, function (props) {
+    var unsupportedProps = Object.keys(props).filter(function (prop) {
+      return !propTypes.hasOwnProperty(prop);
+    });
+
+    if (unsupportedProps.length > 0) {
+      return new Error("The following properties are not supported: ".concat(unsupportedProps.map(function (prop) {
+        return "`".concat(prop, "`");
+      }).join(', '), ". Please remove them."));
+    }
+
+    return null;
+  }));
+}
+
+var _default = exactProp;
+exports.default = _default;
+
+/***/ }),
+
+/***/ "./node_modules/@material-ui/utils/getDisplayName.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@material-ui/utils/getDisplayName.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getFunctionName = getFunctionName;
+exports.default = void 0;
+// Fork of recompose/getDisplayName with added IE 11 support
+// Simplified polyfill for IE 11 support
+// https://github.com/JamesMGreene/Function.name/blob/58b314d4a983110c3682f1228f845d39ccca1817/Function.name.js#L3
+var fnNameMatchRegex = /^\s*function(?:\s|\s*\/\*.*\*\/\s*)+([^(\s/]*)\s*/;
+
+function getFunctionName(fn) {
+  var match = "".concat(fn).match(fnNameMatchRegex);
+  var name = match && match[1];
+  return name || '';
+}
+
+function getDisplayName(Component) {
+  if (typeof Component === 'string') {
+    return Component;
+  }
+
+  if (!Component) {
+    return undefined;
+  }
+
+  return Component.displayName || Component.name || getFunctionName(Component) || 'Component';
+}
+
+var _default = getDisplayName;
+exports.default = _default;
+
+/***/ }),
+
+/***/ "./node_modules/@material-ui/utils/index.es.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/@material-ui/utils/index.es.js ***!
+  \*****************************************************/
+/*! exports provided: exactProp, getDisplayName, ponyfillGlobal */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _exactProp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./exactProp */ "./node_modules/@material-ui/utils/exactProp.js");
+/* harmony import */ var _exactProp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_exactProp__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (default from non-harmony) */ __webpack_require__.d(__webpack_exports__, "exactProp", function() { return _exactProp__WEBPACK_IMPORTED_MODULE_0___default.a; });
+/* harmony import */ var _getDisplayName__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getDisplayName */ "./node_modules/@material-ui/utils/getDisplayName.js");
+/* harmony import */ var _getDisplayName__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_getDisplayName__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony reexport (default from non-harmony) */ __webpack_require__.d(__webpack_exports__, "getDisplayName", function() { return _getDisplayName__WEBPACK_IMPORTED_MODULE_1___default.a; });
+/* harmony import */ var _ponyfillGlobal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ponyfillGlobal */ "./node_modules/@material-ui/utils/ponyfillGlobal.js");
+/* harmony import */ var _ponyfillGlobal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_ponyfillGlobal__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony reexport (default from non-harmony) */ __webpack_require__.d(__webpack_exports__, "ponyfillGlobal", function() { return _ponyfillGlobal__WEBPACK_IMPORTED_MODULE_2___default.a; });
+/** @license Material-UI v3.0.0-alpha.0
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@material-ui/utils/ponyfillGlobal.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@material-ui/utils/ponyfillGlobal.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* eslint-disable */
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var _default = typeof window != 'undefined' && window.Math == Math ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+
 exports.default = _default;
 
 /***/ }),
@@ -8600,6 +8687,7 @@ var PerQueryKeyMaker = (function () {
                 fragment = definition;
                 return true;
             }
+            return false;
         });
         return this.lookupObject(__assign({}, fragmentSpread, { fragment: fragment }));
     };
@@ -8703,6 +8791,7 @@ var StoreReader = (function () {
                 if (contextValue.store instanceof _depTrackingCache__WEBPACK_IMPORTED_MODULE_2__["DepTrackingCache"]) {
                     return reader.cacheKeyRoot.lookup(reader.keyMaker.forQuery(query).lookupQuery(query), contextValue.store, fragmentMatcher, JSON.stringify(variableValues), rootValue.id);
                 }
+                return;
             }
         });
         this.executeSelectionSet = Object(_optimism__WEBPACK_IMPORTED_MODULE_1__["wrap"])(function (options) {
@@ -8713,6 +8802,7 @@ var StoreReader = (function () {
                 if (execContext.contextValue.store instanceof _depTrackingCache__WEBPACK_IMPORTED_MODULE_2__["DepTrackingCache"]) {
                     return reader.cacheKeyRoot.lookup(reader.keyMaker.forQuery(execContext.query).lookupSelectionSet(selectionSet), execContext.contextValue.store, execContext.fragmentMatcher, JSON.stringify(execContext.variableValues), rootValue.id);
                 }
+                return;
             }
         });
     }
@@ -9711,7 +9801,8 @@ var ApolloClient = (function () {
         var _this = this;
         this.defaultOptions = {};
         this.resetStoreCallbacks = [];
-        var link = options.link, cache = options.cache, _a = options.ssrMode, ssrMode = _a === void 0 ? false : _a, _b = options.ssrForceFetchDelay, ssrForceFetchDelay = _b === void 0 ? 0 : _b, connectToDevTools = options.connectToDevTools, _c = options.queryDeduplication, queryDeduplication = _c === void 0 ? true : _c, defaultOptions = options.defaultOptions;
+        this.clientAwareness = {};
+        var link = options.link, cache = options.cache, _a = options.ssrMode, ssrMode = _a === void 0 ? false : _a, _b = options.ssrForceFetchDelay, ssrForceFetchDelay = _b === void 0 ? 0 : _b, connectToDevTools = options.connectToDevTools, _c = options.queryDeduplication, queryDeduplication = _c === void 0 ? true : _c, defaultOptions = options.defaultOptions, clientAwarenessName = options.name, clientAwarenessVersion = options.version;
         if (!link || !cache) {
             throw new Error("\n        In order to initialize Apollo Client, you must specify link & cache properties on the config object.\n        This is part of the required upgrade when migrating from Apollo Client 1.0 to Apollo Client 2.0.\n        For more information, please visit:\n          https://www.apollographql.com/docs/react/basics/setup.html\n        to help you get started.\n      ");
         }
@@ -9766,6 +9857,12 @@ var ApolloClient = (function () {
             }
         }
         this.version = _version__WEBPACK_IMPORTED_MODULE_4__["version"];
+        if (clientAwarenessName) {
+            this.clientAwareness.name = clientAwarenessName;
+        }
+        if (clientAwarenessVersion) {
+            this.clientAwareness.version = clientAwarenessVersion;
+        }
     }
     ApolloClient.prototype.watchQuery = function (options) {
         if (this.defaultOptions.watchQuery) {
@@ -9836,6 +9933,7 @@ var ApolloClient = (function () {
                 store: this.store,
                 queryDeduplication: this.queryDeduplication,
                 ssrMode: this.ssrMode,
+                clientAwareness: this.clientAwareness,
                 onBroadcast: function () {
                     if (_this.devToolsHookCb) {
                         _this.devToolsHookCb({
@@ -9873,7 +9971,9 @@ var ApolloClient = (function () {
     };
     ApolloClient.prototype.clearStore = function () {
         var queryManager = this.queryManager;
-        return Promise.resolve().then(function () { return (queryManager ? queryManager.clearStore() : Promise.resolve(null)); });
+        return Promise.resolve().then(function () {
+            return queryManager ? queryManager.clearStore() : Promise.resolve(null);
+        });
     };
     ApolloClient.prototype.onResetStore = function (cb) {
         var _this = this;
@@ -10371,9 +10471,10 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 var QueryManager = (function () {
     function QueryManager(_a) {
-        var link = _a.link, _b = _a.queryDeduplication, queryDeduplication = _b === void 0 ? false : _b, store = _a.store, _c = _a.onBroadcast, onBroadcast = _c === void 0 ? function () { return undefined; } : _c, _d = _a.ssrMode, ssrMode = _d === void 0 ? false : _d;
+        var link = _a.link, _b = _a.queryDeduplication, queryDeduplication = _b === void 0 ? false : _b, store = _a.store, _c = _a.onBroadcast, onBroadcast = _c === void 0 ? function () { return undefined; } : _c, _d = _a.ssrMode, ssrMode = _d === void 0 ? false : _d, _e = _a.clientAwareness, clientAwareness = _e === void 0 ? {} : _e;
         this.mutationStore = new _data_mutations__WEBPACK_IMPORTED_MODULE_7__["MutationStore"]();
         this.queryStore = new _data_queries__WEBPACK_IMPORTED_MODULE_8__["QueryStore"]();
+        this.clientAwareness = {};
         this.idCounter = 1;
         this.queries = new Map();
         this.fetchQueryPromises = new Map();
@@ -10383,6 +10484,7 @@ var QueryManager = (function () {
         this.queryDeduplication = queryDeduplication;
         this.dataStore = store;
         this.onBroadcast = onBroadcast;
+        this.clientAwareness = clientAwareness;
         this.scheduler = new _scheduler_scheduler__WEBPACK_IMPORTED_MODULE_4__["QueryScheduler"]({ queryManager: this, ssrMode: ssrMode });
     }
     QueryManager.prototype.mutate = function (_a) {
@@ -11134,7 +11236,7 @@ var QueryManager = (function () {
         return requestId;
     };
     QueryManager.prototype.getQuery = function (queryId) {
-        return this.queries.get(queryId) || {
+        return (this.queries.get(queryId) || {
             listeners: [],
             invalidated: false,
             document: null,
@@ -11142,7 +11244,7 @@ var QueryManager = (function () {
             lastRequestId: null,
             observableQuery: null,
             subscriptions: [],
-        };
+        });
     };
     QueryManager.prototype.setQuery = function (queryId, updater) {
         var prev = this.getQuery(queryId);
@@ -11171,7 +11273,7 @@ var QueryManager = (function () {
                     else {
                         throw new Error('To use context.getCacheKey, you need to use a cache that has a configurable dataIdFromObject, like apollo-cache-inmemory.');
                     }
-                } }),
+                }, clientAwareness: this.clientAwareness }),
         };
     };
     return QueryManager;
@@ -11861,7 +11963,7 @@ var Observable = (function (_super) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-exports.version = "2.4.5"
+exports.version = "2.4.7"
 
 /***/ }),
 
@@ -12174,6 +12276,17 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __rest = (undefined && undefined.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -12207,17 +12320,34 @@ var createHttpLink = function (linkOptions) {
     return new apollo_link__WEBPACK_IMPORTED_MODULE_0__["ApolloLink"](function (operation) {
         var chosenURI = Object(apollo_link_http_common__WEBPACK_IMPORTED_MODULE_1__["selectURI"])(operation, uri);
         var context = operation.getContext();
+        // `apollographql-client-*` headers are automatically set if a
+        // `clientAwareness` object is found in the context. These headers are
+        // set first, followed by the rest of the headers pulled from
+        // `context.headers`. If desired, `apollographql-client-*` headers set by
+        // the `clientAwareness` object can be overridden by
+        // `apollographql-client-*` headers set in `context.headers`.
+        var clientAwarenessHeaders = {};
+        if (context.clientAwareness) {
+            var _a = context.clientAwareness, name_1 = _a.name, version = _a.version;
+            if (name_1) {
+                clientAwarenessHeaders['apollographql-client-name'] = name_1;
+            }
+            if (version) {
+                clientAwarenessHeaders['apollographql-client-version'] = version;
+            }
+        }
+        var contextHeaders = __assign({}, clientAwarenessHeaders, context.headers);
         var contextConfig = {
             http: context.http,
             options: context.fetchOptions,
             credentials: context.credentials,
-            headers: context.headers,
+            headers: contextHeaders,
         };
         //uses fallback, link, and then context to build options
-        var _a = Object(apollo_link_http_common__WEBPACK_IMPORTED_MODULE_1__["selectHttpOptionsAndBody"])(operation, apollo_link_http_common__WEBPACK_IMPORTED_MODULE_1__["fallbackHttpConfig"], linkConfig, contextConfig), options = _a.options, body = _a.body;
+        var _b = Object(apollo_link_http_common__WEBPACK_IMPORTED_MODULE_1__["selectHttpOptionsAndBody"])(operation, apollo_link_http_common__WEBPACK_IMPORTED_MODULE_1__["fallbackHttpConfig"], linkConfig, contextConfig), options = _b.options, body = _b.body;
         var controller;
         if (!options.signal) {
-            var _b = Object(apollo_link_http_common__WEBPACK_IMPORTED_MODULE_1__["createSignalIfSupported"])(), _controller = _b.controller, signal = _b.signal;
+            var _c = Object(apollo_link_http_common__WEBPACK_IMPORTED_MODULE_1__["createSignalIfSupported"])(), _controller = _c.controller, signal = _c.signal;
             controller = _controller;
             if (controller)
                 options.signal = signal;
@@ -12231,7 +12361,7 @@ var createHttpLink = function (linkOptions) {
             options.method = 'GET';
         }
         if (options.method === 'GET') {
-            var _c = rewriteURIForGET(chosenURI, body), newURI = _c.newURI, parseError = _c.parseError;
+            var _d = rewriteURIForGET(chosenURI, body), newURI = _d.newURI, parseError = _d.parseError;
             if (parseError) {
                 return Object(apollo_link__WEBPACK_IMPORTED_MODULE_0__["fromError"])(parseError);
             }
@@ -43242,8 +43372,8 @@ var isString = __webpack_require__(/*! lodash.isstring */ "./node_modules/lodash
 var once = __webpack_require__(/*! lodash.once */ "./node_modules/lodash.once/index.js");
 
 var sign_options_schema = {
-  expiresIn: { isValid: function(value) { return isInteger(value) || isString(value); }, message: '"expiresIn" should be a number of seconds or string representing a timespan' },
-  notBefore: { isValid: function(value) { return isInteger(value) || isString(value); }, message: '"notBefore" should be a number of seconds or string representing a timespan' },
+  expiresIn: { isValid: function(value) { return isInteger(value) || (isString(value) && value); }, message: '"expiresIn" should be a number of seconds or string representing a timespan' },
+  notBefore: { isValid: function(value) { return isInteger(value) || (isString(value) && value); }, message: '"notBefore" should be a number of seconds or string representing a timespan' },
   audience: { isValid: function(value) { return isString(value) || Array.isArray(value); }, message: '"audience" must be a string or array' },
   algorithm: { isValid: includes.bind(null, ['RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'HS256', 'HS384', 'HS512', 'none']), message: '"algorithm" must be a valid string enum value' },
   header: { isValid: isPlainObject, message: '"header" must be an object' },
@@ -43380,14 +43510,24 @@ module.exports = function (payload, secretOrPrivateKey, options, callback) {
   }
 
   if (typeof options.notBefore !== 'undefined') {
-    payload.nbf = timespan(options.notBefore, timestamp);
+    try {
+      payload.nbf = timespan(options.notBefore, timestamp);
+    }
+    catch (err) {
+      return failure(err);
+    }
     if (typeof payload.nbf === 'undefined') {
       return failure(new Error('"notBefore" should be a number of seconds or string representing a timespan eg: "1d", "20h", 60'));
     }
   }
 
   if (typeof options.expiresIn !== 'undefined' && typeof payload === 'object') {
-    payload.exp = timespan(options.expiresIn, timestamp);
+    try {
+      payload.exp = timespan(options.expiresIn, timestamp);
+    }
+    catch (err) {
+      return failure(err);
+    }
     if (typeof payload.exp === 'undefined') {
       return failure(new Error('"expiresIn" should be a number of seconds or string representing a timespan eg: "1d", "20h", 60'));
     }
@@ -43466,6 +43606,10 @@ module.exports = function (jwtString, secretOrPublicKey, options, callback) {
 
   if (options.clockTimestamp && typeof options.clockTimestamp !== 'number') {
     return done(new JsonWebTokenError('clockTimestamp must be a number'));
+  }
+
+  if (options.nonce !== undefined && (typeof options.nonce !== 'string' || options.nonce.trim() === '')) {
+    return done(new JsonWebTokenError('nonce must be a non-empty string'));
   }
 
   var clockTimestamp = options.clockTimestamp || Math.floor(Date.now() / 1000);
@@ -43611,6 +43755,12 @@ module.exports = function (jwtString, secretOrPublicKey, options, callback) {
     if (options.jwtid) {
       if (payload.jti !== options.jwtid) {
         return done(new JsonWebTokenError('jwt jwtid invalid. expected: ' + options.jwtid));
+      }
+    }
+
+    if (options.nonce) {
+      if (payload.nonce !== options.nonce) {
+        return done(new JsonWebTokenError('jwt nonce invalid. expected: ' + options.nonce));
       }
     }
 
@@ -62793,45 +62943,6 @@ function arrayPush(array, values) {
 
 /***/ }),
 
-/***/ "./node_modules/lodash-es/_arrayReduce.js":
-/*!************************************************!*\
-  !*** ./node_modules/lodash-es/_arrayReduce.js ***!
-  \************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/**
- * A specialized version of `_.reduce` for arrays without support for
- * iteratee shorthands.
- *
- * @private
- * @param {Array} [array] The array to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @param {*} [accumulator] The initial value.
- * @param {boolean} [initAccum] Specify using the first element of `array` as
- *  the initial value.
- * @returns {*} Returns the accumulated value.
- */
-function arrayReduce(array, iteratee, accumulator, initAccum) {
-  var index = -1,
-      length = array == null ? 0 : array.length;
-
-  if (initAccum && length) {
-    accumulator = array[++index];
-  }
-  while (++index < length) {
-    accumulator = iteratee(accumulator, array[index], index, array);
-  }
-  return accumulator;
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (arrayReduce);
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash-es/_arraySome.js":
 /*!**********************************************!*\
   !*** ./node_modules/lodash-es/_arraySome.js ***!
@@ -63798,83 +63909,6 @@ function baseIsMap(value) {
 
 /***/ }),
 
-/***/ "./node_modules/lodash-es/_baseIsMatch.js":
-/*!************************************************!*\
-  !*** ./node_modules/lodash-es/_baseIsMatch.js ***!
-  \************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Stack_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_Stack.js */ "./node_modules/lodash-es/_Stack.js");
-/* harmony import */ var _baseIsEqual_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_baseIsEqual.js */ "./node_modules/lodash-es/_baseIsEqual.js");
-
-
-
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG = 1,
-    COMPARE_UNORDERED_FLAG = 2;
-
-/**
- * The base implementation of `_.isMatch` without support for iteratee shorthands.
- *
- * @private
- * @param {Object} object The object to inspect.
- * @param {Object} source The object of property values to match.
- * @param {Array} matchData The property names, values, and compare flags to match.
- * @param {Function} [customizer] The function to customize comparisons.
- * @returns {boolean} Returns `true` if `object` is a match, else `false`.
- */
-function baseIsMatch(object, source, matchData, customizer) {
-  var index = matchData.length,
-      length = index,
-      noCustomizer = !customizer;
-
-  if (object == null) {
-    return !length;
-  }
-  object = Object(object);
-  while (index--) {
-    var data = matchData[index];
-    if ((noCustomizer && data[2])
-          ? data[1] !== object[data[0]]
-          : !(data[0] in object)
-        ) {
-      return false;
-    }
-  }
-  while (++index < length) {
-    data = matchData[index];
-    var key = data[0],
-        objValue = object[key],
-        srcValue = data[1];
-
-    if (noCustomizer && data[2]) {
-      if (objValue === undefined && !(key in object)) {
-        return false;
-      }
-    } else {
-      var stack = new _Stack_js__WEBPACK_IMPORTED_MODULE_0__["default"];
-      if (customizer) {
-        var result = customizer(objValue, srcValue, key, object, source, stack);
-      }
-      if (!(result === undefined
-            ? Object(_baseIsEqual_js__WEBPACK_IMPORTED_MODULE_1__["default"])(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack)
-            : result
-          )) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (baseIsMatch);
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash-es/_baseIsNative.js":
 /*!*************************************************!*\
   !*** ./node_modules/lodash-es/_baseIsNative.js ***!
@@ -64048,55 +64082,6 @@ function baseIsTypedArray(value) {
 
 /***/ }),
 
-/***/ "./node_modules/lodash-es/_baseIteratee.js":
-/*!*************************************************!*\
-  !*** ./node_modules/lodash-es/_baseIteratee.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _baseMatches_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_baseMatches.js */ "./node_modules/lodash-es/_baseMatches.js");
-/* harmony import */ var _baseMatchesProperty_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_baseMatchesProperty.js */ "./node_modules/lodash-es/_baseMatchesProperty.js");
-/* harmony import */ var _identity_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./identity.js */ "./node_modules/lodash-es/identity.js");
-/* harmony import */ var _isArray_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./isArray.js */ "./node_modules/lodash-es/isArray.js");
-/* harmony import */ var _property_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./property.js */ "./node_modules/lodash-es/property.js");
-
-
-
-
-
-
-/**
- * The base implementation of `_.iteratee`.
- *
- * @private
- * @param {*} [value=_.identity] The value to convert to an iteratee.
- * @returns {Function} Returns the iteratee.
- */
-function baseIteratee(value) {
-  // Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
-  // See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
-  if (typeof value == 'function') {
-    return value;
-  }
-  if (value == null) {
-    return _identity_js__WEBPACK_IMPORTED_MODULE_2__["default"];
-  }
-  if (typeof value == 'object') {
-    return Object(_isArray_js__WEBPACK_IMPORTED_MODULE_3__["default"])(value)
-      ? Object(_baseMatchesProperty_js__WEBPACK_IMPORTED_MODULE_1__["default"])(value[0], value[1])
-      : Object(_baseMatches_js__WEBPACK_IMPORTED_MODULE_0__["default"])(value);
-  }
-  return Object(_property_js__WEBPACK_IMPORTED_MODULE_4__["default"])(value);
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (baseIteratee);
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash-es/_baseKeys.js":
 /*!*********************************************!*\
   !*** ./node_modules/lodash-es/_baseKeys.js ***!
@@ -64191,97 +64176,6 @@ function baseKeysIn(object) {
 
 /***/ }),
 
-/***/ "./node_modules/lodash-es/_baseMatches.js":
-/*!************************************************!*\
-  !*** ./node_modules/lodash-es/_baseMatches.js ***!
-  \************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _baseIsMatch_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_baseIsMatch.js */ "./node_modules/lodash-es/_baseIsMatch.js");
-/* harmony import */ var _getMatchData_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_getMatchData.js */ "./node_modules/lodash-es/_getMatchData.js");
-/* harmony import */ var _matchesStrictComparable_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_matchesStrictComparable.js */ "./node_modules/lodash-es/_matchesStrictComparable.js");
-
-
-
-
-/**
- * The base implementation of `_.matches` which doesn't clone `source`.
- *
- * @private
- * @param {Object} source The object of property values to match.
- * @returns {Function} Returns the new spec function.
- */
-function baseMatches(source) {
-  var matchData = Object(_getMatchData_js__WEBPACK_IMPORTED_MODULE_1__["default"])(source);
-  if (matchData.length == 1 && matchData[0][2]) {
-    return Object(_matchesStrictComparable_js__WEBPACK_IMPORTED_MODULE_2__["default"])(matchData[0][0], matchData[0][1]);
-  }
-  return function(object) {
-    return object === source || Object(_baseIsMatch_js__WEBPACK_IMPORTED_MODULE_0__["default"])(object, source, matchData);
-  };
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (baseMatches);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/_baseMatchesProperty.js":
-/*!********************************************************!*\
-  !*** ./node_modules/lodash-es/_baseMatchesProperty.js ***!
-  \********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _baseIsEqual_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_baseIsEqual.js */ "./node_modules/lodash-es/_baseIsEqual.js");
-/* harmony import */ var _get_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./get.js */ "./node_modules/lodash-es/get.js");
-/* harmony import */ var _hasIn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hasIn.js */ "./node_modules/lodash-es/hasIn.js");
-/* harmony import */ var _isKey_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./_isKey.js */ "./node_modules/lodash-es/_isKey.js");
-/* harmony import */ var _isStrictComparable_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./_isStrictComparable.js */ "./node_modules/lodash-es/_isStrictComparable.js");
-/* harmony import */ var _matchesStrictComparable_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./_matchesStrictComparable.js */ "./node_modules/lodash-es/_matchesStrictComparable.js");
-/* harmony import */ var _toKey_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./_toKey.js */ "./node_modules/lodash-es/_toKey.js");
-
-
-
-
-
-
-
-
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG = 1,
-    COMPARE_UNORDERED_FLAG = 2;
-
-/**
- * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
- *
- * @private
- * @param {string} path The path of the property to get.
- * @param {*} srcValue The value to match.
- * @returns {Function} Returns the new spec function.
- */
-function baseMatchesProperty(path, srcValue) {
-  if (Object(_isKey_js__WEBPACK_IMPORTED_MODULE_3__["default"])(path) && Object(_isStrictComparable_js__WEBPACK_IMPORTED_MODULE_4__["default"])(srcValue)) {
-    return Object(_matchesStrictComparable_js__WEBPACK_IMPORTED_MODULE_5__["default"])(Object(_toKey_js__WEBPACK_IMPORTED_MODULE_6__["default"])(path), srcValue);
-  }
-  return function(object) {
-    var objValue = Object(_get_js__WEBPACK_IMPORTED_MODULE_1__["default"])(object, path);
-    return (objValue === undefined && objValue === srcValue)
-      ? Object(_hasIn_js__WEBPACK_IMPORTED_MODULE_2__["default"])(object, path)
-      : Object(_baseIsEqual_js__WEBPACK_IMPORTED_MODULE_0__["default"])(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
-  };
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (baseMatchesProperty);
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash-es/_basePick.js":
 /*!*********************************************!*\
   !*** ./node_modules/lodash-es/_basePick.js ***!
@@ -64358,99 +64252,6 @@ function basePickBy(object, paths, predicate) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (basePickBy);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/_baseProperty.js":
-/*!*************************************************!*\
-  !*** ./node_modules/lodash-es/_baseProperty.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/**
- * The base implementation of `_.property` without support for deep paths.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @returns {Function} Returns the new accessor function.
- */
-function baseProperty(key) {
-  return function(object) {
-    return object == null ? undefined : object[key];
-  };
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (baseProperty);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/_basePropertyDeep.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/lodash-es/_basePropertyDeep.js ***!
-  \*****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _baseGet_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_baseGet.js */ "./node_modules/lodash-es/_baseGet.js");
-
-
-/**
- * A specialized version of `baseProperty` which supports deep paths.
- *
- * @private
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new accessor function.
- */
-function basePropertyDeep(path) {
-  return function(object) {
-    return Object(_baseGet_js__WEBPACK_IMPORTED_MODULE_0__["default"])(object, path);
-  };
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (basePropertyDeep);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/_baseReduce.js":
-/*!***********************************************!*\
-  !*** ./node_modules/lodash-es/_baseReduce.js ***!
-  \***********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/**
- * The base implementation of `_.reduce` and `_.reduceRight`, without support
- * for iteratee shorthands, which iterates over `collection` using `eachFunc`.
- *
- * @private
- * @param {Array|Object} collection The collection to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @param {*} accumulator The initial value.
- * @param {boolean} initAccum Specify using the first or last element of
- *  `collection` as the initial value.
- * @param {Function} eachFunc The function to iterate over `collection`.
- * @returns {*} Returns the accumulated value.
- */
-function baseReduce(collection, iteratee, accumulator, initAccum, eachFunc) {
-  eachFunc(collection, function(value, index, collection) {
-    accumulator = initAccum
-      ? (initAccum = false, value)
-      : iteratee(accumulator, value, index, collection);
-  });
-  return accumulator;
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (baseReduce);
 
 
 /***/ }),
@@ -65836,45 +65637,6 @@ function getMapData(map, key) {
 
 /***/ }),
 
-/***/ "./node_modules/lodash-es/_getMatchData.js":
-/*!*************************************************!*\
-  !*** ./node_modules/lodash-es/_getMatchData.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _isStrictComparable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_isStrictComparable.js */ "./node_modules/lodash-es/_isStrictComparable.js");
-/* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./keys.js */ "./node_modules/lodash-es/keys.js");
-
-
-
-/**
- * Gets the property names, values, and compare flags of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the match data of `object`.
- */
-function getMatchData(object) {
-  var result = Object(_keys_js__WEBPACK_IMPORTED_MODULE_1__["default"])(object),
-      length = result.length;
-
-  while (length--) {
-    var key = result[length],
-        value = object[key];
-
-    result[length] = [key, value, Object(_isStrictComparable_js__WEBPACK_IMPORTED_MODULE_0__["default"])(value)];
-  }
-  return result;
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (getMatchData);
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash-es/_getNative.js":
 /*!**********************************************!*\
   !*** ./node_modules/lodash-es/_getNative.js ***!
@@ -66792,35 +66554,6 @@ function isPrototype(value) {
 
 /***/ }),
 
-/***/ "./node_modules/lodash-es/_isStrictComparable.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/lodash-es/_isStrictComparable.js ***!
-  \*******************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _isObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isObject.js */ "./node_modules/lodash-es/isObject.js");
-
-
-/**
- * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` if suitable for strict
- *  equality comparisons, else `false`.
- */
-function isStrictComparable(value) {
-  return value === value && !Object(_isObject_js__WEBPACK_IMPORTED_MODULE_0__["default"])(value);
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (isStrictComparable);
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash-es/_listCacheClear.js":
 /*!***************************************************!*\
   !*** ./node_modules/lodash-es/_listCacheClear.js ***!
@@ -67191,39 +66924,6 @@ function mapToArray(map) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (mapToArray);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/_matchesStrictComparable.js":
-/*!************************************************************!*\
-  !*** ./node_modules/lodash-es/_matchesStrictComparable.js ***!
-  \************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/**
- * A specialized version of `matchesProperty` for source values suitable
- * for strict equality comparisons, i.e. `===`.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @param {*} srcValue The value to match.
- * @returns {Function} Returns the new spec function.
- */
-function matchesStrictComparable(key, srcValue) {
-  return function(object) {
-    if (object == null) {
-      return false;
-    }
-    return object[key] === srcValue &&
-      (srcValue !== undefined || (key in Object(object)));
-  };
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (matchesStrictComparable);
 
 
 /***/ }),
@@ -68180,53 +67880,6 @@ function forEach(collection, iteratee) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (forEach);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/get.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash-es/get.js ***!
-  \***************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _baseGet_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_baseGet.js */ "./node_modules/lodash-es/_baseGet.js");
-
-
-/**
- * Gets the value at `path` of `object`. If the resolved value is
- * `undefined`, the `defaultValue` is returned in its place.
- *
- * @static
- * @memberOf _
- * @since 3.7.0
- * @category Object
- * @param {Object} object The object to query.
- * @param {Array|string} path The path of the property to get.
- * @param {*} [defaultValue] The value returned for `undefined` resolved values.
- * @returns {*} Returns the resolved value.
- * @example
- *
- * var object = { 'a': [{ 'b': { 'c': 3 } }] };
- *
- * _.get(object, 'a[0].b.c');
- * // => 3
- *
- * _.get(object, ['a', '0', 'b', 'c']);
- * // => 3
- *
- * _.get(object, 'a.b.c', 'default');
- * // => 'default'
- */
-function get(object, path, defaultValue) {
-  var result = object == null ? undefined : Object(_baseGet_js__WEBPACK_IMPORTED_MODULE_0__["default"])(object, path);
-  return result === undefined ? defaultValue : result;
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (get);
 
 
 /***/ }),
@@ -69327,124 +68980,6 @@ var pick = Object(_flatRest_js__WEBPACK_IMPORTED_MODULE_1__["default"])(function
 });
 
 /* harmony default export */ __webpack_exports__["default"] = (pick);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/property.js":
-/*!********************************************!*\
-  !*** ./node_modules/lodash-es/property.js ***!
-  \********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _baseProperty_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_baseProperty.js */ "./node_modules/lodash-es/_baseProperty.js");
-/* harmony import */ var _basePropertyDeep_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_basePropertyDeep.js */ "./node_modules/lodash-es/_basePropertyDeep.js");
-/* harmony import */ var _isKey_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_isKey.js */ "./node_modules/lodash-es/_isKey.js");
-/* harmony import */ var _toKey_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./_toKey.js */ "./node_modules/lodash-es/_toKey.js");
-
-
-
-
-
-/**
- * Creates a function that returns the value at `path` of a given object.
- *
- * @static
- * @memberOf _
- * @since 2.4.0
- * @category Util
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new accessor function.
- * @example
- *
- * var objects = [
- *   { 'a': { 'b': 2 } },
- *   { 'a': { 'b': 1 } }
- * ];
- *
- * _.map(objects, _.property('a.b'));
- * // => [2, 1]
- *
- * _.map(_.sortBy(objects, _.property(['a', 'b'])), 'a.b');
- * // => [1, 2]
- */
-function property(path) {
-  return Object(_isKey_js__WEBPACK_IMPORTED_MODULE_2__["default"])(path) ? Object(_baseProperty_js__WEBPACK_IMPORTED_MODULE_0__["default"])(Object(_toKey_js__WEBPACK_IMPORTED_MODULE_3__["default"])(path)) : Object(_basePropertyDeep_js__WEBPACK_IMPORTED_MODULE_1__["default"])(path);
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (property);
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash-es/reduce.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash-es/reduce.js ***!
-  \******************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _arrayReduce_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_arrayReduce.js */ "./node_modules/lodash-es/_arrayReduce.js");
-/* harmony import */ var _baseEach_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_baseEach.js */ "./node_modules/lodash-es/_baseEach.js");
-/* harmony import */ var _baseIteratee_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_baseIteratee.js */ "./node_modules/lodash-es/_baseIteratee.js");
-/* harmony import */ var _baseReduce_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./_baseReduce.js */ "./node_modules/lodash-es/_baseReduce.js");
-/* harmony import */ var _isArray_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./isArray.js */ "./node_modules/lodash-es/isArray.js");
-
-
-
-
-
-
-/**
- * Reduces `collection` to a value which is the accumulated result of running
- * each element in `collection` thru `iteratee`, where each successive
- * invocation is supplied the return value of the previous. If `accumulator`
- * is not given, the first element of `collection` is used as the initial
- * value. The iteratee is invoked with four arguments:
- * (accumulator, value, index|key, collection).
- *
- * Many lodash methods are guarded to work as iteratees for methods like
- * `_.reduce`, `_.reduceRight`, and `_.transform`.
- *
- * The guarded methods are:
- * `assign`, `defaults`, `defaultsDeep`, `includes`, `merge`, `orderBy`,
- * and `sortBy`
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Collection
- * @param {Array|Object} collection The collection to iterate over.
- * @param {Function} [iteratee=_.identity] The function invoked per iteration.
- * @param {*} [accumulator] The initial value.
- * @returns {*} Returns the accumulated value.
- * @see _.reduceRight
- * @example
- *
- * _.reduce([1, 2], function(sum, n) {
- *   return sum + n;
- * }, 0);
- * // => 3
- *
- * _.reduce({ 'a': 1, 'b': 2, 'c': 1 }, function(result, value, key) {
- *   (result[value] || (result[value] = [])).push(key);
- *   return result;
- * }, {});
- * // => { '1': ['a', 'c'], '2': ['b'] } (iteration order is not guaranteed)
- */
-function reduce(collection, iteratee, accumulator) {
-  var func = Object(_isArray_js__WEBPACK_IMPORTED_MODULE_4__["default"])(collection) ? _arrayReduce_js__WEBPACK_IMPORTED_MODULE_0__["default"] : _baseReduce_js__WEBPACK_IMPORTED_MODULE_3__["default"],
-      initAccum = arguments.length < 3;
-
-  return func(collection, Object(_baseIteratee_js__WEBPACK_IMPORTED_MODULE_2__["default"])(iteratee, 4), accumulator, initAccum, _baseEach_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (reduce);
 
 
 /***/ }),
@@ -84733,9 +84268,9 @@ exports.isArray = isArray;
 /***/ (function(module, exports, __webpack_require__) {
 
 
-// File generated by noflo-component-loader on 2018-11-05T14:49:27.196Z
+// File generated by noflo-component-loader on 2018-11-22T21:04:12.089Z
 var baseLoader = __webpack_require__(/*! noflo-component-loader/lib/loader.js */ "./node_modules/noflo-component-loader/lib/loader.js");
-var sources = {"bigiot-driver-app/AddNavigationUrls":{"language":"javascript","source":"const noflo = require('noflo');\n\n// Format a directions URL for Google Maps\n// https://developers.google.com/maps/documentation/urls/guide#directions-action\nfunction navUrl(location) {\n  const url = new URL('maps/dir/?api=1', 'https://www.google.com');\n  url.searchParams.set('travelmode', 'driving');\n  url.searchParams.set('destination', `${location.latitude},${location.longitude}`);\n  return url.toString();\n}\n\nfunction addNavigationUrls(sites) {\n  const withNav = sites.map(s => ({ ...s, navigationUrl: navUrl(s) }));\n  return withNav;\n}\n\nexports.getComponent = () => {\n  const c = noflo.asComponent(addNavigationUrls, {\n    description: 'Add navigation URLs using Google Maps',\n  });\n  return c;\n};\n"},"bigiot-driver-app/BestParkingSites":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction siteHasVacantSpots(site) {\n  return site.vacant > 1;\n}\n\nfunction isSortedByDistance(sites) {\n  return sites[0].distance <= sites[1].distance;\n}\n\nfunction bestN(sites, n) {\n  if (sites.length < 2) {\n    throw new Error('Expected more than 2 parking sites');\n  }\n  if (!isSortedByDistance(sites)) {\n    throw new Error('Parking sites are not sorted by distance');\n  }\n\n  const best = sites.filter(siteHasVacantSpots).slice(0, n);\n  if (best.length > n) {\n    throw new Error('Postcondition failed. Length should be <= n');\n  }\n  return best;\n}\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Return the N best parking spots';\n  c.icon = 'expand-arrows-alt';\n  c.inPorts.add('in', {\n    datatype: 'array',\n    required: true,\n  });\n  c.inPorts.add('n', {\n    datatype: 'int',\n    required: false,\n    control: true,\n    default: 10,\n  });\n  c.outPorts.add('out', {\n    datatype: 'array',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'n')) {\n      return;\n    }\n\n    const [data, n] = input.getData('in', 'n');\n    const best = bestN(data, n);\n    output.sendDone(best);\n  });\n  return c;\n};\n"},"bigiot-driver-app/EnsureMountpoint":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction ensureMountpoint(id) {\n  let mount = document.getElementById(id);\n  if (mount) {\n    return mount;\n  }\n  const container = window.document.body;\n  mount = document.createElement('div');\n  mount.id = id;\n  container.appendChild(mount);\n  return mount;\n}\n\nexports.getComponent = () =>\n  noflo.asComponent(ensureMountpoint, {\n    description: 'Find DOM element, or create it if not existing',\n  });\n"},"bigiot-driver-app/Flatten":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction flatten(array) {\n  const flat = array.reduce((items, item) => items.concat(item), []);\n  return flat;\n}\n\nexports.getComponent = () => {\n  const c = noflo.asComponent(flatten, {\n    description: 'Flatten an array-of-arrays',\n  });\n  return c;\n};\n"},"bigiot-driver-app/HideElement":{"language":"javascript","source":"const noflo = require('noflo');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.inPorts.add('in', {\n    datatype: 'bang',\n  });\n  c.inPorts.add('id', {\n    datatype: 'string',\n    control: true,\n    required: true,\n  });\n  c.outPorts.add('out', {\n    datatype: 'bang',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'id')) {\n      return;\n    }\n    const id = input.getData('id');\n    input.getData('in');\n    const element = document.getElementById(id);\n    if (!element) {\n      output.done(new Error(`Element #${id} not found`));\n    }\n    element.style.display = 'none';\n    output.sendDone({\n      out: true,\n    });\n  });\n  return c;\n};\n"},"bigiot-driver-app/RenderDetails":{"language":"javascript","source":"const noflo = require('noflo');\n\nconst ReactDOM = require('react-dom');\nconst React = require('react');\n\nconst List = require('@material-ui/core/List').default;\nconst ListItem = require('@material-ui/core/ListItem').default;\nconst ListItemText = require('@material-ui/core/ListItemText').default;\nconst ListItemSecondaryAction = require('@material-ui/core/ListItemSecondaryAction').default;\nconst IconButton = require('@material-ui/core/IconButton').default;\nconst NavigationIcon = require('@material-ui/icons/Navigation').default;\n\nfunction prettyDistance(distance) {\n  if (distance > 1999) {\n    return `${distance / 1000} kilometers`;\n  }\n  return `${distance} meters`;\n}\n\nfunction siteListItem(site, emitEvent) {\n  const e = React.createElement;\n  const key = `${site.latitude}-${site.longitude}`;\n\n  function selectSite() {\n    emitEvent({ type: 'select', payload: site });\n  }\n\n  const item = e(ListItem, { key, onClick: selectSite }, [\n    e(ListItemText, { key: 'text', primary: prettyDistance(site.distance), secondary: `${site.vacant} free parking spaces` }),\n    e(ListItemSecondaryAction, { key: 'secondary' }, [\n      e(IconButton, { key: 'nav-button', href: site.navigationUrl, 'aria-label': 'Navigate to' }, [\n        e(NavigationIcon, { key: 'nav-icon' }),\n      ]),\n    ]),\n  ]);\n  return item;\n}\n\nfunction render(mount, sites, emitEvent) {\n  const e = React.createElement;\n\n  const details =\n    e(List, { }, sites.map(s => siteListItem(s, emitEvent)));\n\n  return ReactDOM.render(details, mount);\n}\n\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Render list of details about parking sites';\n\n  c.inPorts.add('mount', {\n    datatype: 'object',\n  });\n  c.inPorts.add('sites', {\n    datatype: 'array',\n  });\n\n  c.outPorts.add('event', {\n    datatype: 'object',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n\n  c.process((input, output) => {\n    if (!input.hasData('mount', 'sites')) {\n      return;\n    }\n\n    const [mount, sites] = input.getData('mount', 'sites');\n    const emitEvent = (event) => {\n      output.send({ event });\n    };\n    render(mount, sites, emitEvent);\n\n    output.done(true);\n  });\n  return c;\n};\n"},"bigiot-driver-app/RenderMap":{"language":"javascript","source":"const { Map, Marker, TileLayer } = require('react-leaflet');\nconst noflo = require('noflo');\nconst ReactDOM = require('react-dom');\nconst React = require('react');\nconst Leaflet = require('leaflet');\n\n// TODO: only put the iconset in once, and then just use references\nconst iconSet = `\n  <svg width=\"0\" height=\"0\" class=\"icon-set\">\n     <defs>\n    <circle\n       id=\"parking-site-icon\"\n       cx=\"256.62244\"\n       cy=\"257.51282\"\n       r=\"244.0538\" />\n    <g\n       id=\"car-icon\"\n       transform=\"translate(63.100403,46.990602)\">\n      <g\n         id=\"g956\"\n         transform=\"translate(19.139834,-107.66157)\">\n        <g\n           id=\"g987\"\n           transform=\"matrix(1.3685326,0,0,1.3685326,-65.797803,-120.19095)\">\n          <path\n             inkscape:connector-curvature=\"0\"\n             id=\"path2301\"\n             style=\"fill:#000000\"\n             d=\"m 214.06,176.82 h 41.43 c 22.55,0 34.52,12.32 40.04,26.73 l 29.33,75.67 c 11.62,1.48 32.22,15.14 32.22,40.98 v 96.24 h -28.53 v 30.77 c 0,37.87 -53.59,37.43 -53.59,0 v -30.77 h -96.39 -0.06 0.06 -0.05 -96.393 v 30.77 c 0,37.43 -53.599,37.87 -53.599,0 V 416.44 H 0 V 320.2 c 0,-25.84 20.577,-39.5 32.197,-40.98 l 29.335,-75.67 c 5.522,-14.41 17.487,-26.73 40.038,-26.73 h 41.91 z\" />\n          <g\n             id=\"g975\">\n            <path\n               d=\"M 178.51,278.44 H 178.46 62.57 l 22.085,-59.56 c 2.761,-8.36 6.904,-14.4 16.565,-14.49 h 77.24 0.05 0.06 77.27 c 9.66,0.09 13.8,6.13 16.57,14.49 l 22.08,59.56 H 178.57 Z\"\n               style=\"fill:#ffffff\"\n               id=\"path2315\"\n               inkscape:connector-curvature=\"0\" />\n            <g\n               id=\"g2317\">\n              <g\n                 id=\"g2319\">\n                <path\n                   d=\"m 56.18,358.44 c -13.672,0 -24.758,-11.42 -24.758,-25.51 0,-14.1 11.086,-25.52 24.758,-25.52 13.673,0 24.757,11.42 24.757,25.52 0,14.09 -11.084,25.51 -24.757,25.51 z\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2321\"\n                   inkscape:connector-curvature=\"0\" />\n                <path\n                   d=\"M 56.18,332.93\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2323\"\n                   inkscape:connector-curvature=\"0\" />\n              </g>\n              <g\n                 id=\"g2325\">\n                <path\n                   d=\"m 300.88,358.44 c 13.67,0 24.76,-11.42 24.76,-25.51 0,-14.1 -11.09,-25.52 -24.76,-25.52 -13.67,0 -24.76,11.42 -24.76,25.52 0,14.09 11.09,25.51 24.76,25.51 z\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2327\"\n                   inkscape:connector-curvature=\"0\" />\n                <path\n                   d=\"M 300.88,332.93\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2329\"\n                   inkscape:connector-curvature=\"0\" />\n              </g>\n            </g>\n          </g>\n        </g>\n      </g>\n    </g>\n    </defs>\n  </svg>\n`;\n\nfunction svgIcon(name) {\n  const [width, height] = [512, 512]; // needs to match what is used in original SVG geometry\n  const useIcon = `<svg viewBox=\"0 0 ${width} ${height}\"><use xlink:href=\"#${name}\"></use></svg>`;\n  return iconSet + useIcon;\n}\n\nfunction parkingStatus(site) {\n  let status = 'unknown';\n  if (site.vacant === 0) {\n    status = 'unavailable';\n  } else if (site.vacant <= 3) {\n    status = 'low';\n  } else if (site.vacant > 3) {\n    status = 'available';\n  }\n  return status;\n}\n\nfunction parkingSiteMarker(site) {\n  const e = React.createElement;\n\n  const icon = new Leaflet.DivIcon({\n    className: `parking-site-icon parking-${parkingStatus(site)}`,\n    html: svgIcon('parking-site-icon'),\n    iconSize: ['use-css', 'use-css'],\n  });\n\n  const marker = e(Marker, {\n    position: [site.latitude, site.longitude],\n    key: `parking-site-${site.latitude}-${site.longitude}`,\n    icon,\n  }, []);\n\n  return marker;\n}\n\nfunction currentLocationMarker(location) {\n  const e = React.createElement;\n\n  const icon = new Leaflet.DivIcon({\n    className: 'current-location-icon',\n    html: svgIcon('car-icon'),\n    iconSize: ['use-css', 'use-css'],\n  });\n\n  const marker = e(Marker, {\n    position: [location.latitude, location.longitude],\n    key: 'current-location',\n    icon,\n  }, []);\n\n  return marker;\n}\n\n\n// # TODO: render a marker for current location\nfunction render({ mount, sites = [], center }) {\n  const e = React.createElement;\n\n  const centerLatLon = [center.latitude, center.longitude];\n  const markers = sites.map(parkingSiteMarker).concat([currentLocationMarker(center)]);\n\n  const map =\n    e(Map, { center: centerLatLon, zoom: 16 }, [\n      e(TileLayer, {\n        key: 'layer',\n        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',\n        attribution: '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors',\n      }),\n    ].concat(markers));\n\n  return ReactDOM.render(map, mount);\n}\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.inPorts.add('mount', {\n    datatype: 'object',\n    required: true,\n  });\n  c.inPorts.add('center', {\n    datatype: 'object',\n    required: true,\n  });\n  c.inPorts.add('sites', {\n    datatype: 'array',\n  });\n  c.outPorts.add('out', {\n    datatype: 'object',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.setUp = (callback) => {\n    c.state = {};\n    callback();\n  };\n  c.tearDown = (callback) => {\n    delete c.state;\n    callback();\n  };\n  c.process((input, output) => {\n    if (!input.hasData('mount') && !c.state.mount) {\n      // We can't render without a mountpoint\n      return;\n    }\n    if (!input.hasData('center') && !c.state.center) {\n      // We can't render without a map center\n      return;\n    }\n    Object.keys(c.inPorts.ports).forEach((port) => {\n      if (!input.hasData(port)) {\n        return;\n      }\n      c.state[port] = input.getData(port);\n    });\n    output.sendDone({\n      out: render(c.state),\n    });\n  });\n  return c;\n};\n\n"},"bigiot-driver-app/ShowError":{"language":"javascript","source":"const noflo = require('noflo');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.inPorts.add('in', {\n    datatype: 'object',\n  });\n  c.inPorts.add('selector', {\n    datatype: 'string',\n    control: true,\n    required: true,\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'selector')) {\n      return;\n    }\n    const [err, selector] = input.getData('in', 'selector');\n    const element = document.querySelector(selector);\n    if (!element) {\n      output.done(new Error(`Element #${selector} not found`));\n    }\n    element.innerHTML = `ERROR: ${err.message || 'An error has occured'}`;\n    if (element.parentElement) {\n      element.parentElement.classList.add('error');\n    }\n    output.done();\n  });\n  return c;\n};\n"},"bigiot-driver-app/SortEntriesByDistance":{"language":"javascript","source":"const noflo = require('noflo');\nconst where = require('where');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Sort a list of geolocated results by distance to current location';\n  c.icon = 'expand-arrows-alt';\n  c.inPorts.add('in', {\n    datatype: 'array',\n    required: true,\n  });\n  c.inPorts.add('location', {\n    datatype: 'object',\n    required: true,\n    control: true,\n  });\n  c.outPorts.add('out', {\n    datatype: 'array',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'location')) {\n      return;\n    }\n    const [data, location] = input.getData('in', 'location');\n    const current = new where.Point(location.latitude, location.longitude);\n    const withDistance = data.map((entry) => {\n      const point = new where.Point(entry.latitude, entry.longitude);\n      return {\n        ...entry,\n        distance: current.distanceTo(point) * 1000,\n        bearing: current.bearingTo(point),\n      };\n    });\n    withDistance.sort((a, b) => {\n      if (a.distance < b.distance) {\n        return -1;\n      }\n      if (b.distance < a.distance) {\n        return 1;\n      }\n      return 0;\n    });\n    output.sendDone(withDistance);\n  });\n  return c;\n};\n"},"bigiot-driver-app/SwitchEvent":{"language":"javascript","source":"const noflo = require('noflo');\n\nconst supportedEvents = ['select', 'navigate'];\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = ' ';\n  c.icon = 'sign-out';\n\n  c.inPorts.add('in', {\n    description: 'Event',\n    datatype: 'object',\n  });\n\n  supportedEvents.map((event) => {\n    c.outPorts.add(event, {\n      datatype: 'all',\n    });\n    return null;\n  });\n\n  c.outPorts.add(\n    'error',\n    { datatype: 'object' },\n  );\n\n  return c.process((input, output) => {\n    if (!input.hasData('in')) {\n      return;\n    }\n\n    const event = input.getData('in');\n\n    // send to port with same name of the event type\n    if (supportedEvents.indexOf(event.type) !== -1) {\n      const send = {};\n      send[event.type] = event.payload;\n      output.sendDone(send);\n    } else {\n      output.done(new Error(`Unsupported event type: ${event.type}`));\n    }\n  });\n};\n"},"bigiot-driver-app/GetCurrentPosition":{"language":"javascript","source":"const noflo = require('noflo');\n\n// @runtime noflo-browser\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Get user\\'s current location';\n  c.icon = 'location-arrow';\n  c.inPorts.add('in', {\n    datatype: 'bang',\n  });\n  c.outPorts.add('out', {\n    datatype: 'object',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in')) {\n      return;\n    }\n    input.getData('in');\n    if (!navigator.geolocation) {\n      output.done(new Error('Location API not available'));\n      return;\n    }\n    navigator.geolocation.getCurrentPosition((pos) => {\n      output.sendDone({\n        out: {\n          latitude: pos.coords.latitude,\n          longitude: pos.coords.longitude,\n          accuracy: pos.coords.accuracy,\n        },\n      });\n    }, (err) => {\n      output.done(new Error(err.message || 'Failed to acquire position'));\n    });\n  });\n  return c;\n};\n"},"Graph":{"language":"javascript","source":"//     NoFlo - Flow-Based Programming for JavaScript\n//     (c) 2013-2017 Flowhub UG\n//     (c) 2011-2012 Henri Bergius, Nemein\n//     NoFlo may be freely distributed under the MIT license\n\n// The Graph component is used to wrap NoFlo Networks into components inside\n// another network.\nvar Graph, noflo;\n\nnoflo = require(\"../lib/NoFlo\");\n\nGraph = class Graph extends noflo.Component {\n  constructor(metadata) {\n    super();\n    this.metadata = metadata;\n    this.network = null;\n    this.ready = true;\n    this.started = false;\n    this.starting = false;\n    this.baseDir = null;\n    this.loader = null;\n    this.load = 0;\n    this.inPorts = new noflo.InPorts({\n      graph: {\n        datatype: 'all',\n        description: 'NoFlo graph definition to be used with the subgraph component',\n        required: true\n      }\n    });\n    this.outPorts = new noflo.OutPorts;\n    this.inPorts.graph.on('ip', (packet) => {\n      if (packet.type !== 'data') {\n        return;\n      }\n      return this.setGraph(packet.data, (err) => {\n        if (err) {\n          // TODO: Port this part to Process API and use output.error method instead\n          return this.error(err);\n        }\n      });\n    });\n  }\n\n  setGraph(graph, callback) {\n    this.ready = false;\n    if (typeof graph === 'object') {\n      if (typeof graph.addNode === 'function') {\n        // Existing Graph object\n        this.createNetwork(graph, callback);\n        return;\n      }\n      // JSON definition of a graph\n      noflo.graph.loadJSON(graph, (err, instance) => {\n        if (err) {\n          return callback(err);\n        }\n        instance.baseDir = this.baseDir;\n        return this.createNetwork(instance, callback);\n      });\n      return;\n    }\n    if (graph.substr(0, 1) !== \"/\" && graph.substr(1, 1) !== \":\" && process && process.cwd) {\n      graph = `${process.cwd()}/${graph}`;\n    }\n    return noflo.graph.loadFile(graph, (err, instance) => {\n      if (err) {\n        return callback(err);\n      }\n      instance.baseDir = this.baseDir;\n      return this.createNetwork(instance, callback);\n    });\n  }\n\n  createNetwork(graph, callback) {\n    this.description = graph.properties.description || '';\n    this.icon = graph.properties.icon || this.icon;\n    if (!graph.name) {\n      graph.name = this.nodeId;\n    }\n    graph.componentLoader = this.loader;\n    return noflo.createNetwork(graph, (err, network1) => {\n      this.network = network1;\n      if (err) {\n        return callback(err);\n      }\n      this.emit('network', this.network);\n      // Subscribe to network lifecycle\n      this.subscribeNetwork(this.network);\n      // Wire the network up\n      return this.network.connect((err) => {\n        var name, node, ref;\n        if (err) {\n          return callback(err);\n        }\n        ref = this.network.processes;\n        for (name in ref) {\n          node = ref[name];\n          // Map exported ports to local component\n          this.findEdgePorts(name, node);\n        }\n        // Finally set ourselves as \"ready\"\n        this.setToReady();\n        return callback();\n      });\n    }, true);\n  }\n\n  subscribeNetwork(network) {\n    var contexts;\n    contexts = [];\n    this.network.on('start', () => {\n      var ctx;\n      ctx = {};\n      contexts.push(ctx);\n      return this.activate(ctx);\n    });\n    return this.network.on('end', () => {\n      var ctx;\n      ctx = contexts.pop();\n      if (!ctx) {\n        return;\n      }\n      return this.deactivate(ctx);\n    });\n  }\n\n  isExportedInport(port, nodeName, portName) {\n    var priv, pub, ref;\n    ref = this.network.graph.inports;\n    // First we check disambiguated exported ports\n    for (pub in ref) {\n      priv = ref[pub];\n      if (!(priv.process === nodeName && priv.port === portName)) {\n        continue;\n      }\n      return pub;\n    }\n    // Component has exported ports and this isn't one of them\n    return false;\n  }\n\n  isExportedOutport(port, nodeName, portName) {\n    var priv, pub, ref;\n    ref = this.network.graph.outports;\n    // First we check disambiguated exported ports\n    for (pub in ref) {\n      priv = ref[pub];\n      if (!(priv.process === nodeName && priv.port === portName)) {\n        continue;\n      }\n      return pub;\n    }\n    // Component has exported ports and this isn't one of them\n    return false;\n  }\n\n  setToReady() {\n    if (typeof process !== 'undefined' && process.execPath && process.execPath.indexOf('node') !== -1) {\n      return process.nextTick(() => {\n        this.ready = true;\n        return this.emit('ready');\n      });\n    } else {\n      return setTimeout(() => {\n        this.ready = true;\n        return this.emit('ready');\n      }, 0);\n    }\n  }\n\n  findEdgePorts(name, process) {\n    var inPorts, outPorts, port, portName, targetPortName;\n    inPorts = process.component.inPorts.ports;\n    outPorts = process.component.outPorts.ports;\n    for (portName in inPorts) {\n      port = inPorts[portName];\n      targetPortName = this.isExportedInport(port, name, portName);\n      if (targetPortName === false) {\n        continue;\n      }\n      this.inPorts.add(targetPortName, port);\n      this.inPorts[targetPortName].on('connect', () => {\n        // Start the network implicitly if we're starting to get data\n        if (this.starting) {\n          return;\n        }\n        if (this.network.isStarted()) {\n          return;\n        }\n        if (this.network.startupDate) {\n          // Network was started, but did finish. Re-start simply\n          this.network.setStarted(true);\n          return;\n        }\n        // Network was never started, start properly\n        return this.setUp(function() {});\n      });\n    }\n    for (portName in outPorts) {\n      port = outPorts[portName];\n      targetPortName = this.isExportedOutport(port, name, portName);\n      if (targetPortName === false) {\n        continue;\n      }\n      this.outPorts.add(targetPortName, port);\n    }\n    return true;\n  }\n\n  isReady() {\n    return this.ready;\n  }\n\n  isSubgraph() {\n    return true;\n  }\n\n  isLegacy() {\n    return false;\n  }\n\n  setUp(callback) {\n    this.starting = true;\n    if (!this.isReady()) {\n      this.once('ready', () => {\n        return this.setUp(callback);\n      });\n      return;\n    }\n    if (!this.network) {\n      return callback(null);\n    }\n    return this.network.start((err) => {\n      if (err) {\n        return callback(err);\n      }\n      this.starting = false;\n      return callback();\n    });\n  }\n\n  tearDown(callback) {\n    this.starting = false;\n    if (!this.network) {\n      return callback(null);\n    }\n    return this.network.stop(function(err) {\n      if (err) {\n        return callback(err);\n      }\n      return callback();\n    });\n  }\n\n};\n\nexports.getComponent = function(metadata) {\n  return new Graph(metadata);\n};\n"},"bigiot/AccessSubscriptions":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction accessSubscriptions(consumer, subscriptions, input = {}) {\n  return Promise.all(subscriptions.map(sub => consumer.access(sub, input)));\n}\n\nexports.getComponent = () => noflo.asComponent(accessSubscriptions, {\n  icon: null,\n  description: 'Request data from a set of subscriptions',\n});\n"},"bigiot/AuthenticateConsumer":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction authenticateConsumer(consumer) {\n  return consumer.authenticate().then(() => consumer);\n}\n\nexports.getComponent = () => noflo.asComponent(authenticateConsumer, {\n  icon: null,\n  description: 'Authenticate a BIG IoT Consumer against Marketplace',\n});\n"},"bigiot/Callback":{"language":"javascript","source":"const noflo = require('noflo');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = `This component calls a given callback function for each\nIP it receives.  The Callback component is typically used to connect\nNoFlo with external Node.js code.`;\n  c.icon = 'sign-out';\n\n  c.inPorts.add('in', {\n    description: 'Object passed as argument of the callback',\n    datatype: 'all',\n  });\n  c.inPorts.add('callback', {\n    description: 'Callback to invoke',\n    datatype: 'function',\n    control: true,\n    required: true,\n  });\n  c.outPorts.add(\n    'error',\n    { datatype: 'object' },\n  );\n\n  return c.process((input, output) => {\n    if (!input.hasData('callback', 'in')) {\n      return;\n    }\n    const [callback, data] = input.getData('callback', 'in');\n    if (typeof callback !== 'function') {\n      output.done(new Error('The provided callback must be a function'));\n      return;\n    }\n\n    // Call the callback when receiving data\n    try {\n      callback(data);\n    } catch (e) {\n      output.done(e);\n      return;\n    }\n    output.done();\n  });\n};\n"},"bigiot/CreateConsumer":{"language":"javascript","source":"const noflo = require('noflo');\nconst bigiot = require('bigiot-js');\n\nfunction createConsumer(id, secret, api = 0, cors = 0) {\n  const marketplace = (api === 0) ? undefined : api;\n  const corsProxy = (cors === 0) ? undefined : cors;\n  return new bigiot.consumer(id, secret, marketplace, corsProxy);\n}\n\nexports.getComponent = () => noflo.asComponent(createConsumer, {\n  icon: null,\n  description: 'Create BIG IoT Consumer',\n});\n"},"bigiot/OfferingQuery":{"language":"javascript","source":"const noflo = require('noflo');\nconst bigiot = require('bigiot-js');\n\nfunction offeringQuery(category, options = {}) {\n  const name = options.name || category;\n  const query = new bigiot.offering(name, category);\n\n  // Defaults to giving everything\n  delete query.license;\n  delete query.extent;\n  delete query.price;\n\n  Object.keys(options).forEach((key) => {\n    query[key] = options[key];\n  });\n\n  return query;\n}\n\nexports.getComponent = () => noflo.asComponent(offeringQuery, {\n  icon: null,\n  description: 'Create Offering Query',\n});\n"},"bigiot/DiscoverOfferings":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction discoverOfferings(consumer, query) {\n  return consumer.discover(query);\n}\n\nexports.getComponent = () => noflo.asComponent(discoverOfferings, {\n  icon: null,\n  description: 'Discover offers on marketplace that matches @query',\n});\n"},"bigiot/SubscribeOfferings":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction subscribeOfferings(consumer, offerings) {\n  const subscribeOffer = (offer) => {\n    const id = (typeof offer === 'string') ? offer : offer.id;\n    return consumer.subscribe(id);\n  };\n\n  return Promise.all(offerings.map(subscribeOffer));\n}\n\nexports.getComponent = () => noflo.asComponent(subscribeOfferings, {\n  icon: null,\n  description: 'Subscribe to a set of offerings',\n});\n"},"core/Callback":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component calls a given callback function for each\n  IP it receives.  The Callback component is typically used to connect\n  NoFlo with external Node.js code.'\n  c.icon = 'sign-out'\n\n  c.inPorts.add 'in',\n    description: 'Object passed as argument of the callback'\n    datatype: 'all'\n  c.inPorts.add 'callback',\n    description: 'Callback to invoke'\n    datatype: 'function'\n    control: true\n    required: true\n  c.outPorts.add 'error',\n    datatype: 'object'\n\n  c.process (input, output) ->\n    return unless input.hasData 'callback', 'in'\n    [callback, data] = input.getData 'callback', 'in'\n    unless typeof callback is 'function'\n      output.done new Error 'The provided callback must be a function'\n      return\n\n    # Call the callback when receiving data\n    try\n      callback data\n    catch e\n      return output.done e\n    output.done()\n"},"core/Copy":{"language":"coffeescript","source":"noflo = require 'noflo'\nowl = require 'owl-deepcopy'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'deep (i.e. recursively) copy an object'\n  c.icon = 'copy'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be copied'\n  c.outPorts.add 'out',\n    datatype: 'all'\n    description: 'Copy of the original packet'\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    data = input.getData 'in'\n\n    copy = owl.deepCopy data\n    output.sendDone\n      out: copy\n    return\n"},"core/DisconnectAfterPacket":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Makes each data packet a stream of its own'\n  c.icon = 'pause'\n  c.forwardBrackets = {}\n  c.autoOrdering = false\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forward with disconnection'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  brackets = {}\n  c.tearDown = (callback) ->\n    brackets = {}\n  c.process (input, output) ->\n    # Force auto-ordering to be off for this one\n    c.autoOrdering = false\n\n    data = input.get 'in'\n    brackets[input.scope] = [] unless brackets[input.scope]\n    if data.type is 'openBracket'\n      brackets[input.scope].push data.data\n      output.done()\n      return\n    if data.type is 'closeBracket'\n      brackets[input.scope].pop()\n      output.done()\n      return\n\n    return unless data.type is 'data'\n\n    for bracket in brackets[input.scope]\n      output.sendIP 'out', new noflo.IP 'openBracket', bracket\n    output.sendIP 'out', data\n    closes = brackets[input.scope].slice 0\n    closes.reverse()\n    for bracket in closes\n      output.sendIP 'out', new noflo.IP 'closeBracket', bracket\n\n    output.done()\n"},"core/Drop":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component drops every packet it receives with no\n  action'\n  c.icon = 'trash-o'\n\n  c.inPorts.add 'in',\n    datatypes: 'all'\n    description: 'Packet to be dropped'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    data.drop()\n    output.done()\n    return\n"},"core/Kick":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component generates a single packet and sends it to\n  the output port. Mostly usable for debugging, but can also be useful\n  for starting up networks.'\n  c.icon = 'share'\n\n  c.inPorts.add 'in',\n    datatype: 'bang'\n    description: 'Signal to send the data packet'\n  c.inPorts.add 'data',\n    datatype: 'all'\n    description: 'Packet to be sent'\n    control: true\n    default: null\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    return unless input.hasStream 'in'\n    return if input.attached('data').length and not input.hasData 'data'\n    bang = input.getData 'in'\n    data = input.getData 'data'\n    output.send\n      out: data\n    output.done()\n"},"core/MakeFunction":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Evaluates a function each time data hits the \"in\" port\n  and sends the return value to \"out\". Within the function \"x\" will\n  be the variable from the in port. For example, to make a ^2 function\n  input \"return x*x;\" to the function port.'\n  c.icon = 'code'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be processed'\n  c.inPorts.add 'function',\n    datatype: 'string'\n    description: 'Function to evaluate'\n    control: true\n  c.outPorts.add 'out',\n    datatype: 'all'\n  c.outPorts.add 'function',\n    datatype: 'function'\n  c.outPorts.add 'error',\n    datatype: 'object'\n\n  prepareFunction = (func, callback) ->\n    if typeof func is 'function'\n      callback null, func\n      return\n    try\n      newFunc = Function 'x', func\n    catch e\n      callback e\n      return\n    callback null, newFunc\n\n  c.process (input, output) ->\n    return if input.attached('in').length and not input.hasData 'in'\n    if input.hasData 'function', 'in'\n      # Both function and input data\n      prepareFunction input.getData('function'), (err, func) ->\n        if err\n          output.done e\n          return\n        data = input.getData 'in'\n        try\n          result = func data\n        catch e\n          output.done e\n          return\n        output.sendDone\n          function: func\n          out: result\n        return\n      return\n    return unless input.hasData 'function'\n    prepareFunction input.getData('function'), (err, func) ->\n      if err\n        output.done e\n        return\n      output.sendDone\n        function: func\n      return\n    return\n"},"core/Merge":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component receives data on multiple input ports and\n    sends the same data out to the connected output port'\n  c.icon = 'compress'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forwarded'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    output.sendDone\n      out: data\n"},"core/Output":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nunless noflo.isBrowser()\n  util = require 'util'\nelse\n  util =\n    inspect: (data) -> data\n\nlog = (options, data) ->\n  if options?\n    console.log util.inspect data,\n      options.showHidden, options.depth, options.colors\n  else\n    console.log data\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Sends the data items to console.log'\n  c.icon = 'bug'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be printed through console.log'\n  c.inPorts.add 'options',\n    datatype: 'object'\n    description: 'Options to be passed to console.log'\n    control: true\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    return if input.attached('options').length and not input.hasData 'options'\n\n    options = null\n    if input.has 'options'\n      options = input.getData 'options'\n\n    data = input.getData 'in'\n    log options, data\n    output.sendDone\n      out: data\n"},"core/ReadGlobal":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Returns the value of a global variable.'\n  c.icon = 'usd'\n\n  # inPorts\n  c.inPorts.add 'name',\n    description: 'The name of the global variable.'\n\n  # outPorts\n  c.outPorts.add 'value',\n    description: 'The value of the variable.'\n\n  c.outPorts.add 'error',\n    description: 'Any errors that occured reading the variables value.'\n\n  c.forwardBrackets =\n    name: ['value', 'error']\n\n  c.process (input, output) ->\n    return unless input.hasData 'name'\n    data = input.getData 'name'\n\n    value = unless noflo.isBrowser() then global[data] else window[data]\n\n    if typeof value is 'undefined'\n      err = new Error \"\\\"#{data}\\\" is undefined on the global object.\"\n      output.sendDone err\n      return\n    output.sendDone\n      value: value\n"},"core/Repeat":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Forwards packets and metadata in the same way\n  it receives them'\n  c.icon = 'forward'\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to forward'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    output.sendDone\n      out: data\n"},"core/RepeatAsync":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = \"Like 'Repeat', except repeat on next tick\"\n  c.icon = 'step-forward'\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to forward'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    setTimeout ->\n      output.sendDone\n        out: data\n    , 0\n"},"core/RunInterval":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Send a packet at the given interval'\n  c.icon = 'clock-o'\n  c.inPorts.add 'interval',\n    datatype: 'number'\n    description: 'Interval at which output packets are emitted (ms)'\n    required: true\n    control: true\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start the emission'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop the emission'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n\n  c.timers = {}\n\n  cleanUp = (scope) ->\n    return unless c.timers[scope]\n    clearInterval c.timers[scope].interval\n    c.timers[scope].deactivate()\n    c.timers[scope] = null\n\n  c.tearDown = (callback) ->\n    for scope, context of c.timers\n      cleanUp scope\n    c.timers = {}\n    callback()\n\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      return unless input.hasData 'interval'\n      start = input.get 'start'\n      return unless start.type is 'data'\n      interval = parseInt input.getData 'interval'\n      # Ensure we deactivate previous interval in this scope, if any\n      cleanUp start.scope\n\n      # Set up interval\n      context.interval = setInterval ->\n        bang = new noflo.IP 'data', true\n        bang.scope = start.scope\n        c.outPorts.out.sendIP bang\n      , interval\n\n      # Register scope, we keep it active until stopped\n      c.timers[start.scope] = context\n      return\n\n    if input.hasData 'stop'\n      stop = input.get 'stop'\n      return unless stop.type is 'data'\n      # Deactivate interval in this scope\n      cleanUp stop.scope\n      return\n"},"core/RepeatDelayed":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Forward packet after a set delay'\n  c.icon = 'clock-o'\n\n  c.timers = []\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forwarded with a delay'\n  c.inPorts.add 'delay',\n    datatype: 'number'\n    description: 'How much to delay'\n    default: 500\n    control: true\n\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.tearDown = (callback) ->\n    clearTimeout timer for timer in c.timers\n    c.timers = []\n    callback()\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    return if input.attached('delay').length and not input.hasData 'delay'\n\n    delay = 500\n    if input.hasData 'delay'\n      delay = input.getData 'delay'\n    payload = input.get 'in'\n\n    timer = setTimeout ->\n      c.timers.splice c.timers.indexOf(timer), 1\n      output.sendDone\n        out: payload\n    , delay\n    c.timers.push timer\n"},"core/RunTimeout":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Send a packet after the given time in ms'\n  c.icon = 'clock-o'\n\n  c.timer = {}\n\n  c.inPorts.add 'time',\n    datatype: 'number'\n    description: 'Time after which a packet will be sent'\n    required: true\n    control: true\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start the timeout before sending a packet'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n\n  c.forwardBrackets =\n    start: ['out']\n\n  c.stopTimer = (scope) ->\n    return unless c.timer[scope]\n    clearTimeout c.timer[scope].timeout\n    c.timer[scope].deactivate()\n    delete c.timer[scope]\n\n  c.tearDown = (callback) ->\n    for scope, timer of c.timer\n      c.stopTimer scope\n    callback()\n\n  c.process (input, output, context) ->\n    return unless input.hasData 'time', 'start'\n    time = input.getData 'time'\n    bang = input.getData 'start'\n    # Ensure we deactivate previous timeout, if any\n    c.stopTimer input.scope\n    # Set up new timer\n    context.timeout = setTimeout ->\n      c.timer = null\n      output.sendDone\n        out: true\n    , time\n    c.timer[input.scope] = context\n    return\n"},"core/SendNext":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Sends next packet in buffer when receiving a bang'\n  c.icon = 'forward'\n\n  c.inPorts.add 'data',\n    datatype: 'all'\n  c.inPorts.add 'in',\n    datatype: 'bang'\n  c.outPorts.add 'out',\n    datatype: 'all'\n  c.outPorts.add 'empty',\n    datatype: 'bang'\n    required: false\n\n  c.forwardBrackets = {}\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    bang = input.getData 'in'\n\n    unless input.hasData 'data'\n      # No data packets in the buffer, send \"empty\"\n      output.sendDone\n        empty: true\n      return\n\n    sent = false\n    # Loop until we've either drained the buffer completely, or until\n    # we hit the next data packet\n    while input.has 'data'\n      if sent\n        # If we already sent data, we look ahead to see if next packet is data and bail out\n        buf = c.inPorts.data.getBuffer bang.scope\n        break if buf[0].type is 'data'\n\n      packet = input.get 'data'\n      output.send\n        out: packet\n      sent = true if packet.type is 'data'\n    # After the loop we can deactivate\n    output.done()\n"},"core/Split":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'expand'\n  c.description = 'This component receives data on a single input port and\n    sends the same data out to all connected output ports'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forwarded'\n\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    output.sendDone\n      out: data\n"},"dom/AddClass":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Add a class to an element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'class',\n    datatype: 'string'\n\n  c.process (input, output) ->\n    return unless input.has 'element', 'class'\n    [element, className] = input.getData 'element', 'class'\n    element.classList.add className\n    output.done()\n"},"dom/CreateElement":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Create a new DOM Element'\n  c.inPorts.add 'tagname',\n    datatype: 'string'\n  c.inPorts.add 'container',\n    datatype: 'object'\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.forwardBrackets =\n    tagname: ['element']\n\n  c.process (input, output) ->\n    return unless input.hasData 'tagname'\n    if c.inPorts.container.isAttached()\n      # If container is attached, we want it too\n      return unless input.hasData 'container'\n\n    tagname = input.getData 'tagname'\n    element = document.createElement tagname\n    if input.hasData 'container'\n      container = input.getData 'container'\n      container.appendChild element\n\n    output.sendDone\n      element: element\n"},"dom/AppendChild":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Append elements as children of a parent element'\n  c.inPorts.add 'parent',\n    datatype: 'object'\n  c.inPorts.add 'child',\n    datatype: 'object'\n\n  c.process (input, output) ->\n    return unless input.hasData 'parent', 'child'\n    [parent, child] = input.getData 'parent', 'child'\n    parent.appendChild child\n    output.done()\n"},"dom/CreateFragment":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c. description = 'Create a new DOM DocumentFragment'\n  c.inPorts.add 'in',\n    datatype: 'bang'\n  c.outPorts.add 'fragment',\n    datatype: 'object'\n\n  c.forwardBrackets =\n    in: ['fragment']\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    input.getData 'in'\n    fragment = document.createDocumentFragment()\n    output.sendDone\n      fragment: fragment\n"},"dom/GetAttribute":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = \"Reads the given attribute from the DOM element on the in\n    port.\"\n\n  # Define in ports.\n  c.inPorts.add 'element',\n    datatype: 'object'\n    description: 'The element from which to read the attribute from.'\n    required: true\n\n  c.inPorts.add 'attribute',\n    datatype: 'string'\n    description: 'The attribute which is read from the DOM element.'\n    required: true\n    control: true\n\n  # Define out ports.\n  c.outPorts.add 'out',\n    datatype: 'string'\n    description: 'Value of the attribute being read.'\n\n  c.forwardBrackets =\n    element: ['out']\n\n  # On data flow.\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'attribute'\n    [element, attribute] = input.getData 'element', 'attribute'\n    value = element.getAttribute attribute\n    output.sendDone\n      out: value\n"},"dom/GetElement":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description ='Get a DOM element matching a query'\n  c.inPorts.add 'in',\n    datatype: 'object'\n    description: 'DOM element to constrain the query to'\n  c.inPorts.add 'selector',\n    datatype: 'string'\n    description: 'CSS selector'\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'error',\n    datatype: 'object'\n  c.forwardBrackets =\n    selector: ['element', 'error']\n  c.process (input, output) ->\n    return unless input.hasData 'selector'\n    return unless input.hasData 'in' if input.attached('in').length > 0\n    if input.hasData 'in'\n      # Element-scoped selector\n      [container, selector] = input.getData 'in', 'selector'\n      unless typeof container.querySelector is 'function'\n        output.done new Error 'Given container doesn\\'t support querySelectors'\n        return\n      el = container.querySelectorAll selector\n      unless el.length\n        output.done new Error \"No element matching '#{selector}' found under container\"\n        return\n      for element in el\n        output.send\n          element: element\n      output.done()\n      return\n    selector = input.getData 'selector'\n    el = document.querySelectorAll selector\n    unless el.length\n      output.done new Error \"No element matching '#{selector}' found under document\"\n      return\n    for element in el\n      output.send\n        element: element\n    output.done()\n"},"dom/HasClass":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Check if an element has a given class'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'class',\n    datatype: 'string'\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'missed',\n    datatype: 'object'\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'class'\n    [element, klass] = input.getData 'element', 'class'\n    if element.classList.contains klass\n      output.sendDone\n        element: element\n      return\n    output.sendDone\n      missed: element\n"},"dom/Listen":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'addEventListener for specified event type'\n  c.icon = 'stethoscope'\n\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'type',\n    datatype: 'string'\n  c.inPorts.add 'preventdefault',\n    datatype: 'boolean'\n    control: true\n    default: false\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'event',\n    datatype: 'object'\n\n  c.elements = {}\n  cleanUp = (scope) ->\n    return unless c.elements[scope]\n    {element, event, listener} = c.elements[scope]\n    element.removeEventListener event, listener\n    c.elements[scope].deactivate()\n    delete c.elements[scope]\n  c.tearDown = (callback) ->\n    for scope, element of c.elements\n      cleanUp scope\n    c.elements = {}\n    callback()\n  c.forwardBrackets = {}\n\n  c.process (input, output, context) ->\n\n    return unless input.hasData 'element', 'type'\n    [element, type] = input.getData 'element', 'type'\n\n    preventDefault = false\n    if input.hasData 'preventdefault'\n      preventDefault = input.getData 'preventdefault'\n\n    scope = null\n    cleanUp scope\n\n    context.element = element\n    context.event = type\n    context.listener = (event) ->\n      event.preventDefault() if preventDefault\n      output.send\n        element: context.element\n        event: event\n    c.elements[context] = context\n    element.addEventListener type, context.listener\n"},"dom/ReadHtml":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Read HTML from an existing element'\n  c.inPorts.add 'container',\n    datatype: 'object'\n  c.outPorts.add 'html',\n    datatype: 'string'\n  c.forwardBrackets =\n    container: ['html']\n  c.process (input, output) ->\n    return unless input.hasData 'container'\n    container = input.getData 'container'\n    output.sendDone\n      html: container.innerHTML\n"},"dom/RemoveClass":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Remove a class from an element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'class',\n    datatype: 'string'\n\n  c.process (input, output) ->\n    return unless input.has 'element', 'class'\n    [element, className] = input.getData 'element', 'class'\n    element.classList.remove className\n    output.done()\n"},"dom/RequestAnimationFrame":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nrequestAnimationFrame =\n  window.requestAnimationFrame       ||\n  window.webkitRequestAnimationFrame ||\n  window.mozRequestAnimationFrame    ||\n  window.oRequestAnimationFrame      ||\n  window.msRequestAnimationFrame     ||\n  (callback, element) ->\n    window.setTimeout( ->\n      callback(+new Date())\n    , 1000 / 60)\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Sends bangs that correspond with screen refresh rate.'\n  c.icon = 'film'\n\n  c.inPorts.add 'start',\n    datatype: 'bang'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n\n  c.running = {}\n  cleanUp = (scope) ->\n    return unless c.running[scope]\n    c.running[scope].deactivate()\n    delete c.running[scope]\n  c.tearDown = (callback) ->\n    for scope, running of c.running\n      cleanUp scope\n    c.running = {}\n    callback()\n  c.animate = (scope, output) ->\n    # Stop when context has been stopped\n    return unless c.running[scope]\n    # Send bang\n    output.send true\n    # Request next frame\n    requestAnimationFrame c.animate.bind c, scope, output\n\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      start = input.get 'start'\n      return unless start.type is 'data'\n      # Ensure previous was deactivated\n      cleanUp start.scope\n\n      # Register scope\n      c.running[start.scope] = context\n\n      # Request first frame\n      requestAnimationFrame c.animate.bind c, start.scope, output\n      return\n\n    if input.hasData 'stop'\n      stop = input.get 'stop'\n      return unless stop.type is 'data'\n      # Deactivate this scope\n      cleanUp stop.scope\n      return\n"},"dom/WriteHtml":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Write HTML inside an existing element'\n  c.inPorts.add 'container',\n    datatype: 'object'\n  c.inPorts.add 'html',\n    datatype: 'string'\n  c.outPorts.add 'container',\n    datatype: 'object'\n  c.process (input, output) ->\n    return unless input.hasData 'container', 'html'\n    [container, html] = input.getData 'container', 'html'\n    container.innerHTML = html\n    output.sendDone\n      container: container\n"},"interaction/Focus":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'i-cursor'\n  c.description = 'focus element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n    description: 'element to be focused'\n    control: true\n  c.inPorts.add 'trigger',\n    datatype: 'bang'\n    description: 'trigger focus'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'trigger'\n    element = input.getData 'element'\n    input.getData 'trigger'\n    window.setTimeout ->\n      element.focus()\n      output.sendDone\n        out: true\n    , 0\n"},"interaction/ListenChange":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to changes on an input element'\n  c.icon = 'hourglass'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'value',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'change', element.listener, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      listener: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          value: event.target.value\n      ctx: context\n    data.el.addEventListener 'change', data.listener, false\n    c.elements.push data\n    return\n"},"interaction/ListenDrag":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description =  'Listen to drag events on a DOM element'\n  c.icon = 'arrows'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'start',\n    datatype: 'object'\n  c.outPorts.add 'movey',\n    datatype: 'number'\n  c.outPorts.add 'movex',\n    datatype: 'number'\n  c.outPorts.add 'end',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'dragstart', element.dragstart, false\n      element.el.removeEventListener 'drag', element.dragmove, false\n      element.el.removeEventListener 'dragend', element.dragend, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      dragstart: (event) ->\n        event.stopPropagation()\n        output.send\n          start: event\n      dragmove: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          movex: event.clientX\n          movey: event.clientY\n      dragend: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          end: event\n      ctx: context\n    data.el.addEventListener 'dragstart', data.dragstart, false\n    data.el.addEventListener 'drag', data.dragmove, false\n    data.el.addEventListener 'dragend', data.dragend, false\n    c.elements.push data\n    return\n"},"interaction/ListenEvent":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'rss'\n  c.description = 'Listen to custom events on a DOM element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'event',\n    datatype: 'string'\n  c.outPorts.add 'out',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener element.eventName, element.onEvent, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element', 'event'\n    el = input.getData 'element'\n    eventName = input.getData 'event'\n    data =\n      el: el\n      eventName: eventName\n      onEvent: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        event.eventName = eventName\n        output.send\n          out: event\n      ctx: context\n    data.el.addEventListener eventName, data.onEvent, false\n    c.elements.push data\n    return\n"},"interaction/ListenHash":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for hash changes in browser\\'s URL bar'\n  c.icon = 'slack'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for hash changes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for hash changes'\n  c.outPorts.add 'initial',\n    datatype: 'string'\n  c.outPorts.add 'change',\n    datatype: 'string'\n  c.current = null\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    window.removeEventListener 'hashchange', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    c.current = null\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      sendHash = (port) ->\n        oldHash = c.current\n        c.current = window.location.href.split('#')[1] or ''\n        if oldHash\n          output.send\n            change: new noflo.IP 'openBracket', oldHash\n        payload = {}\n        payload[port] = c.current\n        output.send payload\n        if oldHash\n          output.send\n            change: new noflo.IP 'closeBracket', oldHash\n      c.subscriber =\n        callback: (event) ->\n          sendHash 'change'\n        ctx: context\n      # Send initial\n      sendHash 'initial'\n      window.addEventListener 'hashchange', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenKeyboard":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for key presses on a given DOM element'\n  c.icon = 'keyboard-o'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'stop',\n    datatype: 'object'\n  c.outPorts.add 'keypress',\n    datatype: 'integer'\n  c.elements = []\n  unsubcribe = (element) ->\n    element.el.removeEventListener 'keypress', element.listener, false\n    element.ctx.deactivate()\n  c.tearDown = (callback) ->\n    unsubscribe element for element in c.elements\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'element'\n      data =\n        el: input.getData 'element'\n        listener: (event) ->\n          output.send\n            keypress: event.keyCode\n        ctx: context\n      data.el.addEventListener 'keypress', data.listener, false\n      c.elements.push data\n      return\n    if input.hasData 'stop'\n      element = input.getData 'stop'\n      ctx = null\n      for el in c.elements\n        continue unless el.el is element\n        ctx = el\n      return unless ctx\n      unsubscribe ctx\n      output.done()\n"},"interaction/ListenKeyboardShortcuts":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for keyboard shortcuts and route them'\n  c.icon = 'keyboard-o'\n  c.inPorts.add 'keys',\n    datatype: 'array'\n  c.inPorts.add 'ignoreinput',\n    datatype: 'boolean'\n    default: true\n    control: true\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n  c.outPorts.add 'shortcut',\n    datatype: 'bang'\n    addressable: true\n  c.outPorts.add 'missed',\n    datatype: 'integer'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    document.removeEventListener 'keydown', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'keys'\n      keys = input.getData 'keys'\n\n      # Ensure previous subscription is ended\n      do unsubscribe\n\n      # Older version of this component used string input\n      keys = keys.split ',' if typeof keys is 'string'\n\n      # We allow some common keyboard shortcuts to be passed as strings\n      for key, index in keys\n        switch key\n          when '-' then keys[index] = 189\n          when '=' then keys[index] = 187\n          when '0' then keys[index] = 48\n          when 'a' then keys[index] = 65\n          when 'x' then keys[index] = 88\n          when 'c' then keys[index] = 67\n          when 'v' then keys[index] = 86\n          when 'z' then keys[index] = 90\n          when 'r' then keys[index] = 82\n\n      ignoreInput = if input.hasData('ignoreinput') then input.getData('ignoreinput') else true\n\n      c.subscriber =\n        callback: (event) ->\n          return unless event.ctrlKey or event.metaKey\n          return if event.target.tagName is 'TEXTAREA' and ignoreInput\n          return if event.target.tagName is 'INPUT' and ignoreInput\n          return if String(event.target.contentEditable) is 'true' and ignoreInput\n          route = keys.indexOf event.keyCode\n          if route is -1\n            output.send\n              missed: event.keyCode\n            return\n          event.preventDefault()\n          event.stopPropagation()\n          output.send\n            shortcut: new noflo.IP 'data', event.keyCode,\n              index: route\n        ctx: context\n      document.addEventListener 'keydown', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenMouse":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'mouse-pointer'\n  c.description = 'Listen to mouse events on a DOM element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'click',\n    datatype: 'object'\n  c.outPorts.add 'dblclick',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'click', element.click, false\n      element.el.removeEventListener 'dblclick', element.dblclick, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      click: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          click: event\n      dblclick: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          dblclick: event\n      ctx: context\n    data.el.addEventListener 'click', data.click, false\n    data.el.addEventListener 'dblclick', data.dblclick, false\n    c.elements.push data\n    return\n"},"interaction/ListenPointer":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to pointer events on a DOM element'\n  c.icon = 'pencil-square-o'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'action',\n    datatype: 'string'\n    default: 'none'\n    control: true\n  events = [\n    'down'\n    'up'\n    'cancel'\n    'move'\n    'over'\n    'out'\n    'enter'\n    'leave'\n  ]\n  for event in events\n    c.outPorts.add event,\n      datatype: 'object'\n      description: \"Sends event on pointer#{event}\"\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      if element.el.removeAttribute\n        element.el.removeAttribute 'touch-action'\n      for event in events\n        element.el.removeEventListener \"pointer#{event}\", element[\"pointer#{event}\"], false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    action = if input.hasData('action') then input.getData('action') else 'none'\n    data =\n      el: input.getData 'element'\n      ctx: context\n    data.el.setAttribute 'touch-action', action\n    events.forEach (event) ->\n      data[\"pointer#{event}\"] = (ev) ->\n        ev.preventDefault()\n        ev.stopPropagation()\n        payload = {}\n        payload[event] = ev.target.value\n        output.send payload\n      data.el.addEventListener \"pointer#{event}\", data[\"pointer#{event}\"], false\n    c.elements.push data\n    return\n"},"interaction/ListenResize":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to window resize events'\n  c.icon = 'desktop'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for screen resizes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for screen resizes'\n  c.outPorts.add 'width',\n    datatype: 'number'\n  c.outPorts.add 'height',\n    datatype: 'number'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    window.removeEventListener 'resize', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      c.subscriber =\n        callback: (event) ->\n          output.send\n            width: window.innerWidth\n            height: window.innerHeight\n        ctx: context\n      output.send\n        width: window.innerWidth\n        height: window.innerHeight\n      window.addEventListener 'resize', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenScroll":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to scroll events on the browser window'\n  c.icon = 'arrows-v'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for hash changes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for hash changes'\n  c.outPorts.add 'top',\n    datatype: 'number'\n  c.outPorts.add 'bottom',\n    datatype: 'number'\n  c.outPorts.add 'left',\n    datatype: 'number'\n  c.outPorts.add 'right',\n    datatype: 'number'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    window.removeEventListener 'scroll', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      c.subscriber =\n        callback: (event) ->\n          top = window.scrollY\n          left = window.scrollX\n          output.send\n            top: top\n            bottom: top + window.innerHeight\n            left: left\n            right: left.window.innerWidth\n        ctx: context\n      window.addEventListener 'scroll', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenSpeech":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for user\\'s microphone and recognize phrases'\n  c.icon = 'microphone'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for hash changes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for hash changes'\n  c.outPorts.add 'result',\n    datatype: 'string'\n  c.outPorts.add 'error',\n    datatype: 'object'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    do c.subscriber.recognition.stop\n    do c.subscriber.ctx.deactivate\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      unless window.webkitSpeechRecognition\n        output.done new Error 'Speech recognition support not available'\n        return\n      c.subscriber =\n        sent: []\n        callback: (event) ->\n          for result, idx in event.results\n            continue unless result.isFinal\n            if c.subscriber.sent.indexOf(idx) isnt -1\n              continue\n            output.send\n              result: result[0].transcript\n            c.subscriber.sent.push idx\n        error: (err) ->\n          output.send\n            error: err\n        ctx: context\n      c.subscriber.recognition = new window.webkitSpeechRecognition\n      c.subscriber.recognition.continuous = true\n      c.subscriber.recognition.start()\n      c.subscriber.recognition.onresult = c.subscriber.callback\n      c.subscriber.recognition.onerror = c.subscriber.error\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenTouch":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to touch events on a DOM element'\n  c.icon = 'hand-o-up'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'start',\n    datatype: 'object'\n  c.outPorts.add 'movex',\n    datatype: 'number'\n  c.outPorts.add 'movey',\n    datatype: 'number'\n  c.outPorts.add 'end',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'touchstart', element.touchstart, false\n      element.el.removeEventListener 'touchmove', element.touchmove, false\n      element.el.removeEventListener 'touchend', element.touchend, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      touchstart: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        return unless event.changedTouches\n        return unless event.changedTouches.length\n        for touch, idx in event.changedTouches\n          output.send\n            start: new noflo.IP 'data', event,\n              touch: idx\n      touchmove: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        return unless event.changedTouches\n        return unless event.changedTouches.length\n        for touch, idx in event.changedTouches\n          output.send\n            movex: new noflo.IP 'data', touch.pageX,\n              touch: idx\n            movey: new noflo.IP 'data', touch.pageY,\n              touch: idx\n      touchend: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        return unless event.changedTouches\n        return unless event.changedTouches.length\n        for touch, idx in event.changedTouches\n          output.send\n            end: new noflo.IP 'data', event,\n              touch: idx\n      ctx: context\n    data.el.addEventListener 'touchstart', data.touchstart, false\n    data.el.addEventListener 'touchmove', data.touchmove, false\n    data.el.addEventListener 'touchend', data.touchend, false\n    c.elements.push data\n    return\n"},"interaction/ReadCoordinates":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Read the coordinates from a DOM event'\n  c.icon = 'map-marker'\n  c.inPorts.add 'event',\n    datatype: 'object'\n  c.outPorts.add 'screen',\n    datatype: 'object'\n  c.outPorts.add 'client',\n    datatype: 'object'\n  c.outPorts.add 'page',\n    datatype: 'object'\n  c.forwardBrackets =\n    event: ['screen', 'client', 'page']\n  c.process (input, output) ->\n    return unless input.hasData 'event'\n    event = input.getData 'event'\n    output.sendDone\n      screen:\n        x: event.screenX\n        y: event.screenY\n      client:\n        x: event.clientX\n        y: event.clientY\n      page:\n        x: event.pageX\n        y: event.pageY\n"},"interaction/ReadGamepad":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Read the state of a gamepad'\n  c.icon = 'gamepad'\n  c.inPorts.add 'gamepad',\n    datatype: 'integer'\n  c.outPorts.add 'out',\n    datatype: 'object'\n  c.outPorts.add 'error',\n    datatype: 'object'\n  c.lastTimestamps = {}\n  c.tearDown = (callback) ->\n    c.lastTimestamps = {}\n    do callback\n  c.process (input, output) ->\n    return unless input.hasData 'gamepad'\n    gamepad = input.getData 'gamepad'\n    unless navigator.webkitGetGamepads\n      output.done new Error \"No WebKit Gamepad API available\"\n      return\n    gamepadState = navigator.webkitGetGamepads()[gamepad]\n    unless gamepadState\n      output.done new Error \"Gamepad '#{gamepad}' not available\"\n    if c.lastTimestamps[gamepad] = gamepadState.timestamp\n      # No change\n      output.done()\n      return\n    c.lastTimestamps[gamepad] = gamepadState.timestamp\n    output.sendDone\n      out: gamepadState\n"},"interaction/SetHash":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Set the hash in browser\\'s URL bar'\n  c.icon = 'slack'\n  c.inPorts.add 'hash',\n    datatype: 'string'\n  c.outPorts.add 'out',\n    datatype: 'string'\n  c.process (input, output) ->\n    return unless input.hasData 'hash'\n    hash = input.getData 'hash'\n    window.location.hash = \"##{hash}\"\n    output.sendDone\n      out: hash\n"},"dom/SetAttribute":{"language":"coffeescript","source":"'use strict'\n\n# @runtime noflo-browser\n\nnoflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = \"Set the given attribute on the DOM element to the received\n    value.\"\n    \n  # Define in ports.\n  c.inPorts.add 'element',\n    datatype: 'object'\n    description: 'The element on which to set the attribute.'\n\n  c.inPorts.add 'attribute',\n    datatype: 'string'\n    description: 'The attribute which is set on the DOM element.'\n\n  c.inPorts.add 'value',\n    datatype: 'string'\n    description: 'Value of the attribute being set.'\n  \n  # Define out ports.\n  c.outPorts.add 'element',\n    datatype: 'object'\n    description: 'The element that was updated.'\n\n  c.forwardBrackets =\n    element: ['element']\n    value: ['element']\n\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'attribute', 'value'\n    [element, attribute, value] = input.getData 'element', 'attribute', 'value'\n    if typeof value is 'object'\n      if toString.call(value) is '[object Array]'\n        value = value.join ' '\n      else\n        newVal = []\n        newVal.push val for key, val of value\n        value = newVal.join ' '\n    if attribute is \"value\"\n      element.value = value\n    else\n      element.setAttribute attribute, value\n\n    output.sendDone\n      element: element\n"},"dom/RemoveElement":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Remove an element from DOM'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.process (input, output) ->\n    return unless input.hasData 'element'\n    element = input.getData 'element'\n    return unless element.parentNode\n    element.parentNode.removeChild element\n    output.done()\n"}};
+var sources = {"bigiot-driver-app/AddNavigationUrls":{"language":"javascript","source":"const noflo = require('noflo');\n\n// Format a directions URL for Google Maps\n// https://developers.google.com/maps/documentation/urls/guide#directions-action\nfunction navUrl(location) {\n  const url = new URL('maps/dir/?api=1', 'https://www.google.com');\n  url.searchParams.set('travelmode', 'driving');\n  url.searchParams.set('destination', `${location.latitude},${location.longitude}`);\n  return url.toString();\n}\n\nfunction addNavigationUrls(sites) {\n  const withNav = sites.map(s => ({ ...s, navigationUrl: navUrl(s) }));\n  return withNav;\n}\n\nexports.getComponent = () => {\n  const c = noflo.asComponent(addNavigationUrls, {\n    description: 'Add navigation URLs using Google Maps',\n  });\n  return c;\n};\n"},"bigiot-driver-app/BestParkingSites":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction siteHasVacantSpots(site) {\n  return site.vacant > 1;\n}\n\nfunction isSortedByDistance(sites) {\n  return sites[0].distance <= sites[1].distance;\n}\n\nfunction bestN(sites, n) {\n  if (sites.length < 2) {\n    throw new Error('Expected more than 2 parking sites');\n  }\n  if (!isSortedByDistance(sites)) {\n    throw new Error('Parking sites are not sorted by distance');\n  }\n\n  const best = sites.filter(siteHasVacantSpots).slice(0, n);\n  if (best.length > n) {\n    throw new Error('Postcondition failed. Length should be <= n');\n  }\n  return best;\n}\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Return the N best parking spots';\n  c.icon = 'expand-arrows-alt';\n  c.inPorts.add('in', {\n    datatype: 'array',\n    required: true,\n  });\n  c.inPorts.add('n', {\n    datatype: 'int',\n    required: false,\n    control: true,\n    default: 10,\n  });\n  c.outPorts.add('out', {\n    datatype: 'array',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'n')) {\n      return;\n    }\n\n    const [data, n] = input.getData('in', 'n');\n    const best = bestN(data, n);\n    output.sendDone(best);\n  });\n  return c;\n};\n"},"bigiot-driver-app/EnsureMountpoint":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction ensureMountpoint(id) {\n  let mount = document.getElementById(id);\n  if (mount) {\n    return mount;\n  }\n  const container = window.document.body;\n  mount = document.createElement('div');\n  mount.id = id;\n  container.appendChild(mount);\n  return mount;\n}\n\nexports.getComponent = () =>\n  noflo.asComponent(ensureMountpoint, {\n    description: 'Find DOM element, or create it if not existing',\n  });\n"},"bigiot-driver-app/Flatten":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction flatten(array) {\n  const flat = array.reduce((items, item) => items.concat(item), []);\n  return flat;\n}\n\nexports.getComponent = () => {\n  const c = noflo.asComponent(flatten, {\n    description: 'Flatten an array-of-arrays',\n  });\n  return c;\n};\n"},"bigiot-driver-app/HideElement":{"language":"javascript","source":"const noflo = require('noflo');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.inPorts.add('in', {\n    datatype: 'bang',\n  });\n  c.inPorts.add('id', {\n    datatype: 'string',\n    control: true,\n    required: true,\n  });\n  c.outPorts.add('out', {\n    datatype: 'bang',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'id')) {\n      return;\n    }\n    const id = input.getData('id');\n    input.getData('in');\n    const element = document.getElementById(id);\n    if (!element) {\n      output.done(new Error(`Element #${id} not found`));\n    }\n    element.style.display = 'none';\n    output.sendDone({\n      out: true,\n    });\n  });\n  return c;\n};\n"},"bigiot-driver-app/NormalizeSites":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction normalizeSite(site) {\n  const normalized = Object.assign({}, site);\n  // Some offerings have .free instead of .vacant\n  if (typeof site.vacant === 'undefined' && typeof site.free === 'number') {\n    normalized.vacant = site.free;\n  }\n  return normalized;\n}\n\nfunction normalizeSites(sites) {\n  return sites.map(normalizeSite);\n}\n\nexports.getComponent = () => {\n  const c = noflo.asComponent(normalizeSites, {\n    description: 'Normalize different payloads for site',\n  });\n  return c;\n};\n"},"bigiot-driver-app/RenderDetails":{"language":"javascript","source":"const noflo = require('noflo');\n\nconst ReactDOM = require('react-dom');\nconst React = require('react');\n\nconst List = require('@material-ui/core/List').default;\nconst ListItem = require('@material-ui/core/ListItem').default;\nconst ListItemText = require('@material-ui/core/ListItemText').default;\nconst ListItemSecondaryAction = require('@material-ui/core/ListItemSecondaryAction').default;\nconst IconButton = require('@material-ui/core/IconButton').default;\nconst NavigationIcon = require('@material-ui/icons/Navigation').default;\n\nfunction prettyDistance(distance) {\n  if (distance > 1999) {\n    return `${distance / 1000} kilometers`;\n  }\n  return `${distance} meters`;\n}\n\nfunction siteListItem(site, emitEvent) {\n  const e = React.createElement;\n  const key = `${site.latitude}-${site.longitude}`;\n\n  function selectSite() {\n    emitEvent({ type: 'select', payload: site });\n  }\n\n  const item = e(ListItem, { key, onClick: selectSite }, [\n    e(ListItemText, { key: 'text', primary: prettyDistance(site.distance), secondary: `${site.vacant} free parking spaces` }),\n    e(ListItemSecondaryAction, { key: 'secondary' }, [\n      e(IconButton, { key: 'nav-button', href: site.navigationUrl, 'aria-label': 'Navigate to' }, [\n        e(NavigationIcon, { key: 'nav-icon' }),\n      ]),\n    ]),\n  ]);\n  return item;\n}\n\nfunction render(mount, sites, emitEvent) {\n  const e = React.createElement;\n\n  const details =\n    e(List, { }, sites.map(s => siteListItem(s, emitEvent)));\n\n  return ReactDOM.render(details, mount);\n}\n\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Render list of details about parking sites';\n\n  c.inPorts.add('mount', {\n    datatype: 'object',\n  });\n  c.inPorts.add('sites', {\n    datatype: 'array',\n  });\n\n  c.outPorts.add('event', {\n    datatype: 'object',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n\n  c.process((input, output) => {\n    if (!input.hasData('mount', 'sites')) {\n      return;\n    }\n\n    const [mount, sites] = input.getData('mount', 'sites');\n    const emitEvent = (event) => {\n      output.send({ event });\n    };\n    render(mount, sites, emitEvent);\n\n    output.done(true);\n  });\n  return c;\n};\n"},"bigiot-driver-app/RenderMap":{"language":"javascript","source":"const { Map, Marker, TileLayer } = require('react-leaflet');\nconst noflo = require('noflo');\nconst ReactDOM = require('react-dom');\nconst React = require('react');\nconst Leaflet = require('leaflet');\n\n// TODO: only put the iconset in once, and then just use references\nconst iconSet = `\n  <svg width=\"0\" height=\"0\" class=\"icon-set\">\n     <defs>\n    <circle\n       id=\"parking-site-icon\"\n       cx=\"256.62244\"\n       cy=\"257.51282\"\n       r=\"244.0538\" />\n    <g\n       id=\"car-icon\"\n       transform=\"translate(63.100403,46.990602)\">\n      <g\n         id=\"g956\"\n         transform=\"translate(19.139834,-107.66157)\">\n        <g\n           id=\"g987\"\n           transform=\"matrix(1.3685326,0,0,1.3685326,-65.797803,-120.19095)\">\n          <path\n             inkscape:connector-curvature=\"0\"\n             id=\"path2301\"\n             style=\"fill:#000000\"\n             d=\"m 214.06,176.82 h 41.43 c 22.55,0 34.52,12.32 40.04,26.73 l 29.33,75.67 c 11.62,1.48 32.22,15.14 32.22,40.98 v 96.24 h -28.53 v 30.77 c 0,37.87 -53.59,37.43 -53.59,0 v -30.77 h -96.39 -0.06 0.06 -0.05 -96.393 v 30.77 c 0,37.43 -53.599,37.87 -53.599,0 V 416.44 H 0 V 320.2 c 0,-25.84 20.577,-39.5 32.197,-40.98 l 29.335,-75.67 c 5.522,-14.41 17.487,-26.73 40.038,-26.73 h 41.91 z\" />\n          <g\n             id=\"g975\">\n            <path\n               d=\"M 178.51,278.44 H 178.46 62.57 l 22.085,-59.56 c 2.761,-8.36 6.904,-14.4 16.565,-14.49 h 77.24 0.05 0.06 77.27 c 9.66,0.09 13.8,6.13 16.57,14.49 l 22.08,59.56 H 178.57 Z\"\n               style=\"fill:#ffffff\"\n               id=\"path2315\"\n               inkscape:connector-curvature=\"0\" />\n            <g\n               id=\"g2317\">\n              <g\n                 id=\"g2319\">\n                <path\n                   d=\"m 56.18,358.44 c -13.672,0 -24.758,-11.42 -24.758,-25.51 0,-14.1 11.086,-25.52 24.758,-25.52 13.673,0 24.757,11.42 24.757,25.52 0,14.09 -11.084,25.51 -24.757,25.51 z\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2321\"\n                   inkscape:connector-curvature=\"0\" />\n                <path\n                   d=\"M 56.18,332.93\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2323\"\n                   inkscape:connector-curvature=\"0\" />\n              </g>\n              <g\n                 id=\"g2325\">\n                <path\n                   d=\"m 300.88,358.44 c 13.67,0 24.76,-11.42 24.76,-25.51 0,-14.1 -11.09,-25.52 -24.76,-25.52 -13.67,0 -24.76,11.42 -24.76,25.52 0,14.09 11.09,25.51 24.76,25.51 z\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2327\"\n                   inkscape:connector-curvature=\"0\" />\n                <path\n                   d=\"M 300.88,332.93\"\n                   style=\"fill:#ffffff\"\n                   id=\"path2329\"\n                   inkscape:connector-curvature=\"0\" />\n              </g>\n            </g>\n          </g>\n        </g>\n      </g>\n    </g>\n    </defs>\n  </svg>\n`;\n\nfunction svgIcon(name) {\n  const [width, height] = [512, 512]; // needs to match what is used in original SVG geometry\n  const useIcon = `<svg viewBox=\"0 0 ${width} ${height}\"><use xlink:href=\"#${name}\"></use></svg>`;\n  return iconSet + useIcon;\n}\n\nfunction parkingStatus(site) {\n  let status = 'unknown';\n  if (site.vacant === 0) {\n    status = 'unavailable';\n  } else if (site.vacant <= 3) {\n    status = 'low';\n  } else if (site.vacant > 3) {\n    status = 'available';\n  }\n  return status;\n}\n\nfunction parkingSiteMarker(site) {\n  const e = React.createElement;\n\n  const icon = new Leaflet.DivIcon({\n    className: `parking-site-icon parking-${parkingStatus(site)}`,\n    html: svgIcon('parking-site-icon'),\n    iconSize: ['use-css', 'use-css'],\n  });\n\n  const marker = e(Marker, {\n    position: [site.latitude, site.longitude],\n    key: `parking-site-${site.latitude}-${site.longitude}`,\n    icon,\n  }, []);\n\n  return marker;\n}\n\nfunction currentLocationMarker(location) {\n  const e = React.createElement;\n\n  const icon = new Leaflet.DivIcon({\n    className: 'current-location-icon',\n    html: svgIcon('car-icon'),\n    iconSize: ['use-css', 'use-css'],\n  });\n\n  const marker = e(Marker, {\n    position: [location.latitude, location.longitude],\n    key: 'current-location',\n    icon,\n  }, []);\n\n  return marker;\n}\n\n\n// # TODO: render a marker for current location\nfunction render({ mount, sites = [], center }) {\n  const e = React.createElement;\n\n  const centerLatLon = [center.latitude, center.longitude];\n  const markers = sites.map(parkingSiteMarker).concat([currentLocationMarker(center)]);\n\n  const map =\n    e(Map, { center: centerLatLon, zoom: 16 }, [\n      e(TileLayer, {\n        key: 'layer',\n        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',\n        attribution: '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors',\n      }),\n    ].concat(markers));\n\n  return ReactDOM.render(map, mount);\n}\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.inPorts.add('mount', {\n    datatype: 'object',\n    required: true,\n  });\n  c.inPorts.add('center', {\n    datatype: 'object',\n    required: true,\n  });\n  c.inPorts.add('sites', {\n    datatype: 'array',\n  });\n  c.outPorts.add('out', {\n    datatype: 'object',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.setUp = (callback) => {\n    c.state = {};\n    callback();\n  };\n  c.tearDown = (callback) => {\n    delete c.state;\n    callback();\n  };\n  c.process((input, output) => {\n    if (!input.hasData('mount') && !c.state.mount) {\n      // We can't render without a mountpoint\n      return;\n    }\n    if (!input.hasData('center') && !c.state.center) {\n      // We can't render without a map center\n      return;\n    }\n    Object.keys(c.inPorts.ports).forEach((port) => {\n      if (!input.hasData(port)) {\n        return;\n      }\n      c.state[port] = input.getData(port);\n    });\n    output.sendDone({\n      out: render(c.state),\n    });\n  });\n  return c;\n};\n\n"},"bigiot-driver-app/ShowError":{"language":"javascript","source":"const noflo = require('noflo');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.inPorts.add('in', {\n    datatype: 'object',\n  });\n  c.inPorts.add('selector', {\n    datatype: 'string',\n    control: true,\n    required: true,\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'selector')) {\n      return;\n    }\n    const [err, selector] = input.getData('in', 'selector');\n    const element = document.querySelector(selector);\n    if (!element) {\n      output.done(new Error(`Element #${selector} not found`));\n    }\n    element.innerHTML = `ERROR: ${err.message || 'An error has occured'}`;\n    if (element.parentElement) {\n      element.parentElement.classList.add('error');\n    }\n    output.done();\n  });\n  return c;\n};\n"},"bigiot-driver-app/SortEntriesByDistance":{"language":"javascript","source":"const noflo = require('noflo');\nconst where = require('where');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Sort a list of geolocated results by distance to current location';\n  c.icon = 'expand-arrows-alt';\n  c.inPorts.add('in', {\n    datatype: 'array',\n    required: true,\n  });\n  c.inPorts.add('location', {\n    datatype: 'object',\n    required: true,\n    control: true,\n  });\n  c.outPorts.add('out', {\n    datatype: 'array',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in', 'location')) {\n      return;\n    }\n    const [data, location] = input.getData('in', 'location');\n    const current = new where.Point(location.latitude, location.longitude);\n    const withDistance = data.map((entry) => {\n      const point = new where.Point(entry.latitude, entry.longitude);\n      return {\n        ...entry,\n        distance: current.distanceTo(point) * 1000,\n        bearing: current.bearingTo(point),\n      };\n    });\n    withDistance.sort((a, b) => {\n      if (a.distance < b.distance) {\n        return -1;\n      }\n      if (b.distance < a.distance) {\n        return 1;\n      }\n      return 0;\n    });\n    output.sendDone(withDistance);\n  });\n  return c;\n};\n"},"bigiot-driver-app/SwitchEvent":{"language":"javascript","source":"const noflo = require('noflo');\n\nconst supportedEvents = ['select', 'navigate'];\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = ' ';\n  c.icon = 'sign-out';\n\n  c.inPorts.add('in', {\n    description: 'Event',\n    datatype: 'object',\n  });\n\n  supportedEvents.map((event) => {\n    c.outPorts.add(event, {\n      datatype: 'all',\n    });\n    return null;\n  });\n\n  c.outPorts.add(\n    'error',\n    { datatype: 'object' },\n  );\n\n  return c.process((input, output) => {\n    if (!input.hasData('in')) {\n      return;\n    }\n\n    const event = input.getData('in');\n\n    // send to port with same name of the event type\n    if (supportedEvents.indexOf(event.type) !== -1) {\n      const send = {};\n      send[event.type] = event.payload;\n      output.sendDone(send);\n    } else {\n      output.done(new Error(`Unsupported event type: ${event.type}`));\n    }\n  });\n};\n"},"bigiot-driver-app/GetCurrentPosition":{"language":"javascript","source":"const noflo = require('noflo');\n\n// @runtime noflo-browser\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = 'Get user\\'s current location';\n  c.icon = 'location-arrow';\n  c.inPorts.add('in', {\n    datatype: 'bang',\n  });\n  c.outPorts.add('out', {\n    datatype: 'object',\n  });\n  c.outPorts.add('error', {\n    datatype: 'object',\n  });\n  c.process((input, output) => {\n    if (!input.hasData('in')) {\n      return;\n    }\n    input.getData('in');\n    if (!navigator.geolocation) {\n      output.done(new Error('Location API not available'));\n      return;\n    }\n    navigator.geolocation.getCurrentPosition((pos) => {\n      output.sendDone({\n        out: {\n          latitude: 50.9578353,\n          longitude: 6.8272381,\n          accuracy: pos.coords.accuracy,\n        },\n      });\n    }, (err) => {\n      output.done(new Error(err.message || 'Failed to acquire position'));\n    });\n  });\n  return c;\n};\n"},"Graph":{"language":"javascript","source":"//     NoFlo - Flow-Based Programming for JavaScript\n//     (c) 2013-2017 Flowhub UG\n//     (c) 2011-2012 Henri Bergius, Nemein\n//     NoFlo may be freely distributed under the MIT license\n\n// The Graph component is used to wrap NoFlo Networks into components inside\n// another network.\nvar Graph, noflo;\n\nnoflo = require(\"../lib/NoFlo\");\n\nGraph = class Graph extends noflo.Component {\n  constructor(metadata) {\n    super();\n    this.metadata = metadata;\n    this.network = null;\n    this.ready = true;\n    this.started = false;\n    this.starting = false;\n    this.baseDir = null;\n    this.loader = null;\n    this.load = 0;\n    this.inPorts = new noflo.InPorts({\n      graph: {\n        datatype: 'all',\n        description: 'NoFlo graph definition to be used with the subgraph component',\n        required: true\n      }\n    });\n    this.outPorts = new noflo.OutPorts;\n    this.inPorts.graph.on('ip', (packet) => {\n      if (packet.type !== 'data') {\n        return;\n      }\n      return this.setGraph(packet.data, (err) => {\n        if (err) {\n          // TODO: Port this part to Process API and use output.error method instead\n          return this.error(err);\n        }\n      });\n    });\n  }\n\n  setGraph(graph, callback) {\n    this.ready = false;\n    if (typeof graph === 'object') {\n      if (typeof graph.addNode === 'function') {\n        // Existing Graph object\n        this.createNetwork(graph, callback);\n        return;\n      }\n      // JSON definition of a graph\n      noflo.graph.loadJSON(graph, (err, instance) => {\n        if (err) {\n          return callback(err);\n        }\n        instance.baseDir = this.baseDir;\n        return this.createNetwork(instance, callback);\n      });\n      return;\n    }\n    if (graph.substr(0, 1) !== \"/\" && graph.substr(1, 1) !== \":\" && process && process.cwd) {\n      graph = `${process.cwd()}/${graph}`;\n    }\n    return noflo.graph.loadFile(graph, (err, instance) => {\n      if (err) {\n        return callback(err);\n      }\n      instance.baseDir = this.baseDir;\n      return this.createNetwork(instance, callback);\n    });\n  }\n\n  createNetwork(graph, callback) {\n    this.description = graph.properties.description || '';\n    this.icon = graph.properties.icon || this.icon;\n    if (!graph.name) {\n      graph.name = this.nodeId;\n    }\n    graph.componentLoader = this.loader;\n    return noflo.createNetwork(graph, (err, network1) => {\n      this.network = network1;\n      if (err) {\n        return callback(err);\n      }\n      this.emit('network', this.network);\n      // Subscribe to network lifecycle\n      this.subscribeNetwork(this.network);\n      // Wire the network up\n      return this.network.connect((err) => {\n        var name, node, ref;\n        if (err) {\n          return callback(err);\n        }\n        ref = this.network.processes;\n        for (name in ref) {\n          node = ref[name];\n          // Map exported ports to local component\n          this.findEdgePorts(name, node);\n        }\n        // Finally set ourselves as \"ready\"\n        this.setToReady();\n        return callback();\n      });\n    }, true);\n  }\n\n  subscribeNetwork(network) {\n    var contexts;\n    contexts = [];\n    this.network.on('start', () => {\n      var ctx;\n      ctx = {};\n      contexts.push(ctx);\n      return this.activate(ctx);\n    });\n    return this.network.on('end', () => {\n      var ctx;\n      ctx = contexts.pop();\n      if (!ctx) {\n        return;\n      }\n      return this.deactivate(ctx);\n    });\n  }\n\n  isExportedInport(port, nodeName, portName) {\n    var priv, pub, ref;\n    ref = this.network.graph.inports;\n    // First we check disambiguated exported ports\n    for (pub in ref) {\n      priv = ref[pub];\n      if (!(priv.process === nodeName && priv.port === portName)) {\n        continue;\n      }\n      return pub;\n    }\n    // Component has exported ports and this isn't one of them\n    return false;\n  }\n\n  isExportedOutport(port, nodeName, portName) {\n    var priv, pub, ref;\n    ref = this.network.graph.outports;\n    // First we check disambiguated exported ports\n    for (pub in ref) {\n      priv = ref[pub];\n      if (!(priv.process === nodeName && priv.port === portName)) {\n        continue;\n      }\n      return pub;\n    }\n    // Component has exported ports and this isn't one of them\n    return false;\n  }\n\n  setToReady() {\n    if (typeof process !== 'undefined' && process.execPath && process.execPath.indexOf('node') !== -1) {\n      return process.nextTick(() => {\n        this.ready = true;\n        return this.emit('ready');\n      });\n    } else {\n      return setTimeout(() => {\n        this.ready = true;\n        return this.emit('ready');\n      }, 0);\n    }\n  }\n\n  findEdgePorts(name, process) {\n    var inPorts, outPorts, port, portName, targetPortName;\n    inPorts = process.component.inPorts.ports;\n    outPorts = process.component.outPorts.ports;\n    for (portName in inPorts) {\n      port = inPorts[portName];\n      targetPortName = this.isExportedInport(port, name, portName);\n      if (targetPortName === false) {\n        continue;\n      }\n      this.inPorts.add(targetPortName, port);\n      this.inPorts[targetPortName].on('connect', () => {\n        // Start the network implicitly if we're starting to get data\n        if (this.starting) {\n          return;\n        }\n        if (this.network.isStarted()) {\n          return;\n        }\n        if (this.network.startupDate) {\n          // Network was started, but did finish. Re-start simply\n          this.network.setStarted(true);\n          return;\n        }\n        // Network was never started, start properly\n        return this.setUp(function() {});\n      });\n    }\n    for (portName in outPorts) {\n      port = outPorts[portName];\n      targetPortName = this.isExportedOutport(port, name, portName);\n      if (targetPortName === false) {\n        continue;\n      }\n      this.outPorts.add(targetPortName, port);\n    }\n    return true;\n  }\n\n  isReady() {\n    return this.ready;\n  }\n\n  isSubgraph() {\n    return true;\n  }\n\n  isLegacy() {\n    return false;\n  }\n\n  setUp(callback) {\n    this.starting = true;\n    if (!this.isReady()) {\n      this.once('ready', () => {\n        return this.setUp(callback);\n      });\n      return;\n    }\n    if (!this.network) {\n      return callback(null);\n    }\n    return this.network.start((err) => {\n      if (err) {\n        return callback(err);\n      }\n      this.starting = false;\n      return callback();\n    });\n  }\n\n  tearDown(callback) {\n    this.starting = false;\n    if (!this.network) {\n      return callback(null);\n    }\n    return this.network.stop(function(err) {\n      if (err) {\n        return callback(err);\n      }\n      return callback();\n    });\n  }\n\n};\n\nexports.getComponent = function(metadata) {\n  return new Graph(metadata);\n};\n"},"bigiot/AccessSubscriptions":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction accessSubscriptions(consumer, subscriptions, input = {}) {\n  return Promise.all(subscriptions.map(sub => consumer.access(sub, input)));\n}\n\nexports.getComponent = () => noflo.asComponent(accessSubscriptions, {\n  icon: null,\n  description: 'Request data from a set of subscriptions',\n});\n"},"bigiot/AuthenticateConsumer":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction authenticateConsumer(consumer) {\n  return consumer.authenticate().then(() => consumer);\n}\n\nexports.getComponent = () => noflo.asComponent(authenticateConsumer, {\n  icon: null,\n  description: 'Authenticate a BIG IoT Consumer against Marketplace',\n});\n"},"bigiot/Callback":{"language":"javascript","source":"const noflo = require('noflo');\n\nexports.getComponent = () => {\n  const c = new noflo.Component();\n  c.description = `This component calls a given callback function for each\nIP it receives.  The Callback component is typically used to connect\nNoFlo with external Node.js code.`;\n  c.icon = 'sign-out';\n\n  c.inPorts.add('in', {\n    description: 'Object passed as argument of the callback',\n    datatype: 'all',\n  });\n  c.inPorts.add('callback', {\n    description: 'Callback to invoke',\n    datatype: 'function',\n    control: true,\n    required: true,\n  });\n  c.outPorts.add(\n    'error',\n    { datatype: 'object' },\n  );\n\n  return c.process((input, output) => {\n    if (!input.hasData('callback', 'in')) {\n      return;\n    }\n    const [callback, data] = input.getData('callback', 'in');\n    if (typeof callback !== 'function') {\n      output.done(new Error('The provided callback must be a function'));\n      return;\n    }\n\n    // Call the callback when receiving data\n    try {\n      callback(data);\n    } catch (e) {\n      output.done(e);\n      return;\n    }\n    output.done();\n  });\n};\n"},"bigiot/CreateConsumer":{"language":"javascript","source":"const noflo = require('noflo');\nconst bigiot = require('bigiot-js');\n\nfunction createConsumer(id, secret, api = 0, cors = 0) {\n  const marketplace = (api === 0) ? undefined : api;\n  const corsProxy = (cors === 0) ? undefined : cors;\n  return new bigiot.consumer(id, secret, marketplace, corsProxy);\n}\n\nexports.getComponent = () => noflo.asComponent(createConsumer, {\n  icon: null,\n  description: 'Create BIG IoT Consumer',\n});\n"},"bigiot/DiscoverOfferings":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction discoverOfferings(consumer, query) {\n  return consumer.discover(query);\n}\n\nexports.getComponent = () => noflo.asComponent(discoverOfferings, {\n  icon: null,\n  description: 'Discover offers on marketplace that matches @query',\n});\n"},"bigiot/OfferingQuery":{"language":"javascript","source":"const noflo = require('noflo');\nconst bigiot = require('bigiot-js');\n\nfunction offeringQuery(category, options = {}) {\n  const name = options.name || category;\n  const query = new bigiot.offering(name, category);\n\n  // Defaults to giving everything\n  delete query.license;\n  delete query.extent;\n  delete query.price;\n\n  Object.keys(options).forEach((key) => {\n    query[key] = options[key];\n  });\n\n  return query;\n}\n\nexports.getComponent = () => noflo.asComponent(offeringQuery, {\n  icon: null,\n  description: 'Create Offering Query',\n});\n"},"bigiot/SubscribeOfferings":{"language":"javascript","source":"const noflo = require('noflo');\n\nfunction subscribeOfferings(consumer, offerings) {\n  const subscribeOffer = (offer) => {\n    const id = (typeof offer === 'string') ? offer : offer.id;\n    return consumer.subscribe(id);\n  };\n\n  return Promise.all(offerings.map(subscribeOffer));\n}\n\nexports.getComponent = () => noflo.asComponent(subscribeOfferings, {\n  icon: null,\n  description: 'Subscribe to a set of offerings',\n});\n"},"core/Callback":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component calls a given callback function for each\n  IP it receives.  The Callback component is typically used to connect\n  NoFlo with external Node.js code.'\n  c.icon = 'sign-out'\n\n  c.inPorts.add 'in',\n    description: 'Object passed as argument of the callback'\n    datatype: 'all'\n  c.inPorts.add 'callback',\n    description: 'Callback to invoke'\n    datatype: 'function'\n    control: true\n    required: true\n  c.outPorts.add 'error',\n    datatype: 'object'\n\n  c.process (input, output) ->\n    return unless input.hasData 'callback', 'in'\n    [callback, data] = input.getData 'callback', 'in'\n    unless typeof callback is 'function'\n      output.done new Error 'The provided callback must be a function'\n      return\n\n    # Call the callback when receiving data\n    try\n      callback data\n    catch e\n      return output.done e\n    output.done()\n"},"core/Copy":{"language":"coffeescript","source":"noflo = require 'noflo'\nowl = require 'owl-deepcopy'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'deep (i.e. recursively) copy an object'\n  c.icon = 'copy'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be copied'\n  c.outPorts.add 'out',\n    datatype: 'all'\n    description: 'Copy of the original packet'\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    data = input.getData 'in'\n\n    copy = owl.deepCopy data\n    output.sendDone\n      out: copy\n    return\n"},"core/DisconnectAfterPacket":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Makes each data packet a stream of its own'\n  c.icon = 'pause'\n  c.forwardBrackets = {}\n  c.autoOrdering = false\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forward with disconnection'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  brackets = {}\n  c.tearDown = (callback) ->\n    brackets = {}\n  c.process (input, output) ->\n    # Force auto-ordering to be off for this one\n    c.autoOrdering = false\n\n    data = input.get 'in'\n    brackets[input.scope] = [] unless brackets[input.scope]\n    if data.type is 'openBracket'\n      brackets[input.scope].push data.data\n      output.done()\n      return\n    if data.type is 'closeBracket'\n      brackets[input.scope].pop()\n      output.done()\n      return\n\n    return unless data.type is 'data'\n\n    for bracket in brackets[input.scope]\n      output.sendIP 'out', new noflo.IP 'openBracket', bracket\n    output.sendIP 'out', data\n    closes = brackets[input.scope].slice 0\n    closes.reverse()\n    for bracket in closes\n      output.sendIP 'out', new noflo.IP 'closeBracket', bracket\n\n    output.done()\n"},"core/Drop":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component drops every packet it receives with no\n  action'\n  c.icon = 'trash-o'\n\n  c.inPorts.add 'in',\n    datatypes: 'all'\n    description: 'Packet to be dropped'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    data.drop()\n    output.done()\n    return\n"},"core/Kick":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component generates a single packet and sends it to\n  the output port. Mostly usable for debugging, but can also be useful\n  for starting up networks.'\n  c.icon = 'share'\n\n  c.inPorts.add 'in',\n    datatype: 'bang'\n    description: 'Signal to send the data packet'\n  c.inPorts.add 'data',\n    datatype: 'all'\n    description: 'Packet to be sent'\n    control: true\n    default: null\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    return unless input.hasStream 'in'\n    return if input.attached('data').length and not input.hasData 'data'\n    bang = input.getData 'in'\n    data = input.getData 'data'\n    output.send\n      out: data\n    output.done()\n"},"core/MakeFunction":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Evaluates a function each time data hits the \"in\" port\n  and sends the return value to \"out\". Within the function \"x\" will\n  be the variable from the in port. For example, to make a ^2 function\n  input \"return x*x;\" to the function port.'\n  c.icon = 'code'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be processed'\n  c.inPorts.add 'function',\n    datatype: 'string'\n    description: 'Function to evaluate'\n    control: true\n  c.outPorts.add 'out',\n    datatype: 'all'\n  c.outPorts.add 'function',\n    datatype: 'function'\n  c.outPorts.add 'error',\n    datatype: 'object'\n\n  prepareFunction = (func, callback) ->\n    if typeof func is 'function'\n      callback null, func\n      return\n    try\n      newFunc = Function 'x', func\n    catch e\n      callback e\n      return\n    callback null, newFunc\n\n  c.process (input, output) ->\n    return if input.attached('in').length and not input.hasData 'in'\n    if input.hasData 'function', 'in'\n      # Both function and input data\n      prepareFunction input.getData('function'), (err, func) ->\n        if err\n          output.done e\n          return\n        data = input.getData 'in'\n        try\n          result = func data\n        catch e\n          output.done e\n          return\n        output.sendDone\n          function: func\n          out: result\n        return\n      return\n    return unless input.hasData 'function'\n    prepareFunction input.getData('function'), (err, func) ->\n      if err\n        output.done e\n        return\n      output.sendDone\n        function: func\n      return\n    return\n"},"core/Merge":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'This component receives data on multiple input ports and\n    sends the same data out to the connected output port'\n  c.icon = 'compress'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forwarded'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    output.sendDone\n      out: data\n"},"core/Output":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nunless noflo.isBrowser()\n  util = require 'util'\nelse\n  util =\n    inspect: (data) -> data\n\nlog = (options, data) ->\n  if options?\n    console.log util.inspect data,\n      options.showHidden, options.depth, options.colors\n  else\n    console.log data\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Sends the data items to console.log'\n  c.icon = 'bug'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be printed through console.log'\n  c.inPorts.add 'options',\n    datatype: 'object'\n    description: 'Options to be passed to console.log'\n    control: true\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    return if input.attached('options').length and not input.hasData 'options'\n\n    options = null\n    if input.has 'options'\n      options = input.getData 'options'\n\n    data = input.getData 'in'\n    log options, data\n    output.sendDone\n      out: data\n"},"core/ReadGlobal":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Returns the value of a global variable.'\n  c.icon = 'usd'\n\n  # inPorts\n  c.inPorts.add 'name',\n    description: 'The name of the global variable.'\n\n  # outPorts\n  c.outPorts.add 'value',\n    description: 'The value of the variable.'\n\n  c.outPorts.add 'error',\n    description: 'Any errors that occured reading the variables value.'\n\n  c.forwardBrackets =\n    name: ['value', 'error']\n\n  c.process (input, output) ->\n    return unless input.hasData 'name'\n    data = input.getData 'name'\n\n    value = unless noflo.isBrowser() then global[data] else window[data]\n\n    if typeof value is 'undefined'\n      err = new Error \"\\\"#{data}\\\" is undefined on the global object.\"\n      output.sendDone err\n      return\n    output.sendDone\n      value: value\n"},"core/Repeat":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Forwards packets and metadata in the same way\n  it receives them'\n  c.icon = 'forward'\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to forward'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    output.sendDone\n      out: data\n"},"core/RepeatAsync":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = \"Like 'Repeat', except repeat on next tick\"\n  c.icon = 'step-forward'\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to forward'\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    setTimeout ->\n      output.sendDone\n        out: data\n    , 0\n"},"core/RepeatDelayed":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Forward packet after a set delay'\n  c.icon = 'clock-o'\n\n  c.timers = []\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forwarded with a delay'\n  c.inPorts.add 'delay',\n    datatype: 'number'\n    description: 'How much to delay'\n    default: 500\n    control: true\n\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.tearDown = (callback) ->\n    clearTimeout timer for timer in c.timers\n    c.timers = []\n    callback()\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    return if input.attached('delay').length and not input.hasData 'delay'\n\n    delay = 500\n    if input.hasData 'delay'\n      delay = input.getData 'delay'\n    payload = input.get 'in'\n\n    timer = setTimeout ->\n      c.timers.splice c.timers.indexOf(timer), 1\n      output.sendDone\n        out: payload\n    , delay\n    c.timers.push timer\n"},"core/RunInterval":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Send a packet at the given interval'\n  c.icon = 'clock-o'\n  c.inPorts.add 'interval',\n    datatype: 'number'\n    description: 'Interval at which output packets are emitted (ms)'\n    required: true\n    control: true\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start the emission'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop the emission'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n\n  c.timers = {}\n\n  cleanUp = (scope) ->\n    return unless c.timers[scope]\n    clearInterval c.timers[scope].interval\n    c.timers[scope].deactivate()\n    c.timers[scope] = null\n\n  c.tearDown = (callback) ->\n    for scope, context of c.timers\n      cleanUp scope\n    c.timers = {}\n    callback()\n\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      return unless input.hasData 'interval'\n      start = input.get 'start'\n      return unless start.type is 'data'\n      interval = parseInt input.getData 'interval'\n      # Ensure we deactivate previous interval in this scope, if any\n      cleanUp start.scope\n\n      # Set up interval\n      context.interval = setInterval ->\n        bang = new noflo.IP 'data', true\n        bang.scope = start.scope\n        c.outPorts.out.sendIP bang\n      , interval\n\n      # Register scope, we keep it active until stopped\n      c.timers[start.scope] = context\n      return\n\n    if input.hasData 'stop'\n      stop = input.get 'stop'\n      return unless stop.type is 'data'\n      # Deactivate interval in this scope\n      cleanUp stop.scope\n      return\n"},"core/RunTimeout":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Send a packet after the given time in ms'\n  c.icon = 'clock-o'\n\n  c.timer = {}\n\n  c.inPorts.add 'time',\n    datatype: 'number'\n    description: 'Time after which a packet will be sent'\n    required: true\n    control: true\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start the timeout before sending a packet'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n\n  c.forwardBrackets =\n    start: ['out']\n\n  c.stopTimer = (scope) ->\n    return unless c.timer[scope]\n    clearTimeout c.timer[scope].timeout\n    c.timer[scope].deactivate()\n    delete c.timer[scope]\n\n  c.tearDown = (callback) ->\n    for scope, timer of c.timer\n      c.stopTimer scope\n    callback()\n\n  c.process (input, output, context) ->\n    return unless input.hasData 'time', 'start'\n    time = input.getData 'time'\n    bang = input.getData 'start'\n    # Ensure we deactivate previous timeout, if any\n    c.stopTimer input.scope\n    # Set up new timer\n    context.timeout = setTimeout ->\n      c.timer = null\n      output.sendDone\n        out: true\n    , time\n    c.timer[input.scope] = context\n    return\n"},"core/SendNext":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Sends next packet in buffer when receiving a bang'\n  c.icon = 'forward'\n\n  c.inPorts.add 'data',\n    datatype: 'all'\n  c.inPorts.add 'in',\n    datatype: 'bang'\n  c.outPorts.add 'out',\n    datatype: 'all'\n  c.outPorts.add 'empty',\n    datatype: 'bang'\n    required: false\n\n  c.forwardBrackets = {}\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    bang = input.getData 'in'\n\n    unless input.hasData 'data'\n      # No data packets in the buffer, send \"empty\"\n      output.sendDone\n        empty: true\n      return\n\n    sent = false\n    # Loop until we've either drained the buffer completely, or until\n    # we hit the next data packet\n    while input.has 'data'\n      if sent\n        # If we already sent data, we look ahead to see if next packet is data and bail out\n        buf = c.inPorts.data.getBuffer bang.scope\n        break if buf[0].type is 'data'\n\n      packet = input.get 'data'\n      output.send\n        out: packet\n      sent = true if packet.type is 'data'\n    # After the loop we can deactivate\n    output.done()\n"},"core/Split":{"language":"coffeescript","source":"noflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'expand'\n  c.description = 'This component receives data on a single input port and\n    sends the same data out to all connected output ports'\n\n  c.inPorts.add 'in',\n    datatype: 'all'\n    description: 'Packet to be forwarded'\n\n  c.outPorts.add 'out',\n    datatype: 'all'\n\n  c.process (input, output) ->\n    data = input.get 'in'\n    output.sendDone\n      out: data\n"},"dom/AddClass":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Add a class to an element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'class',\n    datatype: 'string'\n\n  c.process (input, output) ->\n    return unless input.has 'element', 'class'\n    [element, className] = input.getData 'element', 'class'\n    element.classList.add className\n    output.done()\n"},"dom/AppendChild":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Append elements as children of a parent element'\n  c.inPorts.add 'parent',\n    datatype: 'object'\n  c.inPorts.add 'child',\n    datatype: 'object'\n\n  c.process (input, output) ->\n    return unless input.hasData 'parent', 'child'\n    [parent, child] = input.getData 'parent', 'child'\n    parent.appendChild child\n    output.done()\n"},"dom/CreateElement":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Create a new DOM Element'\n  c.inPorts.add 'tagname',\n    datatype: 'string'\n  c.inPorts.add 'container',\n    datatype: 'object'\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.forwardBrackets =\n    tagname: ['element']\n\n  c.process (input, output) ->\n    return unless input.hasData 'tagname'\n    if c.inPorts.container.isAttached()\n      # If container is attached, we want it too\n      return unless input.hasData 'container'\n\n    tagname = input.getData 'tagname'\n    element = document.createElement tagname\n    if input.hasData 'container'\n      container = input.getData 'container'\n      container.appendChild element\n\n    output.sendDone\n      element: element\n"},"dom/CreateFragment":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c. description = 'Create a new DOM DocumentFragment'\n  c.inPorts.add 'in',\n    datatype: 'bang'\n  c.outPorts.add 'fragment',\n    datatype: 'object'\n\n  c.forwardBrackets =\n    in: ['fragment']\n\n  c.process (input, output) ->\n    return unless input.hasData 'in'\n    input.getData 'in'\n    fragment = document.createDocumentFragment()\n    output.sendDone\n      fragment: fragment\n"},"dom/GetAttribute":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = \"Reads the given attribute from the DOM element on the in\n    port.\"\n\n  # Define in ports.\n  c.inPorts.add 'element',\n    datatype: 'object'\n    description: 'The element from which to read the attribute from.'\n    required: true\n\n  c.inPorts.add 'attribute',\n    datatype: 'string'\n    description: 'The attribute which is read from the DOM element.'\n    required: true\n    control: true\n\n  # Define out ports.\n  c.outPorts.add 'out',\n    datatype: 'string'\n    description: 'Value of the attribute being read.'\n\n  c.forwardBrackets =\n    element: ['out']\n\n  # On data flow.\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'attribute'\n    [element, attribute] = input.getData 'element', 'attribute'\n    value = element.getAttribute attribute\n    output.sendDone\n      out: value\n"},"dom/GetElement":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description ='Get a DOM element matching a query'\n  c.inPorts.add 'in',\n    datatype: 'object'\n    description: 'DOM element to constrain the query to'\n  c.inPorts.add 'selector',\n    datatype: 'string'\n    description: 'CSS selector'\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'error',\n    datatype: 'object'\n  c.forwardBrackets =\n    selector: ['element', 'error']\n  c.process (input, output) ->\n    return unless input.hasData 'selector'\n    return unless input.hasData 'in' if input.attached('in').length > 0\n    if input.hasData 'in'\n      # Element-scoped selector\n      [container, selector] = input.getData 'in', 'selector'\n      unless typeof container.querySelector is 'function'\n        output.done new Error 'Given container doesn\\'t support querySelectors'\n        return\n      el = container.querySelectorAll selector\n      unless el.length\n        output.done new Error \"No element matching '#{selector}' found under container\"\n        return\n      for element in el\n        output.send\n          element: element\n      output.done()\n      return\n    selector = input.getData 'selector'\n    el = document.querySelectorAll selector\n    unless el.length\n      output.done new Error \"No element matching '#{selector}' found under document\"\n      return\n    for element in el\n      output.send\n        element: element\n    output.done()\n"},"dom/HasClass":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Check if an element has a given class'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'class',\n    datatype: 'string'\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'missed',\n    datatype: 'object'\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'class'\n    [element, klass] = input.getData 'element', 'class'\n    if element.classList.contains klass\n      output.sendDone\n        element: element\n      return\n    output.sendDone\n      missed: element\n"},"dom/Listen":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'addEventListener for specified event type'\n  c.icon = 'stethoscope'\n\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'type',\n    datatype: 'string'\n  c.inPorts.add 'preventdefault',\n    datatype: 'boolean'\n    control: true\n    default: false\n  c.outPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'event',\n    datatype: 'object'\n\n  c.elements = {}\n  cleanUp = (scope) ->\n    return unless c.elements[scope]\n    {element, event, listener} = c.elements[scope]\n    element.removeEventListener event, listener\n    c.elements[scope].deactivate()\n    delete c.elements[scope]\n  c.tearDown = (callback) ->\n    for scope, element of c.elements\n      cleanUp scope\n    c.elements = {}\n    callback()\n  c.forwardBrackets = {}\n\n  c.process (input, output, context) ->\n\n    return unless input.hasData 'element', 'type'\n    [element, type] = input.getData 'element', 'type'\n\n    preventDefault = false\n    if input.hasData 'preventdefault'\n      preventDefault = input.getData 'preventdefault'\n\n    scope = null\n    cleanUp scope\n\n    context.element = element\n    context.event = type\n    context.listener = (event) ->\n      event.preventDefault() if preventDefault\n      output.send\n        element: context.element\n        event: event\n    c.elements[context] = context\n    element.addEventListener type, context.listener\n"},"dom/RemoveClass":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Remove a class from an element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'class',\n    datatype: 'string'\n\n  c.process (input, output) ->\n    return unless input.has 'element', 'class'\n    [element, className] = input.getData 'element', 'class'\n    element.classList.remove className\n    output.done()\n"},"dom/SetAttribute":{"language":"coffeescript","source":"'use strict'\n\n# @runtime noflo-browser\n\nnoflo = require 'noflo'\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = \"Set the given attribute on the DOM element to the received\n    value.\"\n    \n  # Define in ports.\n  c.inPorts.add 'element',\n    datatype: 'object'\n    description: 'The element on which to set the attribute.'\n\n  c.inPorts.add 'attribute',\n    datatype: 'string'\n    description: 'The attribute which is set on the DOM element.'\n\n  c.inPorts.add 'value',\n    datatype: 'string'\n    description: 'Value of the attribute being set.'\n  \n  # Define out ports.\n  c.outPorts.add 'element',\n    datatype: 'object'\n    description: 'The element that was updated.'\n\n  c.forwardBrackets =\n    element: ['element']\n    value: ['element']\n\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'attribute', 'value'\n    [element, attribute, value] = input.getData 'element', 'attribute', 'value'\n    if typeof value is 'object'\n      if toString.call(value) is '[object Array]'\n        value = value.join ' '\n      else\n        newVal = []\n        newVal.push val for key, val of value\n        value = newVal.join ' '\n    if attribute is \"value\"\n      element.value = value\n    else\n      element.setAttribute attribute, value\n\n    output.sendDone\n      element: element\n"},"dom/RequestAnimationFrame":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nrequestAnimationFrame =\n  window.requestAnimationFrame       ||\n  window.webkitRequestAnimationFrame ||\n  window.mozRequestAnimationFrame    ||\n  window.oRequestAnimationFrame      ||\n  window.msRequestAnimationFrame     ||\n  (callback, element) ->\n    window.setTimeout( ->\n      callback(+new Date())\n    , 1000 / 60)\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Sends bangs that correspond with screen refresh rate.'\n  c.icon = 'film'\n\n  c.inPorts.add 'start',\n    datatype: 'bang'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n\n  c.running = {}\n  cleanUp = (scope) ->\n    return unless c.running[scope]\n    c.running[scope].deactivate()\n    delete c.running[scope]\n  c.tearDown = (callback) ->\n    for scope, running of c.running\n      cleanUp scope\n    c.running = {}\n    callback()\n  c.animate = (scope, output) ->\n    # Stop when context has been stopped\n    return unless c.running[scope]\n    # Send bang\n    output.send true\n    # Request next frame\n    requestAnimationFrame c.animate.bind c, scope, output\n\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      start = input.get 'start'\n      return unless start.type is 'data'\n      # Ensure previous was deactivated\n      cleanUp start.scope\n\n      # Register scope\n      c.running[start.scope] = context\n\n      # Request first frame\n      requestAnimationFrame c.animate.bind c, start.scope, output\n      return\n\n    if input.hasData 'stop'\n      stop = input.get 'stop'\n      return unless stop.type is 'data'\n      # Deactivate this scope\n      cleanUp stop.scope\n      return\n"},"dom/WriteHtml":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Write HTML inside an existing element'\n  c.inPorts.add 'container',\n    datatype: 'object'\n  c.inPorts.add 'html',\n    datatype: 'string'\n  c.outPorts.add 'container',\n    datatype: 'object'\n  c.process (input, output) ->\n    return unless input.hasData 'container', 'html'\n    [container, html] = input.getData 'container', 'html'\n    container.innerHTML = html\n    output.sendDone\n      container: container\n"},"interaction/Focus":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'i-cursor'\n  c.description = 'focus element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n    description: 'element to be focused'\n    control: true\n  c.inPorts.add 'trigger',\n    datatype: 'bang'\n    description: 'trigger focus'\n  c.outPorts.add 'out',\n    datatype: 'bang'\n  c.process (input, output) ->\n    return unless input.hasData 'element', 'trigger'\n    element = input.getData 'element'\n    input.getData 'trigger'\n    window.setTimeout ->\n      element.focus()\n      output.sendDone\n        out: true\n    , 0\n"},"interaction/ListenChange":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to changes on an input element'\n  c.icon = 'hourglass'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'value',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'change', element.listener, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      listener: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          value: event.target.value\n      ctx: context\n    data.el.addEventListener 'change', data.listener, false\n    c.elements.push data\n    return\n"},"interaction/ListenDrag":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description =  'Listen to drag events on a DOM element'\n  c.icon = 'arrows'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'start',\n    datatype: 'object'\n  c.outPorts.add 'movey',\n    datatype: 'number'\n  c.outPorts.add 'movex',\n    datatype: 'number'\n  c.outPorts.add 'end',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'dragstart', element.dragstart, false\n      element.el.removeEventListener 'drag', element.dragmove, false\n      element.el.removeEventListener 'dragend', element.dragend, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      dragstart: (event) ->\n        event.stopPropagation()\n        output.send\n          start: event\n      dragmove: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          movex: event.clientX\n          movey: event.clientY\n      dragend: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          end: event\n      ctx: context\n    data.el.addEventListener 'dragstart', data.dragstart, false\n    data.el.addEventListener 'drag', data.dragmove, false\n    data.el.addEventListener 'dragend', data.dragend, false\n    c.elements.push data\n    return\n"},"interaction/ListenEvent":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'rss'\n  c.description = 'Listen to custom events on a DOM element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'event',\n    datatype: 'string'\n  c.outPorts.add 'out',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener element.eventName, element.onEvent, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element', 'event'\n    el = input.getData 'element'\n    eventName = input.getData 'event'\n    data =\n      el: el\n      eventName: eventName\n      onEvent: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        event.eventName = eventName\n        output.send\n          out: event\n      ctx: context\n    data.el.addEventListener eventName, data.onEvent, false\n    c.elements.push data\n    return\n"},"interaction/ListenKeyboard":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for key presses on a given DOM element'\n  c.icon = 'keyboard-o'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'stop',\n    datatype: 'object'\n  c.outPorts.add 'keypress',\n    datatype: 'integer'\n  c.elements = []\n  unsubcribe = (element) ->\n    element.el.removeEventListener 'keypress', element.listener, false\n    element.ctx.deactivate()\n  c.tearDown = (callback) ->\n    unsubscribe element for element in c.elements\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'element'\n      data =\n        el: input.getData 'element'\n        listener: (event) ->\n          output.send\n            keypress: event.keyCode\n        ctx: context\n      data.el.addEventListener 'keypress', data.listener, false\n      c.elements.push data\n      return\n    if input.hasData 'stop'\n      element = input.getData 'stop'\n      ctx = null\n      for el in c.elements\n        continue unless el.el is element\n        ctx = el\n      return unless ctx\n      unsubscribe ctx\n      output.done()\n"},"interaction/ListenKeyboardShortcuts":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for keyboard shortcuts and route them'\n  c.icon = 'keyboard-o'\n  c.inPorts.add 'keys',\n    datatype: 'array'\n  c.inPorts.add 'ignoreinput',\n    datatype: 'boolean'\n    default: true\n    control: true\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n  c.outPorts.add 'shortcut',\n    datatype: 'bang'\n    addressable: true\n  c.outPorts.add 'missed',\n    datatype: 'integer'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    document.removeEventListener 'keydown', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'keys'\n      keys = input.getData 'keys'\n\n      # Ensure previous subscription is ended\n      do unsubscribe\n\n      # Older version of this component used string input\n      keys = keys.split ',' if typeof keys is 'string'\n\n      # We allow some common keyboard shortcuts to be passed as strings\n      for key, index in keys\n        switch key\n          when '-' then keys[index] = 189\n          when '=' then keys[index] = 187\n          when '0' then keys[index] = 48\n          when 'a' then keys[index] = 65\n          when 'x' then keys[index] = 88\n          when 'c' then keys[index] = 67\n          when 'v' then keys[index] = 86\n          when 'z' then keys[index] = 90\n          when 'r' then keys[index] = 82\n\n      ignoreInput = if input.hasData('ignoreinput') then input.getData('ignoreinput') else true\n\n      c.subscriber =\n        callback: (event) ->\n          return unless event.ctrlKey or event.metaKey\n          return if event.target.tagName is 'TEXTAREA' and ignoreInput\n          return if event.target.tagName is 'INPUT' and ignoreInput\n          return if String(event.target.contentEditable) is 'true' and ignoreInput\n          route = keys.indexOf event.keyCode\n          if route is -1\n            output.send\n              missed: event.keyCode\n            return\n          event.preventDefault()\n          event.stopPropagation()\n          output.send\n            shortcut: new noflo.IP 'data', event.keyCode,\n              index: route\n        ctx: context\n      document.addEventListener 'keydown', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenMouse":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.icon = 'mouse-pointer'\n  c.description = 'Listen to mouse events on a DOM element'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'click',\n    datatype: 'object'\n  c.outPorts.add 'dblclick',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'click', element.click, false\n      element.el.removeEventListener 'dblclick', element.dblclick, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      click: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          click: event\n      dblclick: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        output.send\n          dblclick: event\n      ctx: context\n    data.el.addEventListener 'click', data.click, false\n    data.el.addEventListener 'dblclick', data.dblclick, false\n    c.elements.push data\n    return\n"},"interaction/ListenPointer":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to pointer events on a DOM element'\n  c.icon = 'pencil-square-o'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.inPorts.add 'action',\n    datatype: 'string'\n    default: 'none'\n    control: true\n  events = [\n    'down'\n    'up'\n    'cancel'\n    'move'\n    'over'\n    'out'\n    'enter'\n    'leave'\n  ]\n  for event in events\n    c.outPorts.add event,\n      datatype: 'object'\n      description: \"Sends event on pointer#{event}\"\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      if element.el.removeAttribute\n        element.el.removeAttribute 'touch-action'\n      for event in events\n        element.el.removeEventListener \"pointer#{event}\", element[\"pointer#{event}\"], false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    action = if input.hasData('action') then input.getData('action') else 'none'\n    data =\n      el: input.getData 'element'\n      ctx: context\n    data.el.setAttribute 'touch-action', action\n    events.forEach (event) ->\n      data[\"pointer#{event}\"] = (ev) ->\n        ev.preventDefault()\n        ev.stopPropagation()\n        payload = {}\n        payload[event] = ev.target.value\n        output.send payload\n      data.el.addEventListener \"pointer#{event}\", data[\"pointer#{event}\"], false\n    c.elements.push data\n    return\n"},"interaction/ListenResize":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to window resize events'\n  c.icon = 'desktop'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for screen resizes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for screen resizes'\n  c.outPorts.add 'width',\n    datatype: 'number'\n  c.outPorts.add 'height',\n    datatype: 'number'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    window.removeEventListener 'resize', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      c.subscriber =\n        callback: (event) ->\n          output.send\n            width: window.innerWidth\n            height: window.innerHeight\n        ctx: context\n      output.send\n        width: window.innerWidth\n        height: window.innerHeight\n      window.addEventListener 'resize', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenScroll":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to scroll events on the browser window'\n  c.icon = 'arrows-v'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for hash changes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for hash changes'\n  c.outPorts.add 'top',\n    datatype: 'number'\n  c.outPorts.add 'bottom',\n    datatype: 'number'\n  c.outPorts.add 'left',\n    datatype: 'number'\n  c.outPorts.add 'right',\n    datatype: 'number'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    window.removeEventListener 'scroll', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      c.subscriber =\n        callback: (event) ->\n          top = window.scrollY\n          left = window.scrollX\n          output.send\n            top: top\n            bottom: top + window.innerHeight\n            left: left\n            right: left.window.innerWidth\n        ctx: context\n      window.addEventListener 'scroll', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenSpeech":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for user\\'s microphone and recognize phrases'\n  c.icon = 'microphone'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for hash changes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for hash changes'\n  c.outPorts.add 'result',\n    datatype: 'string'\n  c.outPorts.add 'error',\n    datatype: 'object'\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    do c.subscriber.recognition.stop\n    do c.subscriber.ctx.deactivate\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      unless window.webkitSpeechRecognition\n        output.done new Error 'Speech recognition support not available'\n        return\n      c.subscriber =\n        sent: []\n        callback: (event) ->\n          for result, idx in event.results\n            continue unless result.isFinal\n            if c.subscriber.sent.indexOf(idx) isnt -1\n              continue\n            output.send\n              result: result[0].transcript\n            c.subscriber.sent.push idx\n        error: (err) ->\n          output.send\n            error: err\n        ctx: context\n      c.subscriber.recognition = new window.webkitSpeechRecognition\n      c.subscriber.recognition.continuous = true\n      c.subscriber.recognition.start()\n      c.subscriber.recognition.onresult = c.subscriber.callback\n      c.subscriber.recognition.onerror = c.subscriber.error\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"},"interaction/ListenTouch":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen to touch events on a DOM element'\n  c.icon = 'hand-o-up'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.outPorts.add 'start',\n    datatype: 'object'\n  c.outPorts.add 'movex',\n    datatype: 'number'\n  c.outPorts.add 'movey',\n    datatype: 'number'\n  c.outPorts.add 'end',\n    datatype: 'object'\n  c.elements = []\n  c.tearDown = (callback) ->\n    for element in c.elements\n      element.el.removeEventListener 'touchstart', element.touchstart, false\n      element.el.removeEventListener 'touchmove', element.touchmove, false\n      element.el.removeEventListener 'touchend', element.touchend, false\n      element.ctx.deactivate()\n    c.elements = []\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    return unless input.hasData 'element'\n    data =\n      el: input.getData 'element'\n      touchstart: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        return unless event.changedTouches\n        return unless event.changedTouches.length\n        for touch, idx in event.changedTouches\n          output.send\n            start: new noflo.IP 'data', event,\n              touch: idx\n      touchmove: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        return unless event.changedTouches\n        return unless event.changedTouches.length\n        for touch, idx in event.changedTouches\n          output.send\n            movex: new noflo.IP 'data', touch.pageX,\n              touch: idx\n            movey: new noflo.IP 'data', touch.pageY,\n              touch: idx\n      touchend: (event) ->\n        event.preventDefault()\n        event.stopPropagation()\n        return unless event.changedTouches\n        return unless event.changedTouches.length\n        for touch, idx in event.changedTouches\n          output.send\n            end: new noflo.IP 'data', event,\n              touch: idx\n      ctx: context\n    data.el.addEventListener 'touchstart', data.touchstart, false\n    data.el.addEventListener 'touchmove', data.touchmove, false\n    data.el.addEventListener 'touchend', data.touchend, false\n    c.elements.push data\n    return\n"},"interaction/ReadCoordinates":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Read the coordinates from a DOM event'\n  c.icon = 'map-marker'\n  c.inPorts.add 'event',\n    datatype: 'object'\n  c.outPorts.add 'screen',\n    datatype: 'object'\n  c.outPorts.add 'client',\n    datatype: 'object'\n  c.outPorts.add 'page',\n    datatype: 'object'\n  c.forwardBrackets =\n    event: ['screen', 'client', 'page']\n  c.process (input, output) ->\n    return unless input.hasData 'event'\n    event = input.getData 'event'\n    output.sendDone\n      screen:\n        x: event.screenX\n        y: event.screenY\n      client:\n        x: event.clientX\n        y: event.clientY\n      page:\n        x: event.pageX\n        y: event.pageY\n"},"interaction/ReadGamepad":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Read the state of a gamepad'\n  c.icon = 'gamepad'\n  c.inPorts.add 'gamepad',\n    datatype: 'integer'\n  c.outPorts.add 'out',\n    datatype: 'object'\n  c.outPorts.add 'error',\n    datatype: 'object'\n  c.lastTimestamps = {}\n  c.tearDown = (callback) ->\n    c.lastTimestamps = {}\n    do callback\n  c.process (input, output) ->\n    return unless input.hasData 'gamepad'\n    gamepad = input.getData 'gamepad'\n    unless navigator.webkitGetGamepads\n      output.done new Error \"No WebKit Gamepad API available\"\n      return\n    gamepadState = navigator.webkitGetGamepads()[gamepad]\n    unless gamepadState\n      output.done new Error \"Gamepad '#{gamepad}' not available\"\n    if c.lastTimestamps[gamepad] = gamepadState.timestamp\n      # No change\n      output.done()\n      return\n    c.lastTimestamps[gamepad] = gamepadState.timestamp\n    output.sendDone\n      out: gamepadState\n"},"interaction/SetHash":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Set the hash in browser\\'s URL bar'\n  c.icon = 'slack'\n  c.inPorts.add 'hash',\n    datatype: 'string'\n  c.outPorts.add 'out',\n    datatype: 'string'\n  c.process (input, output) ->\n    return unless input.hasData 'hash'\n    hash = input.getData 'hash'\n    window.location.hash = \"##{hash}\"\n    output.sendDone\n      out: hash\n"},"dom/ReadHtml":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Read HTML from an existing element'\n  c.inPorts.add 'container',\n    datatype: 'object'\n  c.outPorts.add 'html',\n    datatype: 'string'\n  c.forwardBrackets =\n    container: ['html']\n  c.process (input, output) ->\n    return unless input.hasData 'container'\n    container = input.getData 'container'\n    output.sendDone\n      html: container.innerHTML\n"},"dom/RemoveElement":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Remove an element from DOM'\n  c.inPorts.add 'element',\n    datatype: 'object'\n  c.process (input, output) ->\n    return unless input.hasData 'element'\n    element = input.getData 'element'\n    return unless element.parentNode\n    element.parentNode.removeChild element\n    output.done()\n"},"interaction/ListenHash":{"language":"coffeescript","source":"noflo = require 'noflo'\n\n# @runtime noflo-browser\n\nexports.getComponent = ->\n  c = new noflo.Component\n  c.description = 'Listen for hash changes in browser\\'s URL bar'\n  c.icon = 'slack'\n  c.inPorts.add 'start',\n    datatype: 'bang'\n    description: 'Start listening for hash changes'\n  c.inPorts.add 'stop',\n    datatype: 'bang'\n    description: 'Stop listening for hash changes'\n  c.outPorts.add 'initial',\n    datatype: 'string'\n  c.outPorts.add 'change',\n    datatype: 'string'\n  c.current = null\n  c.subscriber = null\n  unsubscribe = ->\n    return unless c.subscriber\n    window.removeEventListener 'hashchange', c.subscriber.callback, false\n    c.subscriber.ctx.deactivate()\n    c.subscriber = null\n  c.tearDown = (callback) ->\n    c.current = null\n    do unsubscribe\n    do callback\n  c.forwardBrackets = {}\n  c.process (input, output, context) ->\n    if input.hasData 'start'\n      input.getData 'start'\n      # Ensure previous subscription is ended\n      do unsubscribe\n      sendHash = (port) ->\n        oldHash = c.current\n        c.current = window.location.href.split('#')[1] or ''\n        if oldHash\n          output.send\n            change: new noflo.IP 'openBracket', oldHash\n        payload = {}\n        payload[port] = c.current\n        output.send payload\n        if oldHash\n          output.send\n            change: new noflo.IP 'closeBracket', oldHash\n      c.subscriber =\n        callback: (event) ->\n          sendHash 'change'\n        ctx: context\n      # Send initial\n      sendHash 'initial'\n      window.addEventListener 'hashchange', c.subscriber.callback, false\n      return\n    if input.hasData 'stop'\n      input.getData 'stop'\n      do unsubscribe\n      output.done()\n      return\n"}};
 
 exports.setSource = function (loader, packageId, name, source, language, callback) {
   baseLoader.setSource(sources, loader, packageId, name, source, language, callback);
@@ -84751,6 +84286,7 @@ exports.register = function (loader, callback) {
   loader.registerComponent("bigiot-driver-app", "EnsureMountpoint", __webpack_require__(/*! ./components/EnsureMountpoint.js */ "./components/EnsureMountpoint.js"));
   loader.registerComponent("bigiot-driver-app", "Flatten", __webpack_require__(/*! ./components/Flatten.js */ "./components/Flatten.js"));
   loader.registerComponent("bigiot-driver-app", "HideElement", __webpack_require__(/*! ./components/HideElement.js */ "./components/HideElement.js"));
+  loader.registerComponent("bigiot-driver-app", "NormalizeSites", __webpack_require__(/*! ./components/NormalizeSites.js */ "./components/NormalizeSites.js"));
   loader.registerComponent("bigiot-driver-app", "RenderDetails", __webpack_require__(/*! ./components/RenderDetails.js */ "./components/RenderDetails.js"));
   loader.registerComponent("bigiot-driver-app", "RenderMap", __webpack_require__(/*! ./components/RenderMap.js */ "./components/RenderMap.js"));
   loader.registerComponent("bigiot-driver-app", "ShowError", __webpack_require__(/*! ./components/ShowError.js */ "./components/ShowError.js"));
@@ -88638,7 +88174,7 @@ function randomFillSync (buf, offset, size) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v16.6.1
  * react-dom.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -89136,63 +88672,24 @@ var warningWithoutStack = function () {};
       return;
     }
     if (typeof console !== 'undefined') {
-      var _args$map = args.map(function (item) {
+      var argsWithFormat = args.map(function (item) {
         return '' + item;
-      }),
-          a = _args$map[0],
-          b = _args$map[1],
-          c = _args$map[2],
-          d = _args$map[3],
-          e = _args$map[4],
-          f = _args$map[5],
-          g = _args$map[6],
-          h = _args$map[7];
+      });
+      argsWithFormat.unshift('Warning: ' + format);
 
-      var message = 'Warning: ' + format;
-
-      // We intentionally don't use spread (or .apply) because it breaks IE9:
-      // https://github.com/facebook/react/issues/13610
-      switch (args.length) {
-        case 0:
-          console.error(message);
-          break;
-        case 1:
-          console.error(message, a);
-          break;
-        case 2:
-          console.error(message, a, b);
-          break;
-        case 3:
-          console.error(message, a, b, c);
-          break;
-        case 4:
-          console.error(message, a, b, c, d);
-          break;
-        case 5:
-          console.error(message, a, b, c, d, e);
-          break;
-        case 6:
-          console.error(message, a, b, c, d, e, f);
-          break;
-        case 7:
-          console.error(message, a, b, c, d, e, f, g);
-          break;
-        case 8:
-          console.error(message, a, b, c, d, e, f, g, h);
-          break;
-        default:
-          throw new Error('warningWithoutStack() currently supports at most 8 arguments.');
-      }
+      // We intentionally don't use spread (or .apply) directly because it
+      // breaks IE9: https://github.com/facebook/react/issues/13610
+      Function.prototype.apply.call(console.error, console, argsWithFormat);
     }
     try {
       // --- Welcome to debugging React ---
       // This error was thrown as a convenience so that you can use this stack
       // to find the callsite that caused this warning to fire.
       var argIndex = 0;
-      var _message = 'Warning: ' + format.replace(/%s/g, function () {
+      var message = 'Warning: ' + format.replace(/%s/g, function () {
         return args[argIndex++];
       });
-      throw new Error(_message);
+      throw new Error(message);
     } catch (x) {}
   };
 }
@@ -89231,11 +88728,10 @@ var validateEventDispatches = void 0;
 /**
  * Dispatch the event to the listener.
  * @param {SyntheticEvent} event SyntheticEvent to handle
- * @param {boolean} simulated If the event is simulated (changes exn behavior)
  * @param {function} listener Application-level callback
  * @param {*} inst Internal component instance
  */
-function executeDispatch(event, simulated, listener, inst) {
+function executeDispatch(event, listener, inst) {
   var type = event.type || 'unknown-event';
   event.currentTarget = getNodeFromInstance(inst);
   invokeGuardedCallbackAndCatchFirstError(type, listener, undefined, event);
@@ -89245,7 +88741,7 @@ function executeDispatch(event, simulated, listener, inst) {
 /**
  * Standard/simple iteration through an event's collected dispatches.
  */
-function executeDispatchesInOrder(event, simulated) {
+function executeDispatchesInOrder(event) {
   var dispatchListeners = event._dispatchListeners;
   var dispatchInstances = event._dispatchInstances;
   {
@@ -89257,10 +88753,10 @@ function executeDispatchesInOrder(event, simulated) {
         break;
       }
       // Listeners and Instances are two parallel arrays that are always in sync.
-      executeDispatch(event, simulated, dispatchListeners[i], dispatchInstances[i]);
+      executeDispatch(event, dispatchListeners[i], dispatchInstances[i]);
     }
   } else if (dispatchListeners) {
-    executeDispatch(event, simulated, dispatchListeners, dispatchInstances);
+    executeDispatch(event, dispatchListeners, dispatchInstances);
   }
   event._dispatchListeners = null;
   event._dispatchInstances = null;
@@ -89353,23 +88849,19 @@ var eventQueue = null;
  * Dispatches an event and releases it back into the pool, unless persistent.
  *
  * @param {?object} event Synthetic event to be dispatched.
- * @param {boolean} simulated If the event is simulated (changes exn behavior)
  * @private
  */
-var executeDispatchesAndRelease = function (event, simulated) {
+var executeDispatchesAndRelease = function (event) {
   if (event) {
-    executeDispatchesInOrder(event, simulated);
+    executeDispatchesInOrder(event);
 
     if (!event.isPersistent()) {
       event.constructor.release(event);
     }
   }
 };
-var executeDispatchesAndReleaseSimulated = function (e) {
-  return executeDispatchesAndRelease(e, true);
-};
 var executeDispatchesAndReleaseTopLevel = function (e) {
-  return executeDispatchesAndRelease(e, false);
+  return executeDispatchesAndRelease(e);
 };
 
 function isInteractive(tag) {
@@ -89483,7 +88975,7 @@ function extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget)
   return events;
 }
 
-function runEventsInBatch(events, simulated) {
+function runEventsInBatch(events) {
   if (events !== null) {
     eventQueue = accumulateInto(eventQueue, events);
   }
@@ -89497,11 +88989,7 @@ function runEventsInBatch(events, simulated) {
     return;
   }
 
-  if (simulated) {
-    forEachAccumulated(processingEventQueue, executeDispatchesAndReleaseSimulated);
-  } else {
-    forEachAccumulated(processingEventQueue, executeDispatchesAndReleaseTopLevel);
-  }
+  forEachAccumulated(processingEventQueue, executeDispatchesAndReleaseTopLevel);
   !!eventQueue ? invariant(false, 'processEventQueue(): Additional events were enqueued while processing an event queue. Support for this has not yet been implemented.') : void 0;
   // This would be a good time to rethrow if any of the event handlers threw.
   rethrowCaughtError();
@@ -89509,7 +88997,7 @@ function runEventsInBatch(events, simulated) {
 
 function runExtractedEventsInBatch(topLevelType, targetInst, nativeEvent, nativeEventTarget) {
   var events = extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget);
-  runEventsInBatch(events, false);
+  runEventsInBatch(events);
 }
 
 var FunctionComponent = 0;
@@ -91111,6 +90599,7 @@ var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeac
 var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
 var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
 var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
+
 var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
 var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
 var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
@@ -91207,6 +90696,7 @@ function describeFiber(fiber) {
     case ClassComponent:
     case HostComponent:
     case Mode:
+    case SuspenseComponent:
       var owner = fiber._debugOwner;
       var source = fiber._debugSource;
       var name = getComponentName(fiber.type);
@@ -91802,6 +91292,7 @@ var ReactControlledValuePropTypes = {
 
 var enableUserTimingAPI = true;
 
+var enableHooks = false;
 // Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
 var debugRenderPhaseSideEffects = false;
 
@@ -91833,6 +91324,10 @@ var enableSchedulerTracing = true;
 // React Fire: prevent the value and checked attributes from syncing
 // with their related DOM properties
 var disableInputAttributeSyncing = false;
+
+// These APIs will no longer be "unstable" in the upcoming 16.7 release,
+// Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
+var enableStableConcurrentModeAPIs = false;
 
 // TODO: direct imports like some-package/src/* are bad. Fix me.
 var didWarnValueDefaultValue = false;
@@ -92210,7 +91705,7 @@ function manualDispatchChangeEvent(nativeEvent) {
 }
 
 function runEventInBatch(event) {
-  runEventsInBatch(event, false);
+  runEventsInBatch(event);
 }
 
 function getInstIfValueChanged(targetInst) {
@@ -92420,9 +91915,9 @@ var modifierKeyToProp = {
   Shift: 'shiftKey'
 };
 
-// IE8 does not implement getModifierState so we simply map it to the only
-// modifier keys exposed by the event itself, does not support Lock-keys.
-// Currently, all major browsers except Chrome seems to support Lock-keys.
+// Older browsers (Safari <= 10, iOS Safari <= 10.2) do not support
+// getModifierState. If getModifierState is not supported, we map it to a set of
+// modifier keys exposed by the event. In this case, Lock-keys are not supported.
 /**
  * Translation from modifier key to the associated property in the event.
  * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
@@ -92722,15 +92217,16 @@ var Callback = /*              */32;
 var DidCapture = /*            */64;
 var Ref = /*                   */128;
 var Snapshot = /*              */256;
+var Passive = /*               */512;
 
-// Update & Callback & Ref & Snapshot
-var LifecycleEffectMask = /*   */420;
+// Passive & Update & Callback & Ref & Snapshot
+var LifecycleEffectMask = /*   */932;
 
 // Union of all host effects
-var HostEffectMask = /*        */511;
+var HostEffectMask = /*        */1023;
 
-var Incomplete = /*            */512;
-var ShouldCapture = /*         */1024;
+var Incomplete = /*            */1024;
+var ShouldCapture = /*         */2048;
 
 var ReactCurrentOwner$1 = ReactSharedInternals.ReactCurrentOwner;
 
@@ -93938,6 +93434,14 @@ function getModernOffsetsFromPoints(outerNode, anchorNode, anchorOffset, focusNo
 function setOffsets(node, offsets) {
   var doc = node.ownerDocument || document;
   var win = doc && doc.defaultView || window;
+
+  // Edge fails with "Object expected" in some scenarios.
+  // (For instance: TinyMCE editor used in a list component that supports pasting to add more,
+  // fails when pasting 100+ items)
+  if (!win.getSelection) {
+    return;
+  }
+
   var selection = win.getSelection();
   var length = node.textContent.length;
   var start = Math.min(offsets.start, length);
@@ -97307,8 +96811,11 @@ function createTextInstance(text, rootContainerInstance, hostContext, internalIn
 }
 
 var isPrimaryRenderer = true;
-var scheduleTimeout = setTimeout;
-var cancelTimeout = clearTimeout;
+// This initialization code may run even on server environments
+// if a component just imports ReactDOM (e.g. for findDOMNode).
+// Some environments might not have setTimeout or clearTimeout.
+var scheduleTimeout = typeof setTimeout === 'function' ? setTimeout : undefined;
+var cancelTimeout = typeof clearTimeout === 'function' ? clearTimeout : undefined;
 var noTimeout = -1;
 
 // -------------------
@@ -97412,8 +96919,7 @@ function unhideInstance(instance, props) {
   instance = instance;
   var styleProp = props[STYLE];
   var display = styleProp !== undefined && styleProp !== null && styleProp.hasOwnProperty('display') ? styleProp.display : null;
-  // $FlowFixMe Setting a style property to null is the valid way to reset it.
-  instance.style.display = display;
+  instance.style.display = dangerousStyleValue('display', display);
 }
 
 function unhideTextInstance(textInstance, text) {
@@ -98308,20 +97814,20 @@ function onCommitUnmount(fiber) {
 var maxSigned31BitInt = 1073741823;
 
 var NoWork = 0;
-var Sync = 1;
-var Never = maxSigned31BitInt;
+var Never = 1;
+var Sync = maxSigned31BitInt;
 
 var UNIT_SIZE = 10;
-var MAGIC_NUMBER_OFFSET = 2;
+var MAGIC_NUMBER_OFFSET = maxSigned31BitInt - 1;
 
 // 1 unit of expiration time represents 10ms.
 function msToExpirationTime(ms) {
   // Always add an offset so that we don't clash with the magic number for NoWork.
-  return (ms / UNIT_SIZE | 0) + MAGIC_NUMBER_OFFSET;
+  return MAGIC_NUMBER_OFFSET - (ms / UNIT_SIZE | 0);
 }
 
 function expirationTimeToMs(expirationTime) {
-  return (expirationTime - MAGIC_NUMBER_OFFSET) * UNIT_SIZE;
+  return (MAGIC_NUMBER_OFFSET - expirationTime) * UNIT_SIZE;
 }
 
 function ceiling(num, precision) {
@@ -98329,7 +97835,7 @@ function ceiling(num, precision) {
 }
 
 function computeExpirationBucket(currentTime, expirationInMs, bucketSizeMs) {
-  return MAGIC_NUMBER_OFFSET + ceiling(currentTime - MAGIC_NUMBER_OFFSET + expirationInMs / UNIT_SIZE, bucketSizeMs / UNIT_SIZE);
+  return MAGIC_NUMBER_OFFSET - ceiling(MAGIC_NUMBER_OFFSET - currentTime + expirationInMs / UNIT_SIZE, bucketSizeMs / UNIT_SIZE);
 }
 
 var LOW_PRIORITY_EXPIRATION = 5000;
@@ -99179,12 +98685,12 @@ function markPendingPriorityLevel(root, expirationTime) {
     // No other pending updates.
     root.earliestPendingTime = root.latestPendingTime = expirationTime;
   } else {
-    if (earliestPendingTime > expirationTime) {
+    if (earliestPendingTime < expirationTime) {
       // This is the earliest pending update.
       root.earliestPendingTime = expirationTime;
     } else {
       var latestPendingTime = root.latestPendingTime;
-      if (latestPendingTime < expirationTime) {
+      if (latestPendingTime > expirationTime) {
         // This is the latest pending update
         root.latestPendingTime = expirationTime;
       }
@@ -99210,12 +98716,12 @@ function markCommittedPriorityLevels(root, earliestRemainingTime) {
   // Let's see if the previous latest known pending level was just flushed.
   var latestPendingTime = root.latestPendingTime;
   if (latestPendingTime !== NoWork) {
-    if (latestPendingTime < earliestRemainingTime) {
+    if (latestPendingTime > earliestRemainingTime) {
       // We've flushed all the known pending levels.
       root.earliestPendingTime = root.latestPendingTime = NoWork;
     } else {
       var earliestPendingTime = root.earliestPendingTime;
-      if (earliestPendingTime < earliestRemainingTime) {
+      if (earliestPendingTime > earliestRemainingTime) {
         // We've flushed the earliest known pending level. Set this to the
         // latest pending time.
         root.earliestPendingTime = root.latestPendingTime;
@@ -99237,7 +98743,7 @@ function markCommittedPriorityLevels(root, earliestRemainingTime) {
   }
 
   var latestSuspendedTime = root.latestSuspendedTime;
-  if (earliestRemainingTime > latestSuspendedTime) {
+  if (earliestRemainingTime < latestSuspendedTime) {
     // The earliest remaining level is later than all the suspended work. That
     // means we've flushed all the suspended work.
     root.earliestSuspendedTime = NoWork;
@@ -99251,7 +98757,7 @@ function markCommittedPriorityLevels(root, earliestRemainingTime) {
     return;
   }
 
-  if (earliestRemainingTime < earliestSuspendedTime) {
+  if (earliestRemainingTime > earliestSuspendedTime) {
     // The earliest remaining time is earlier than all the suspended work.
     // Treat it as a pending update.
     markPendingPriorityLevel(root, earliestRemainingTime);
@@ -99268,13 +98774,13 @@ function hasLowerPriorityWork(root, erroredExpirationTime) {
   var latestPendingTime = root.latestPendingTime;
   var latestSuspendedTime = root.latestSuspendedTime;
   var latestPingedTime = root.latestPingedTime;
-  return latestPendingTime !== NoWork && latestPendingTime > erroredExpirationTime || latestSuspendedTime !== NoWork && latestSuspendedTime > erroredExpirationTime || latestPingedTime !== NoWork && latestPingedTime > erroredExpirationTime;
+  return latestPendingTime !== NoWork && latestPendingTime < erroredExpirationTime || latestSuspendedTime !== NoWork && latestSuspendedTime < erroredExpirationTime || latestPingedTime !== NoWork && latestPingedTime < erroredExpirationTime;
 }
 
 function isPriorityLevelSuspended(root, expirationTime) {
   var earliestSuspendedTime = root.earliestSuspendedTime;
   var latestSuspendedTime = root.latestSuspendedTime;
-  return earliestSuspendedTime !== NoWork && expirationTime >= earliestSuspendedTime && expirationTime <= latestSuspendedTime;
+  return earliestSuspendedTime !== NoWork && expirationTime <= earliestSuspendedTime && expirationTime >= latestSuspendedTime;
 }
 
 function markSuspendedPriorityLevel(root, suspendedTime) {
@@ -99306,10 +98812,10 @@ function markSuspendedPriorityLevel(root, suspendedTime) {
     // No other suspended levels.
     root.earliestSuspendedTime = root.latestSuspendedTime = suspendedTime;
   } else {
-    if (earliestSuspendedTime > suspendedTime) {
+    if (earliestSuspendedTime < suspendedTime) {
       // This is the earliest suspended level.
       root.earliestSuspendedTime = suspendedTime;
-    } else if (latestSuspendedTime < suspendedTime) {
+    } else if (latestSuspendedTime > suspendedTime) {
       // This is the latest suspended level
       root.latestSuspendedTime = suspendedTime;
     }
@@ -99325,7 +98831,7 @@ function markPingedPriorityLevel(root, pingedTime) {
   // is thrown out and not reused during the restarted render. One way to
   // invalidate the progressed work is to restart at expirationTime + 1.
   var latestPingedTime = root.latestPingedTime;
-  if (latestPingedTime === NoWork || latestPingedTime < pingedTime) {
+  if (latestPingedTime === NoWork || latestPingedTime > pingedTime) {
     root.latestPingedTime = pingedTime;
   }
   findNextExpirationTimeToWorkOn(pingedTime, root);
@@ -99335,7 +98841,7 @@ function clearPing(root, completedTime) {
   // TODO: Track whether the root was pinged during the render phase. If so,
   // we need to make sure we don't lose track of it.
   var latestPingedTime = root.latestPingedTime;
-  if (latestPingedTime !== NoWork && latestPingedTime <= completedTime) {
+  if (latestPingedTime !== NoWork && latestPingedTime >= completedTime) {
     root.latestPingedTime = NoWork;
   }
 }
@@ -99345,10 +98851,10 @@ function findEarliestOutstandingPriorityLevel(root, renderExpirationTime) {
 
   var earliestPendingTime = root.earliestPendingTime;
   var earliestSuspendedTime = root.earliestSuspendedTime;
-  if (earliestExpirationTime === NoWork || earliestPendingTime !== NoWork && earliestPendingTime < earliestExpirationTime) {
+  if (earliestPendingTime > earliestExpirationTime) {
     earliestExpirationTime = earliestPendingTime;
   }
-  if (earliestExpirationTime === NoWork || earliestSuspendedTime !== NoWork && earliestSuspendedTime < earliestExpirationTime) {
+  if (earliestSuspendedTime > earliestExpirationTime) {
     earliestExpirationTime = earliestSuspendedTime;
   }
   return earliestExpirationTime;
@@ -99356,7 +98862,7 @@ function findEarliestOutstandingPriorityLevel(root, renderExpirationTime) {
 
 function didExpireAtExpirationTime(root, currentTime) {
   var expirationTime = root.expirationTime;
-  if (expirationTime !== NoWork && currentTime >= expirationTime) {
+  if (expirationTime !== NoWork && currentTime <= expirationTime) {
     // The root has expired. Flush all work up to the current time.
     root.nextExpirationTimeToWorkOn = currentTime;
   }
@@ -99374,7 +98880,7 @@ function findNextExpirationTimeToWorkOn(completedExpirationTime, root) {
 
   // If there is no pending or pinged work, check if there's suspended work
   // that's lower priority than what we just completed.
-  if (nextExpirationTimeToWorkOn === NoWork && (completedExpirationTime === NoWork || latestSuspendedTime > completedExpirationTime)) {
+  if (nextExpirationTimeToWorkOn === NoWork && (completedExpirationTime === NoWork || latestSuspendedTime < completedExpirationTime)) {
     // The lowest priority suspended work is the work most likely to be
     // committed next. Let's start rendering it again, so that if it times out,
     // it's ready to commit.
@@ -99382,7 +98888,7 @@ function findNextExpirationTimeToWorkOn(completedExpirationTime, root) {
   }
 
   var expirationTime = nextExpirationTimeToWorkOn;
-  if (expirationTime !== NoWork && earliestSuspendedTime !== NoWork && earliestSuspendedTime < expirationTime) {
+  if (expirationTime !== NoWork && earliestSuspendedTime > expirationTime) {
     // Expire using the earliest known expiration time.
     expirationTime = earliestSuspendedTime;
   }
@@ -99718,7 +99224,7 @@ function processUpdateQueue(workInProgress, queue, props, instance, renderExpira
   var resultState = newBaseState;
   while (update !== null) {
     var updateExpirationTime = update.expirationTime;
-    if (updateExpirationTime > renderExpirationTime) {
+    if (updateExpirationTime < renderExpirationTime) {
       // This update does not have sufficient priority. Skip it.
       if (newFirstUpdate === null) {
         // This is the first skipped update. It will be the first update in
@@ -99730,7 +99236,7 @@ function processUpdateQueue(workInProgress, queue, props, instance, renderExpira
       }
       // Since this update will remain in the list, update the remaining
       // expiration time.
-      if (newExpirationTime === NoWork || newExpirationTime > updateExpirationTime) {
+      if (newExpirationTime < updateExpirationTime) {
         newExpirationTime = updateExpirationTime;
       }
     } else {
@@ -99759,7 +99265,7 @@ function processUpdateQueue(workInProgress, queue, props, instance, renderExpira
   update = queue.firstCapturedUpdate;
   while (update !== null) {
     var _updateExpirationTime = update.expirationTime;
-    if (_updateExpirationTime > renderExpirationTime) {
+    if (_updateExpirationTime < renderExpirationTime) {
       // This update does not have sufficient priority. Skip it.
       if (newFirstCapturedUpdate === null) {
         // This is the first skipped captured update. It will be the first
@@ -99773,7 +99279,7 @@ function processUpdateQueue(workInProgress, queue, props, instance, renderExpira
       }
       // Since this update will remain in the list, update the remaining
       // expiration time.
-      if (newExpirationTime === NoWork || newExpirationTime > _updateExpirationTime) {
+      if (newExpirationTime < _updateExpirationTime) {
         newExpirationTime = _updateExpirationTime;
       }
     } else {
@@ -99987,11 +99493,11 @@ function propagateContextChange(workInProgress, context, changedBits, renderExpi
             enqueueUpdate(fiber, update);
           }
 
-          if (fiber.expirationTime === NoWork || fiber.expirationTime > renderExpirationTime) {
+          if (fiber.expirationTime < renderExpirationTime) {
             fiber.expirationTime = renderExpirationTime;
           }
           var alternate = fiber.alternate;
-          if (alternate !== null && (alternate.expirationTime === NoWork || alternate.expirationTime > renderExpirationTime)) {
+          if (alternate !== null && alternate.expirationTime < renderExpirationTime) {
             alternate.expirationTime = renderExpirationTime;
           }
           // Update the child expiration time of all the ancestors, including
@@ -99999,12 +99505,12 @@ function propagateContextChange(workInProgress, context, changedBits, renderExpi
           var node = fiber.return;
           while (node !== null) {
             alternate = node.alternate;
-            if (node.childExpirationTime === NoWork || node.childExpirationTime > renderExpirationTime) {
+            if (node.childExpirationTime < renderExpirationTime) {
               node.childExpirationTime = renderExpirationTime;
-              if (alternate !== null && (alternate.childExpirationTime === NoWork || alternate.childExpirationTime > renderExpirationTime)) {
+              if (alternate !== null && alternate.childExpirationTime < renderExpirationTime) {
                 alternate.childExpirationTime = renderExpirationTime;
               }
-            } else if (alternate !== null && (alternate.childExpirationTime === NoWork || alternate.childExpirationTime > renderExpirationTime)) {
+            } else if (alternate !== null && alternate.childExpirationTime < renderExpirationTime) {
               alternate.childExpirationTime = renderExpirationTime;
             } else {
               // Neither alternate was updated, which means the rest of the
@@ -100092,6 +99598,591 @@ function readContext(context, observedBits) {
     }
   }
   return isPrimaryRenderer ? context._currentValue : context._currentValue2;
+}
+
+var NoEffect$1 = /*             */0;
+var UnmountSnapshot = /*      */2;
+var UnmountMutation = /*      */4;
+var MountMutation = /*        */8;
+var UnmountLayout = /*        */16;
+var MountLayout = /*          */32;
+var MountPassive = /*         */64;
+var UnmountPassive = /*       */128;
+
+function areHookInputsEqual(arr1, arr2) {
+  // Don't bother comparing lengths in prod because these arrays should be
+  // passed inline.
+  {
+    !(arr1.length === arr2.length) ? warning$1(false, 'Detected a variable number of hook dependencies. The length of the ' + 'dependencies array should be constant between renders.\n\n' + 'Previous: %s\n' + 'Incoming: %s', arr1.join(', '), arr2.join(', ')) : void 0;
+  }
+  for (var i = 0; i < arr1.length; i++) {
+    // Inlined Object.is polyfill.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+    var val1 = arr1[i];
+    var val2 = arr2[i];
+    if (val1 === val2 && (val1 !== 0 || 1 / val1 === 1 / val2) || val1 !== val1 && val2 !== val2 // eslint-disable-line no-self-compare
+    ) {
+        continue;
+      }
+    return false;
+  }
+  return true;
+}
+
+// These are set right before calling the component.
+var renderExpirationTime = NoWork;
+// The work-in-progress fiber. I've named it differently to distinguish it from
+// the work-in-progress hook.
+var currentlyRenderingFiber$1 = null;
+
+// Hooks are stored as a linked list on the fiber's memoizedState field. The
+// current hook list is the list that belongs to the current fiber. The
+// work-in-progress hook list is a new list that will be added to the
+// work-in-progress fiber.
+var firstCurrentHook = null;
+var currentHook = null;
+var firstWorkInProgressHook = null;
+var workInProgressHook = null;
+
+var remainingExpirationTime = NoWork;
+var componentUpdateQueue = null;
+
+// Updates scheduled during render will trigger an immediate re-render at the
+// end of the current pass. We can't store these updates on the normal queue,
+// because if the work is aborted, they should be discarded. Because this is
+// a relatively rare case, we also don't want to add an additional field to
+// either the hook or queue object types. So we store them in a lazily create
+// map of queue -> render-phase updates, which are discarded once the component
+// completes without re-rendering.
+
+// Whether the work-in-progress hook is a re-rendered hook
+var isReRender = false;
+// Whether an update was scheduled during the currently executing render pass.
+var didScheduleRenderPhaseUpdate = false;
+// Lazily created map of render-phase updates
+var renderPhaseUpdates = null;
+// Counter to prevent infinite loops.
+var numberOfReRenders = 0;
+var RE_RENDER_LIMIT = 25;
+
+function resolveCurrentlyRenderingFiber() {
+  !(currentlyRenderingFiber$1 !== null) ? invariant(false, 'Hooks can only be called inside the body of a function component.') : void 0;
+  return currentlyRenderingFiber$1;
+}
+
+function prepareToUseHooks(current, workInProgress, nextRenderExpirationTime) {
+  if (!enableHooks) {
+    return;
+  }
+  renderExpirationTime = nextRenderExpirationTime;
+  currentlyRenderingFiber$1 = workInProgress;
+  firstCurrentHook = current !== null ? current.memoizedState : null;
+
+  // The following should have already been reset
+  // currentHook = null;
+  // workInProgressHook = null;
+
+  // remainingExpirationTime = NoWork;
+  // componentUpdateQueue = null;
+
+  // isReRender = false;
+  // didScheduleRenderPhaseUpdate = false;
+  // renderPhaseUpdates = null;
+  // numberOfReRenders = 0;
+}
+
+function finishHooks(Component, props, children, refOrContext) {
+  if (!enableHooks) {
+    return children;
+  }
+
+  // This must be called after every function component to prevent hooks from
+  // being used in classes.
+
+  while (didScheduleRenderPhaseUpdate) {
+    // Updates were scheduled during the render phase. They are stored in
+    // the `renderPhaseUpdates` map. Call the component again, reusing the
+    // work-in-progress hooks and applying the additional updates on top. Keep
+    // restarting until no more updates are scheduled.
+    didScheduleRenderPhaseUpdate = false;
+    numberOfReRenders += 1;
+
+    // Start over from the beginning of the list
+    currentHook = null;
+    workInProgressHook = null;
+    componentUpdateQueue = null;
+
+    children = Component(props, refOrContext);
+  }
+  renderPhaseUpdates = null;
+  numberOfReRenders = 0;
+
+  var renderedWork = currentlyRenderingFiber$1;
+
+  renderedWork.memoizedState = firstWorkInProgressHook;
+  renderedWork.expirationTime = remainingExpirationTime;
+  renderedWork.updateQueue = componentUpdateQueue;
+
+  var didRenderTooFewHooks = currentHook !== null && currentHook.next !== null;
+
+  renderExpirationTime = NoWork;
+  currentlyRenderingFiber$1 = null;
+
+  firstCurrentHook = null;
+  currentHook = null;
+  firstWorkInProgressHook = null;
+  workInProgressHook = null;
+
+  remainingExpirationTime = NoWork;
+  componentUpdateQueue = null;
+
+  // Always set during createWorkInProgress
+  // isReRender = false;
+
+  // These were reset above
+  // didScheduleRenderPhaseUpdate = false;
+  // renderPhaseUpdates = null;
+  // numberOfReRenders = 0;
+
+  !!didRenderTooFewHooks ? invariant(false, 'Rendered fewer hooks than expected. This may be caused by an accidental early return statement.') : void 0;
+
+  return children;
+}
+
+function resetHooks() {
+  if (!enableHooks) {
+    return;
+  }
+
+  // This is called instead of `finishHooks` if the component throws. It's also
+  // called inside mountIndeterminateComponent if we determine the component
+  // is a module-style component.
+  renderExpirationTime = NoWork;
+  currentlyRenderingFiber$1 = null;
+
+  firstCurrentHook = null;
+  currentHook = null;
+  firstWorkInProgressHook = null;
+  workInProgressHook = null;
+
+  remainingExpirationTime = NoWork;
+  componentUpdateQueue = null;
+
+  // Always set during createWorkInProgress
+  // isReRender = false;
+
+  didScheduleRenderPhaseUpdate = false;
+  renderPhaseUpdates = null;
+  numberOfReRenders = 0;
+}
+
+function createHook() {
+  return {
+    memoizedState: null,
+
+    baseState: null,
+    queue: null,
+    baseUpdate: null,
+
+    next: null
+  };
+}
+
+function cloneHook(hook) {
+  return {
+    memoizedState: hook.memoizedState,
+
+    baseState: hook.memoizedState,
+    queue: hook.queue,
+    baseUpdate: hook.baseUpdate,
+
+    next: null
+  };
+}
+
+function createWorkInProgressHook() {
+  if (workInProgressHook === null) {
+    // This is the first hook in the list
+    if (firstWorkInProgressHook === null) {
+      isReRender = false;
+      currentHook = firstCurrentHook;
+      if (currentHook === null) {
+        // This is a newly mounted hook
+        workInProgressHook = createHook();
+      } else {
+        // Clone the current hook.
+        workInProgressHook = cloneHook(currentHook);
+      }
+      firstWorkInProgressHook = workInProgressHook;
+    } else {
+      // There's already a work-in-progress. Reuse it.
+      isReRender = true;
+      currentHook = firstCurrentHook;
+      workInProgressHook = firstWorkInProgressHook;
+    }
+  } else {
+    if (workInProgressHook.next === null) {
+      isReRender = false;
+      var hook = void 0;
+      if (currentHook === null) {
+        // This is a newly mounted hook
+        hook = createHook();
+      } else {
+        currentHook = currentHook.next;
+        if (currentHook === null) {
+          // This is a newly mounted hook
+          hook = createHook();
+        } else {
+          // Clone the current hook.
+          hook = cloneHook(currentHook);
+        }
+      }
+      // Append to the end of the list
+      workInProgressHook = workInProgressHook.next = hook;
+    } else {
+      // There's already a work-in-progress. Reuse it.
+      isReRender = true;
+      workInProgressHook = workInProgressHook.next;
+      currentHook = currentHook !== null ? currentHook.next : null;
+    }
+  }
+  return workInProgressHook;
+}
+
+function createFunctionComponentUpdateQueue() {
+  return {
+    lastEffect: null
+  };
+}
+
+function basicStateReducer(state, action) {
+  return typeof action === 'function' ? action(state) : action;
+}
+
+function useContext(context, observedBits) {
+  // Ensure we're in a function component (class components support only the
+  // .unstable_read() form)
+  resolveCurrentlyRenderingFiber();
+  return readContext(context, observedBits);
+}
+
+function useState(initialState) {
+  return useReducer(basicStateReducer,
+  // useReducer has a special case to support lazy useState initializers
+  initialState);
+}
+
+function useReducer(reducer, initialState, initialAction) {
+  currentlyRenderingFiber$1 = resolveCurrentlyRenderingFiber();
+  workInProgressHook = createWorkInProgressHook();
+  var queue = workInProgressHook.queue;
+  if (queue !== null) {
+    // Already have a queue, so this is an update.
+    if (isReRender) {
+      // This is a re-render. Apply the new render phase updates to the previous
+      var _dispatch2 = queue.dispatch;
+      if (renderPhaseUpdates !== null) {
+        // Render phase updates are stored in a map of queue -> linked list
+        var firstRenderPhaseUpdate = renderPhaseUpdates.get(queue);
+        if (firstRenderPhaseUpdate !== undefined) {
+          renderPhaseUpdates.delete(queue);
+          var newState = workInProgressHook.memoizedState;
+          var update = firstRenderPhaseUpdate;
+          do {
+            // Process this render phase update. We don't have to check the
+            // priority because it will always be the same as the current
+            // render's.
+            var _action = update.action;
+            newState = reducer(newState, _action);
+            update = update.next;
+          } while (update !== null);
+
+          workInProgressHook.memoizedState = newState;
+
+          // Don't persist the state accumlated from the render phase updates to
+          // the base state unless the queue is empty.
+          // TODO: Not sure if this is the desired semantics, but it's what we
+          // do for gDSFP. I can't remember why.
+          if (workInProgressHook.baseUpdate === queue.last) {
+            workInProgressHook.baseState = newState;
+          }
+
+          return [newState, _dispatch2];
+        }
+      }
+      return [workInProgressHook.memoizedState, _dispatch2];
+    }
+
+    // The last update in the entire queue
+    var _last = queue.last;
+    // The last update that is part of the base state.
+    var _baseUpdate = workInProgressHook.baseUpdate;
+
+    // Find the first unprocessed update.
+    var first = void 0;
+    if (_baseUpdate !== null) {
+      if (_last !== null) {
+        // For the first update, the queue is a circular linked list where
+        // `queue.last.next = queue.first`. Once the first update commits, and
+        // the `baseUpdate` is no longer empty, we can unravel the list.
+        _last.next = null;
+      }
+      first = _baseUpdate.next;
+    } else {
+      first = _last !== null ? _last.next : null;
+    }
+    if (first !== null) {
+      var _newState = workInProgressHook.baseState;
+      var newBaseState = null;
+      var newBaseUpdate = null;
+      var prevUpdate = _baseUpdate;
+      var _update = first;
+      var didSkip = false;
+      do {
+        var updateExpirationTime = _update.expirationTime;
+        if (updateExpirationTime < renderExpirationTime) {
+          // Priority is insufficient. Skip this update. If this is the first
+          // skipped update, the previous update/state is the new base
+          // update/state.
+          if (!didSkip) {
+            didSkip = true;
+            newBaseUpdate = prevUpdate;
+            newBaseState = _newState;
+          }
+          // Update the remaining priority in the queue.
+          if (updateExpirationTime > remainingExpirationTime) {
+            remainingExpirationTime = updateExpirationTime;
+          }
+        } else {
+          // Process this update.
+          var _action2 = _update.action;
+          _newState = reducer(_newState, _action2);
+        }
+        prevUpdate = _update;
+        _update = _update.next;
+      } while (_update !== null && _update !== first);
+
+      if (!didSkip) {
+        newBaseUpdate = prevUpdate;
+        newBaseState = _newState;
+      }
+
+      workInProgressHook.memoizedState = _newState;
+      workInProgressHook.baseUpdate = newBaseUpdate;
+      workInProgressHook.baseState = newBaseState;
+    }
+
+    var _dispatch = queue.dispatch;
+    return [workInProgressHook.memoizedState, _dispatch];
+  }
+
+  // There's no existing queue, so this is the initial render.
+  if (reducer === basicStateReducer) {
+    // Special case for `useState`.
+    if (typeof initialState === 'function') {
+      initialState = initialState();
+    }
+  } else if (initialAction !== undefined && initialAction !== null) {
+    initialState = reducer(initialState, initialAction);
+  }
+  workInProgressHook.memoizedState = workInProgressHook.baseState = initialState;
+  queue = workInProgressHook.queue = {
+    last: null,
+    dispatch: null
+  };
+  var dispatch = queue.dispatch = dispatchAction.bind(null, currentlyRenderingFiber$1, queue);
+  return [workInProgressHook.memoizedState, dispatch];
+}
+
+function pushEffect(tag, create, destroy, inputs) {
+  var effect = {
+    tag: tag,
+    create: create,
+    destroy: destroy,
+    inputs: inputs,
+    // Circular
+    next: null
+  };
+  if (componentUpdateQueue === null) {
+    componentUpdateQueue = createFunctionComponentUpdateQueue();
+    componentUpdateQueue.lastEffect = effect.next = effect;
+  } else {
+    var _lastEffect = componentUpdateQueue.lastEffect;
+    if (_lastEffect === null) {
+      componentUpdateQueue.lastEffect = effect.next = effect;
+    } else {
+      var firstEffect = _lastEffect.next;
+      _lastEffect.next = effect;
+      effect.next = firstEffect;
+      componentUpdateQueue.lastEffect = effect;
+    }
+  }
+  return effect;
+}
+
+function useRef(initialValue) {
+  currentlyRenderingFiber$1 = resolveCurrentlyRenderingFiber();
+  workInProgressHook = createWorkInProgressHook();
+  var ref = void 0;
+
+  if (workInProgressHook.memoizedState === null) {
+    ref = { current: initialValue };
+    {
+      Object.seal(ref);
+    }
+    workInProgressHook.memoizedState = ref;
+  } else {
+    ref = workInProgressHook.memoizedState;
+  }
+  return ref;
+}
+
+function useMutationEffect(create, inputs) {
+  useEffectImpl(Snapshot | Update, UnmountSnapshot | MountMutation, create, inputs);
+}
+
+function useLayoutEffect(create, inputs) {
+  useEffectImpl(Update, UnmountMutation | MountLayout, create, inputs);
+}
+
+function useEffect(create, inputs) {
+  useEffectImpl(Update | Passive, UnmountPassive | MountPassive, create, inputs);
+}
+
+function useEffectImpl(fiberEffectTag, hookEffectTag, create, inputs) {
+  currentlyRenderingFiber$1 = resolveCurrentlyRenderingFiber();
+  workInProgressHook = createWorkInProgressHook();
+
+  var nextInputs = inputs !== undefined && inputs !== null ? inputs : [create];
+  var destroy = null;
+  if (currentHook !== null) {
+    var prevEffect = currentHook.memoizedState;
+    destroy = prevEffect.destroy;
+    if (areHookInputsEqual(nextInputs, prevEffect.inputs)) {
+      pushEffect(NoEffect$1, create, destroy, nextInputs);
+      return;
+    }
+  }
+
+  currentlyRenderingFiber$1.effectTag |= fiberEffectTag;
+  workInProgressHook.memoizedState = pushEffect(hookEffectTag, create, destroy, nextInputs);
+}
+
+function useImperativeMethods(ref, create, inputs) {
+  // TODO: If inputs are provided, should we skip comparing the ref itself?
+  var nextInputs = inputs !== null && inputs !== undefined ? inputs.concat([ref]) : [ref, create];
+
+  // TODO: I've implemented this on top of useEffect because it's almost the
+  // same thing, and it would require an equal amount of code. It doesn't seem
+  // like a common enough use case to justify the additional size.
+  useEffectImpl(Update, UnmountMutation | MountLayout, function () {
+    if (typeof ref === 'function') {
+      var refCallback = ref;
+      var _inst = create();
+      refCallback(_inst);
+      return function () {
+        return refCallback(null);
+      };
+    } else if (ref !== null && ref !== undefined) {
+      var refObject = ref;
+      var _inst2 = create();
+      refObject.current = _inst2;
+      return function () {
+        refObject.current = null;
+      };
+    }
+  }, nextInputs);
+}
+
+function useCallback(callback, inputs) {
+  currentlyRenderingFiber$1 = resolveCurrentlyRenderingFiber();
+  workInProgressHook = createWorkInProgressHook();
+
+  var nextInputs = inputs !== undefined && inputs !== null ? inputs : [callback];
+
+  var prevState = workInProgressHook.memoizedState;
+  if (prevState !== null) {
+    var prevInputs = prevState[1];
+    if (areHookInputsEqual(nextInputs, prevInputs)) {
+      return prevState[0];
+    }
+  }
+  workInProgressHook.memoizedState = [callback, nextInputs];
+  return callback;
+}
+
+function useMemo(nextCreate, inputs) {
+  currentlyRenderingFiber$1 = resolveCurrentlyRenderingFiber();
+  workInProgressHook = createWorkInProgressHook();
+
+  var nextInputs = inputs !== undefined && inputs !== null ? inputs : [nextCreate];
+
+  var prevState = workInProgressHook.memoizedState;
+  if (prevState !== null) {
+    var prevInputs = prevState[1];
+    if (areHookInputsEqual(nextInputs, prevInputs)) {
+      return prevState[0];
+    }
+  }
+
+  var nextValue = nextCreate();
+  workInProgressHook.memoizedState = [nextValue, nextInputs];
+  return nextValue;
+}
+
+function dispatchAction(fiber, queue, action) {
+  !(numberOfReRenders < RE_RENDER_LIMIT) ? invariant(false, 'Too many re-renders. React limits the number of renders to prevent an infinite loop.') : void 0;
+
+  var alternate = fiber.alternate;
+  if (fiber === currentlyRenderingFiber$1 || alternate !== null && alternate === currentlyRenderingFiber$1) {
+    // This is a render phase update. Stash it in a lazily-created map of
+    // queue -> linked list of updates. After this render pass, we'll restart
+    // and apply the stashed updates on top of the work-in-progress hook.
+    didScheduleRenderPhaseUpdate = true;
+    var update = {
+      expirationTime: renderExpirationTime,
+      action: action,
+      next: null
+    };
+    if (renderPhaseUpdates === null) {
+      renderPhaseUpdates = new Map();
+    }
+    var firstRenderPhaseUpdate = renderPhaseUpdates.get(queue);
+    if (firstRenderPhaseUpdate === undefined) {
+      renderPhaseUpdates.set(queue, update);
+    } else {
+      // Append the update to the end of the list.
+      var lastRenderPhaseUpdate = firstRenderPhaseUpdate;
+      while (lastRenderPhaseUpdate.next !== null) {
+        lastRenderPhaseUpdate = lastRenderPhaseUpdate.next;
+      }
+      lastRenderPhaseUpdate.next = update;
+    }
+  } else {
+    var currentTime = requestCurrentTime();
+    var _expirationTime = computeExpirationForFiber(currentTime, fiber);
+    var _update2 = {
+      expirationTime: _expirationTime,
+      action: action,
+      next: null
+    };
+    flushPassiveEffects();
+    // Append the update to the end of the list.
+    var _last2 = queue.last;
+    if (_last2 === null) {
+      // This is the first update. Create a circular list.
+      _update2.next = _update2;
+    } else {
+      var first = _last2.next;
+      if (first !== null) {
+        // Still circular.
+        _update2.next = first;
+      }
+      _last2.next = _update2;
+    }
+    queue.last = _update2;
+    scheduleWork(fiber, _expirationTime);
+  }
 }
 
 var NO_CONTEXT = {};
@@ -100216,6 +100307,68 @@ function stopProfilerTimerIfRunningAndRecordDelta(fiber, overrideBaseTime) {
   }
 }
 
+function resolveDefaultProps(Component, baseProps) {
+  if (Component && Component.defaultProps) {
+    // Resolve default props. Taken from ReactElement
+    var props = _assign({}, baseProps);
+    var defaultProps = Component.defaultProps;
+    for (var propName in defaultProps) {
+      if (props[propName] === undefined) {
+        props[propName] = defaultProps[propName];
+      }
+    }
+    return props;
+  }
+  return baseProps;
+}
+
+function readLazyComponentType(lazyComponent) {
+  var status = lazyComponent._status;
+  var result = lazyComponent._result;
+  switch (status) {
+    case Resolved:
+      {
+        var Component = result;
+        return Component;
+      }
+    case Rejected:
+      {
+        var error = result;
+        throw error;
+      }
+    case Pending:
+      {
+        var thenable = result;
+        throw thenable;
+      }
+    default:
+      {
+        lazyComponent._status = Pending;
+        var ctor = lazyComponent._ctor;
+        var _thenable = ctor();
+        _thenable.then(function (moduleObject) {
+          if (lazyComponent._status === Pending) {
+            var defaultExport = moduleObject.default;
+            {
+              if (defaultExport === undefined) {
+                warning$1(false, 'lazy: Expected the result of a dynamic import() call. ' + 'Instead received: %s\n\nYour code should look like: \n  ' + "const MyComponent = lazy(() => import('./MyComponent'))", moduleObject);
+              }
+            }
+            lazyComponent._status = Resolved;
+            lazyComponent._result = defaultExport;
+          }
+        }, function (error) {
+          if (lazyComponent._status === Pending) {
+            lazyComponent._status = Rejected;
+            lazyComponent._result = error;
+          }
+        });
+        lazyComponent._result = _thenable;
+        throw _thenable;
+      }
+  }
+}
+
 var ReactCurrentOwner$4 = ReactSharedInternals.ReactCurrentOwner;
 
 function readContext$1(contextType) {
@@ -100331,6 +100484,7 @@ var classComponentUpdater = {
       update.callback = callback;
     }
 
+    flushPassiveEffects();
     enqueueUpdate(fiber, update);
     scheduleWork(fiber, expirationTime);
   },
@@ -100350,6 +100504,7 @@ var classComponentUpdater = {
       update.callback = callback;
     }
 
+    flushPassiveEffects();
     enqueueUpdate(fiber, update);
     scheduleWork(fiber, expirationTime);
   },
@@ -100368,6 +100523,7 @@ var classComponentUpdater = {
       update.callback = callback;
     }
 
+    flushPassiveEffects();
     enqueueUpdate(fiber, update);
     scheduleWork(fiber, expirationTime);
   }
@@ -100768,7 +100924,7 @@ function updateClassInstance(current, workInProgress, ctor, newProps, renderExpi
   var instance = workInProgress.stateNode;
 
   var oldProps = workInProgress.memoizedProps;
-  instance.props = oldProps;
+  instance.props = workInProgress.type === workInProgress.elementType ? oldProps : resolveDefaultProps(workInProgress.type, oldProps);
 
   var oldContext = instance.context;
   var contextType = ctor.contextType;
@@ -102075,53 +102231,6 @@ function resetHydrationState() {
   isHydrating = false;
 }
 
-function readLazyComponentType(lazyComponent) {
-  var status = lazyComponent._status;
-  var result = lazyComponent._result;
-  switch (status) {
-    case Resolved:
-      {
-        var Component = result;
-        return Component;
-      }
-    case Rejected:
-      {
-        var error = result;
-        throw error;
-      }
-    case Pending:
-      {
-        var thenable = result;
-        throw thenable;
-      }
-    default:
-      {
-        lazyComponent._status = Pending;
-        var ctor = lazyComponent._ctor;
-        var _thenable = ctor();
-        _thenable.then(function (moduleObject) {
-          if (lazyComponent._status === Pending) {
-            var defaultExport = moduleObject.default;
-            {
-              if (defaultExport === undefined) {
-                warning$1(false, 'lazy: Expected the result of a dynamic import() call. ' + 'Instead received: %s\n\nYour code should look like: \n  ' + "const MyComponent = lazy(() => import('./MyComponent'))", moduleObject);
-              }
-            }
-            lazyComponent._status = Resolved;
-            lazyComponent._result = defaultExport;
-          }
-        }, function (error) {
-          if (lazyComponent._status === Pending) {
-            lazyComponent._status = Rejected;
-            lazyComponent._result = error;
-          }
-        });
-        lazyComponent._result = _thenable;
-        throw _thenable;
-      }
-  }
-}
-
 var ReactCurrentOwner$3 = ReactSharedInternals.ReactCurrentOwner;
 
 var didWarnAboutBadClass = void 0;
@@ -102171,27 +102280,24 @@ function forceUnmountCurrentAndReconcile(current$$1, workInProgress, nextChildre
   workInProgress.child = reconcileChildFibers(workInProgress, null, nextChildren, renderExpirationTime);
 }
 
-function updateForwardRef(current$$1, workInProgress, type, nextProps, renderExpirationTime) {
-  var render = type.render;
+function updateForwardRef(current$$1, workInProgress, Component, nextProps, renderExpirationTime) {
+  var render = Component.render;
   var ref = workInProgress.ref;
-  if (hasContextChanged()) {
-    // Normally we can bail out on props equality but if context has changed
-    // we don't do the bailout and we have to reuse existing props instead.
-  } else if (workInProgress.memoizedProps === nextProps) {
-    var currentRef = current$$1 !== null ? current$$1.ref : null;
-    if (ref === currentRef) {
-      return bailoutOnAlreadyFinishedWork(current$$1, workInProgress, renderExpirationTime);
-    }
-  }
 
+  // The rest is a fork of updateFunctionComponent
   var nextChildren = void 0;
+  prepareToReadContext(workInProgress, renderExpirationTime);
+  prepareToUseHooks(current$$1, workInProgress, renderExpirationTime);
   {
     ReactCurrentOwner$3.current = workInProgress;
     setCurrentPhase('render');
     nextChildren = render(nextProps, ref);
     setCurrentPhase(null);
   }
+  nextChildren = finishHooks(render, nextProps, nextChildren, ref);
 
+  // React DevTools reads this flag.
+  workInProgress.effectTag |= PerformedWork;
   reconcileChildren(current$$1, workInProgress, nextChildren, renderExpirationTime);
   return workInProgress.child;
 }
@@ -102214,7 +102320,7 @@ function updateMemoComponent(current$$1, workInProgress, Component, nextProps, u
     return child;
   }
   var currentChild = current$$1.child; // This is always exactly one child
-  if (updateExpirationTime === NoWork || updateExpirationTime > renderExpirationTime) {
+  if (updateExpirationTime < renderExpirationTime) {
     // This will be the props with resolved defaultProps,
     // unlike current.memoizedProps which will be the unresolved ones.
     var prevProps = currentChild.memoizedProps;
@@ -102225,6 +102331,8 @@ function updateMemoComponent(current$$1, workInProgress, Component, nextProps, u
       return bailoutOnAlreadyFinishedWork(current$$1, workInProgress, renderExpirationTime);
     }
   }
+  // React DevTools reads this flag.
+  workInProgress.effectTag |= PerformedWork;
   var newChild = createWorkInProgress(currentChild, nextProps, renderExpirationTime);
   newChild.ref = workInProgress.ref;
   newChild.return = workInProgress;
@@ -102233,7 +102341,7 @@ function updateMemoComponent(current$$1, workInProgress, Component, nextProps, u
 }
 
 function updateSimpleMemoComponent(current$$1, workInProgress, Component, nextProps, updateExpirationTime, renderExpirationTime) {
-  if (current$$1 !== null && (updateExpirationTime === NoWork || updateExpirationTime > renderExpirationTime)) {
+  if (current$$1 !== null && updateExpirationTime < renderExpirationTime) {
     var prevProps = current$$1.memoizedProps;
     if (shallowEqual(prevProps, nextProps) && current$$1.ref === workInProgress.ref) {
       return bailoutOnAlreadyFinishedWork(current$$1, workInProgress, renderExpirationTime);
@@ -102278,12 +102386,14 @@ function updateFunctionComponent(current$$1, workInProgress, Component, nextProp
 
   var nextChildren = void 0;
   prepareToReadContext(workInProgress, renderExpirationTime);
+  prepareToUseHooks(current$$1, workInProgress, renderExpirationTime);
   {
     ReactCurrentOwner$3.current = workInProgress;
     setCurrentPhase('render');
     nextChildren = Component(nextProps, context);
     setCurrentPhase(null);
   }
+  nextChildren = finishHooks(Component, nextProps, nextChildren, context);
 
   // React DevTools reads this flag.
   workInProgress.effectTag |= PerformedWork;
@@ -102499,25 +102609,10 @@ function updateHostText(current$$1, workInProgress) {
   return null;
 }
 
-function resolveDefaultProps(Component, baseProps) {
-  if (Component && Component.defaultProps) {
-    // Resolve default props. Taken from ReactElement
-    var props = _assign({}, baseProps);
-    var defaultProps = Component.defaultProps;
-    for (var propName in defaultProps) {
-      if (props[propName] === undefined) {
-        props[propName] = defaultProps[propName];
-      }
-    }
-    return props;
-  }
-  return baseProps;
-}
-
 function mountLazyComponent(_current, workInProgress, elementType, updateExpirationTime, renderExpirationTime) {
   if (_current !== null) {
     // An lazy component only mounts if it suspended inside a non-
-    // concurrent tree, in an inconsistent state. We want to tree it like
+    // concurrent tree, in an inconsistent state. We want to treat it like
     // a new mount, even though an empty version of it already committed.
     // Disconnect the alternate pointers.
     _current.alternate = null;
@@ -102561,7 +102656,7 @@ function mountLazyComponent(_current, workInProgress, elementType, updateExpirat
       }
     default:
       {
-        // This message intentionally doesn't metion ForwardRef or MemoComponent
+        // This message intentionally doesn't mention ForwardRef or MemoComponent
         // because the fact that it's a separate type of work is an
         // implementation detail.
         invariant(false, 'Element type is invalid. Received a promise that resolves to: %s. Promise elements must resolve to a class or function.', Component);
@@ -102573,7 +102668,7 @@ function mountLazyComponent(_current, workInProgress, elementType, updateExpirat
 function mountIncompleteClassComponent(_current, workInProgress, Component, nextProps, renderExpirationTime) {
   if (_current !== null) {
     // An incomplete component only mounts if it suspended inside a non-
-    // concurrent tree, in an inconsistent state. We want to tree it like
+    // concurrent tree, in an inconsistent state. We want to treat it like
     // a new mount, even though an empty version of it already committed.
     // Disconnect the alternate pointers.
     _current.alternate = null;
@@ -102608,7 +102703,7 @@ function mountIncompleteClassComponent(_current, workInProgress, Component, next
 function mountIndeterminateComponent(_current, workInProgress, Component, renderExpirationTime) {
   if (_current !== null) {
     // An indeterminate component only mounts if it suspended inside a non-
-    // concurrent tree, in an inconsistent state. We want to tree it like
+    // concurrent tree, in an inconsistent state. We want to treat it like
     // a new mount, even though an empty version of it already committed.
     // Disconnect the alternate pointers.
     _current.alternate = null;
@@ -102622,6 +102717,7 @@ function mountIndeterminateComponent(_current, workInProgress, Component, render
   var context = getMaskedContext(workInProgress, unmaskedContext);
 
   prepareToReadContext(workInProgress, renderExpirationTime);
+  prepareToUseHooks(null, workInProgress, renderExpirationTime);
 
   var value = void 0;
 
@@ -102649,6 +102745,9 @@ function mountIndeterminateComponent(_current, workInProgress, Component, render
     // Proceed under the assumption that this is a class instance
     workInProgress.tag = ClassComponent;
 
+    // Throw out any hooks that were used.
+    resetHooks();
+
     // Push context providers early to prevent context stack mismatches.
     // During mounting we don't know the child context yet as the instance doesn't exist.
     // We will invalidate the child context in finishClassComponent() right after rendering.
@@ -102673,6 +102772,7 @@ function mountIndeterminateComponent(_current, workInProgress, Component, render
   } else {
     // Proceed under the assumption that this is a function component
     workInProgress.tag = FunctionComponent;
+    value = finishHooks(Component, props, value, context);
     {
       if (Component) {
         !!Component.childContextTypes ? warningWithoutStack$1(false, '%s(...): childContextTypes cannot be defined on a function component.', Component.displayName || Component.name || 'Component') : void 0;
@@ -102725,31 +102825,21 @@ function updateSuspenseComponent(current$$1, workInProgress, renderExpirationTim
   // We should attempt to render the primary children unless this boundary
   // already suspended during this render (`alreadyCaptured` is true).
   var nextState = workInProgress.memoizedState;
-  if (nextState === null) {
-    // An empty suspense state means this boundary has not yet timed out.
+
+  var nextDidTimeout = void 0;
+  if ((workInProgress.effectTag & DidCapture) === NoEffect) {
+    // This is the first attempt.
+    nextState = null;
+    nextDidTimeout = false;
   } else {
-    if (!nextState.alreadyCaptured) {
-      // Since we haven't already suspended during this commit, clear the
-      // existing suspense state. We'll try rendering again.
-      nextState = null;
-    } else {
-      // Something in this boundary's subtree already suspended. Switch to
-      // rendering the fallback children. Set `alreadyCaptured` to true.
-      if (current$$1 !== null && nextState === current$$1.memoizedState) {
-        // Create a new suspense state to avoid mutating the current tree's.
-        nextState = {
-          alreadyCaptured: true,
-          didTimeout: true,
-          timedOutAt: nextState.timedOutAt
-        };
-      } else {
-        // Already have a clone, so it's safe to mutate.
-        nextState.alreadyCaptured = true;
-        nextState.didTimeout = true;
-      }
-    }
+    // Something in this boundary's subtree already suspended. Switch to
+    // rendering the fallback children.
+    nextState = {
+      timedOutAt: nextState !== null ? nextState.timedOutAt : NoWork
+    };
+    nextDidTimeout = true;
+    workInProgress.effectTag &= ~DidCapture;
   }
-  var nextDidTimeout = nextState !== null && nextState.didTimeout;
 
   // This next part is a bit confusing. If the children timeout, we switch to
   // showing the fallback children in place of the "primary" children.
@@ -102789,6 +102879,14 @@ function updateSuspenseComponent(current$$1, workInProgress, renderExpirationTim
       // Mount separate fragments for primary and fallback children.
       var nextFallbackChildren = nextProps.fallback;
       var primaryChildFragment = createFiberFromFragment(null, mode, NoWork, null);
+
+      if ((workInProgress.mode & ConcurrentMode) === NoContext) {
+        // Outside of concurrent mode, we commit the effects from the
+        var progressedState = workInProgress.memoizedState;
+        var progressedPrimaryChild = progressedState !== null ? workInProgress.child.child : workInProgress.child;
+        primaryChildFragment.child = progressedPrimaryChild;
+      }
+
       var fallbackChildFragment = createFiberFromFragment(nextFallbackChildren, mode, renderExpirationTime, null);
       primaryChildFragment.sibling = fallbackChildFragment;
       child = primaryChildFragment;
@@ -102805,7 +102903,7 @@ function updateSuspenseComponent(current$$1, workInProgress, renderExpirationTim
     // This is an update. This branch is more complicated because we need to
     // ensure the state of the primary children is preserved.
     var prevState = current$$1.memoizedState;
-    var prevDidTimeout = prevState !== null && prevState.didTimeout;
+    var prevDidTimeout = prevState !== null;
     if (prevDidTimeout) {
       // The current tree already timed out. That means each child set is
       var currentPrimaryChildFragment = current$$1.child;
@@ -102815,11 +102913,32 @@ function updateSuspenseComponent(current$$1, workInProgress, renderExpirationTim
         // its fragment. We're going to skip over these entirely.
         var _nextFallbackChildren = nextProps.fallback;
         var _primaryChildFragment = createWorkInProgress(currentPrimaryChildFragment, currentPrimaryChildFragment.pendingProps, NoWork);
-        _primaryChildFragment.effectTag |= Placement;
+
+        if ((workInProgress.mode & ConcurrentMode) === NoContext) {
+          // Outside of concurrent mode, we commit the effects from the
+          var _progressedState = workInProgress.memoizedState;
+          var _progressedPrimaryChild = _progressedState !== null ? workInProgress.child.child : workInProgress.child;
+          if (_progressedPrimaryChild !== currentPrimaryChildFragment.child) {
+            _primaryChildFragment.child = _progressedPrimaryChild;
+          }
+        }
+
+        // Because primaryChildFragment is a new fiber that we're inserting as the
+        // parent of a new tree, we need to set its treeBaseDuration.
+        if (enableProfilerTimer && workInProgress.mode & ProfileMode) {
+          // treeBaseDuration is the sum of all the child tree base durations.
+          var treeBaseDuration = 0;
+          var hiddenChild = _primaryChildFragment.child;
+          while (hiddenChild !== null) {
+            treeBaseDuration += hiddenChild.treeBaseDuration;
+            hiddenChild = hiddenChild.sibling;
+          }
+          _primaryChildFragment.treeBaseDuration = treeBaseDuration;
+        }
+
         // Clone the fallback child fragment, too. These we'll continue
         // working on.
         var _fallbackChildFragment = _primaryChildFragment.sibling = createWorkInProgress(currentFallbackChildFragment, _nextFallbackChildren, currentFallbackChildFragment.expirationTime);
-        _fallbackChildFragment.effectTag |= Placement;
         child = _primaryChildFragment;
         _primaryChildFragment.childExpirationTime = NoWork;
         // Skip the primary children, and continue working on the
@@ -102831,15 +102950,20 @@ function updateSuspenseComponent(current$$1, workInProgress, renderExpirationTim
         // and remove the intermediate fragment fiber.
         var _nextPrimaryChildren = nextProps.children;
         var currentPrimaryChild = currentPrimaryChildFragment.child;
-        var currentFallbackChild = currentFallbackChildFragment.child;
         var primaryChild = reconcileChildFibers(workInProgress, currentPrimaryChild, _nextPrimaryChildren, renderExpirationTime);
-        // Delete the fallback children.
-        reconcileChildFibers(workInProgress, currentFallbackChild, null, renderExpirationTime);
+
+        // If this render doesn't suspend, we need to delete the fallback
+        // children. Wait until the complete phase, after we've confirmed the
+        // fallback is no longer needed.
+        // TODO: Would it be better to store the fallback fragment on
+        // the stateNode?
+
         // Continue rendering the children, like we normally do.
         child = next = primaryChild;
       }
     } else {
       // The current tree has not already timed out. That means the primary
+      // children are not wrapped in a fragment fiber.
       var _currentPrimaryChild = current$$1.child;
       if (nextDidTimeout) {
         // Timed out. Wrap the children in a fragment fiber to keep them
@@ -102849,9 +102973,33 @@ function updateSuspenseComponent(current$$1, workInProgress, renderExpirationTim
         // It shouldn't matter what the pending props are because we aren't
         // going to render this fragment.
         null, mode, NoWork, null);
-        _primaryChildFragment2.effectTag |= Placement;
         _primaryChildFragment2.child = _currentPrimaryChild;
-        _currentPrimaryChild.return = _primaryChildFragment2;
+
+        // Even though we're creating a new fiber, there are no new children,
+        // because we're reusing an already mounted tree. So we don't need to
+        // schedule a placement.
+        // primaryChildFragment.effectTag |= Placement;
+
+        if ((workInProgress.mode & ConcurrentMode) === NoContext) {
+          // Outside of concurrent mode, we commit the effects from the
+          var _progressedState2 = workInProgress.memoizedState;
+          var _progressedPrimaryChild2 = _progressedState2 !== null ? workInProgress.child.child : workInProgress.child;
+          _primaryChildFragment2.child = _progressedPrimaryChild2;
+        }
+
+        // Because primaryChildFragment is a new fiber that we're inserting as the
+        // parent of a new tree, we need to set its treeBaseDuration.
+        if (enableProfilerTimer && workInProgress.mode & ProfileMode) {
+          // treeBaseDuration is the sum of all the child tree base durations.
+          var _treeBaseDuration = 0;
+          var _hiddenChild = _primaryChildFragment2.child;
+          while (_hiddenChild !== null) {
+            _treeBaseDuration += _hiddenChild.treeBaseDuration;
+            _hiddenChild = _hiddenChild.sibling;
+          }
+          _primaryChildFragment2.treeBaseDuration = _treeBaseDuration;
+        }
+
         // Create a fragment from the fallback children, too.
         var _fallbackChildFragment2 = _primaryChildFragment2.sibling = createFiberFromFragment(_nextFallbackChildren2, mode, renderExpirationTime, null);
         _fallbackChildFragment2.effectTag |= Placement;
@@ -102979,25 +103127,6 @@ function updateContextConsumer(current$$1, workInProgress, renderExpirationTime)
   return workInProgress.child;
 }
 
-/*
-  function reuseChildrenEffects(returnFiber : Fiber, firstChild : Fiber) {
-    let child = firstChild;
-    do {
-      // Ensure that the first and last effect of the parent corresponds
-      // to the children's first and last effect.
-      if (!returnFiber.firstEffect) {
-        returnFiber.firstEffect = child.firstEffect;
-      }
-      if (child.lastEffect) {
-        if (returnFiber.lastEffect) {
-          returnFiber.lastEffect.nextEffect = child.firstEffect;
-        }
-        returnFiber.lastEffect = child.lastEffect;
-      }
-    } while (child = child.sibling);
-  }
-  */
-
 function bailoutOnAlreadyFinishedWork(current$$1, workInProgress, renderExpirationTime) {
   cancelWorkTimer(workInProgress);
 
@@ -103013,7 +103142,7 @@ function bailoutOnAlreadyFinishedWork(current$$1, workInProgress, renderExpirati
 
   // Check if the children have any pending work.
   var childExpirationTime = workInProgress.childExpirationTime;
-  if (childExpirationTime === NoWork || childExpirationTime > renderExpirationTime) {
+  if (childExpirationTime < renderExpirationTime) {
     // The children don't have any work either. We can skip them.
     // TODO: Once we add back resuming, we should check if the children are
     // a work-in-progress set. If so, we need to transfer their effects.
@@ -103032,7 +103161,7 @@ function beginWork(current$$1, workInProgress, renderExpirationTime) {
   if (current$$1 !== null) {
     var oldProps = current$$1.memoizedProps;
     var newProps = workInProgress.pendingProps;
-    if (oldProps === newProps && !hasContextChanged() && (updateExpirationTime === NoWork || updateExpirationTime > renderExpirationTime)) {
+    if (oldProps === newProps && !hasContextChanged() && updateExpirationTime < renderExpirationTime) {
       // This fiber does not have any pending work. Bailout without entering
       // the begin phase. There's still some bookkeeping we that needs to be done
       // in this optimized path, mostly pushing stuff onto the stack.
@@ -103069,14 +103198,14 @@ function beginWork(current$$1, workInProgress, renderExpirationTime) {
         case SuspenseComponent:
           {
             var state = workInProgress.memoizedState;
-            var didTimeout = state !== null && state.didTimeout;
+            var didTimeout = state !== null;
             if (didTimeout) {
               // If this boundary is currently timed out, we need to decide
               // whether to retry the primary children, or to skip over it and
               // go straight to the fallback. Check the priority of the primary
               var primaryChildFragment = workInProgress.child;
               var primaryChildExpirationTime = primaryChildFragment.childExpirationTime;
-              if (primaryChildExpirationTime !== NoWork && primaryChildExpirationTime <= renderExpirationTime) {
+              if (primaryChildExpirationTime !== NoWork && primaryChildExpirationTime >= renderExpirationTime) {
                 // The primary children have pending work. Use the normal path
                 // to attempt to render the primary children again.
                 return updateSuspenseComponent(current$$1, workInProgress, renderExpirationTime);
@@ -103311,8 +103440,8 @@ if (supportsMutation) {
         if (current !== null) {
           var oldState = current.memoizedState;
           var newState = node.memoizedState;
-          var oldIsHidden = oldState !== null && oldState.didTimeout;
-          var newIsHidden = newState !== null && newState.didTimeout;
+          var oldIsHidden = oldState !== null;
+          var newIsHidden = newState !== null;
           if (oldIsHidden !== newIsHidden) {
             // The placeholder either just timed out or switched back to the normal
             // children after having previously timed out. Toggle the visibility of
@@ -103399,8 +103528,8 @@ if (supportsMutation) {
         if (current !== null) {
           var oldState = current.memoizedState;
           var newState = node.memoizedState;
-          var oldIsHidden = oldState !== null && oldState.didTimeout;
-          var newIsHidden = newState !== null && newState.didTimeout;
+          var oldIsHidden = oldState !== null;
+          var newIsHidden = newState !== null;
           if (oldIsHidden !== newIsHidden) {
             // The placeholder either just timed out or switched back to the normal
             // children after having previously timed out. Toggle the visibility of
@@ -103641,12 +103770,45 @@ function completeWork(current, workInProgress, renderExpirationTime) {
     case SuspenseComponent:
       {
         var nextState = workInProgress.memoizedState;
-        var prevState = current !== null ? current.memoizedState : null;
-        var nextDidTimeout = nextState !== null && nextState.didTimeout;
-        var prevDidTimeout = prevState !== null && prevState.didTimeout;
-        if (nextDidTimeout !== prevDidTimeout) {
-          // If this render commits, and it switches between the normal state
-          // and the timed-out state, schedule an effect.
+        if ((workInProgress.effectTag & DidCapture) !== NoEffect) {
+          // Something suspended. Re-render with the fallback children.
+          workInProgress.expirationTime = renderExpirationTime;
+          // Do not reset the effect list.
+          return workInProgress;
+        }
+
+        var nextDidTimeout = nextState !== null;
+        var prevDidTimeout = current !== null && current.memoizedState !== null;
+
+        if (current !== null && !nextDidTimeout && prevDidTimeout) {
+          // We just switched from the fallback to the normal children. Delete
+          // the fallback.
+          // TODO: Would it be better to store the fallback fragment on
+          var currentFallbackChild = current.child.sibling;
+          if (currentFallbackChild !== null) {
+            // Deletions go at the beginning of the return fiber's effect list
+            var first = workInProgress.firstEffect;
+            if (first !== null) {
+              workInProgress.firstEffect = currentFallbackChild;
+              currentFallbackChild.nextEffect = first;
+            } else {
+              workInProgress.firstEffect = workInProgress.lastEffect = currentFallbackChild;
+              currentFallbackChild.nextEffect = null;
+            }
+            currentFallbackChild.effectTag = Deletion;
+          }
+        }
+
+        // The children either timed out after previously being visible, or
+        // were restored after previously being hidden. Schedule an effect
+        // to update their visiblity.
+        if (
+        //
+        nextDidTimeout !== prevDidTimeout ||
+        // Outside concurrent mode, the primary children commit in an
+        // inconsistent state, even if they are hidden. So if they are hidden,
+        // we need to schedule an effect to re-hide them, just in case.
+        (workInProgress.effectTag & ConcurrentMode) === NoContext && nextDidTimeout) {
           workInProgress.effectTag |= Update;
         }
         break;
@@ -103694,7 +103856,7 @@ function shouldCaptureSuspense(current, workInProgress) {
   // If it was the primary children that just suspended, capture and render the
   // fallback. Otherwise, don't capture and bubble to the next boundary.
   var nextState = workInProgress.memoizedState;
-  return nextState === null || !nextState.didTimeout;
+  return nextState === null;
 }
 
 // This module is forked in different environments.
@@ -103842,8 +104004,25 @@ function safelyDetachRef(current$$1) {
   }
 }
 
+function safelyCallDestroy(current$$1, destroy) {
+  {
+    invokeGuardedCallback(null, destroy, null);
+    if (hasCaughtError()) {
+      var error = clearCaughtError();
+      captureCommitPhaseError(current$$1, error);
+    }
+  }
+}
+
 function commitBeforeMutationLifeCycles(current$$1, finishedWork) {
   switch (finishedWork.tag) {
+    case FunctionComponent:
+    case ForwardRef:
+    case SimpleMemoComponent:
+      {
+        commitHookEffectList(UnmountSnapshot, NoEffect$1, finishedWork);
+        return;
+      }
     case ClassComponent:
       {
         if (finishedWork.effectTag & Snapshot) {
@@ -103852,9 +104031,16 @@ function commitBeforeMutationLifeCycles(current$$1, finishedWork) {
             var prevState = current$$1.memoizedState;
             startPhaseTimer(finishedWork, 'getSnapshotBeforeUpdate');
             var instance = finishedWork.stateNode;
-            instance.props = finishedWork.memoizedProps;
-            instance.state = finishedWork.memoizedState;
-            var snapshot = instance.getSnapshotBeforeUpdate(prevProps, prevState);
+            // We could update instance props and state here,
+            // but instead we rely on them being set during last render.
+            // TODO: revisit this when we implement resuming.
+            {
+              if (finishedWork.type === finishedWork.elementType) {
+                !(instance.props === finishedWork.memoizedProps) ? warning$1(false, 'Expected instance props to match memoized props before ' + 'getSnapshotBeforeUpdate. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+                !(instance.state === finishedWork.memoizedState) ? warning$1(false, 'Expected instance state to match memoized state before ' + 'getSnapshotBeforeUpdate. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+              }
+            }
+            var snapshot = instance.getSnapshotBeforeUpdate(finishedWork.elementType === finishedWork.type ? prevProps : resolveDefaultProps(finishedWork.type, prevProps), prevState);
             {
               var didWarnSet = didWarnAboutUndefinedSnapshotBeforeUpdate;
               if (snapshot === undefined && !didWarnSet.has(finishedWork.type)) {
@@ -103882,32 +104068,102 @@ function commitBeforeMutationLifeCycles(current$$1, finishedWork) {
   }
 }
 
+function commitHookEffectList(unmountTag, mountTag, finishedWork) {
+  if (!enableHooks) {
+    return;
+  }
+  var updateQueue = finishedWork.updateQueue;
+  var lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;
+  if (lastEffect !== null) {
+    var firstEffect = lastEffect.next;
+    var effect = firstEffect;
+    do {
+      if ((effect.tag & unmountTag) !== NoEffect$1) {
+        // Unmount
+        var destroy = effect.destroy;
+        effect.destroy = null;
+        if (destroy !== null) {
+          destroy();
+        }
+      }
+      if ((effect.tag & mountTag) !== NoEffect$1) {
+        // Mount
+        var create = effect.create;
+        var _destroy = create();
+        if (typeof _destroy !== 'function') {
+          {
+            if (_destroy !== null && _destroy !== undefined) {
+              warningWithoutStack$1(false, 'useEffect function must return a cleanup function or ' + 'nothing.%s%s', typeof _destroy.then === 'function' ? ' Promises and useEffect(async () => ...) are not ' + 'supported, but you can call an async function inside an ' + 'effect.' : '', getStackByFiberInDevAndProd(finishedWork));
+            }
+          }
+          _destroy = null;
+        }
+        effect.destroy = _destroy;
+      }
+      effect = effect.next;
+    } while (effect !== firstEffect);
+  }
+}
+
+function commitPassiveHookEffects(finishedWork) {
+  commitHookEffectList(UnmountPassive, NoEffect$1, finishedWork);
+  commitHookEffectList(NoEffect$1, MountPassive, finishedWork);
+}
+
 function commitLifeCycles(finishedRoot, current$$1, finishedWork, committedExpirationTime) {
   switch (finishedWork.tag) {
+    case FunctionComponent:
+    case ForwardRef:
+    case SimpleMemoComponent:
+      {
+        commitHookEffectList(UnmountLayout, MountLayout, finishedWork);
+        break;
+      }
     case ClassComponent:
       {
         var instance = finishedWork.stateNode;
         if (finishedWork.effectTag & Update) {
           if (current$$1 === null) {
             startPhaseTimer(finishedWork, 'componentDidMount');
-            instance.props = finishedWork.memoizedProps;
-            instance.state = finishedWork.memoizedState;
+            // We could update instance props and state here,
+            // but instead we rely on them being set during last render.
+            // TODO: revisit this when we implement resuming.
+            {
+              if (finishedWork.type === finishedWork.elementType) {
+                !(instance.props === finishedWork.memoizedProps) ? warning$1(false, 'Expected instance props to match memoized props before ' + 'componentDidMount. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+                !(instance.state === finishedWork.memoizedState) ? warning$1(false, 'Expected instance state to match memoized state before ' + 'componentDidMount. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+              }
+            }
             instance.componentDidMount();
             stopPhaseTimer();
           } else {
-            var prevProps = current$$1.memoizedProps;
+            var prevProps = finishedWork.elementType === finishedWork.type ? current$$1.memoizedProps : resolveDefaultProps(finishedWork.type, current$$1.memoizedProps);
             var prevState = current$$1.memoizedState;
             startPhaseTimer(finishedWork, 'componentDidUpdate');
-            instance.props = finishedWork.memoizedProps;
-            instance.state = finishedWork.memoizedState;
+            // We could update instance props and state here,
+            // but instead we rely on them being set during last render.
+            // TODO: revisit this when we implement resuming.
+            {
+              if (finishedWork.type === finishedWork.elementType) {
+                !(instance.props === finishedWork.memoizedProps) ? warning$1(false, 'Expected instance props to match memoized props before ' + 'componentDidUpdate. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+                !(instance.state === finishedWork.memoizedState) ? warning$1(false, 'Expected instance state to match memoized state before ' + 'componentDidUpdate. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+              }
+            }
             instance.componentDidUpdate(prevProps, prevState, instance.__reactInternalSnapshotBeforeUpdate);
             stopPhaseTimer();
           }
         }
         var updateQueue = finishedWork.updateQueue;
         if (updateQueue !== null) {
-          instance.props = finishedWork.memoizedProps;
-          instance.state = finishedWork.memoizedState;
+          {
+            if (finishedWork.type === finishedWork.elementType) {
+              !(instance.props === finishedWork.memoizedProps) ? warning$1(false, 'Expected instance props to match memoized props before ' + 'processing the update queue. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+              !(instance.state === finishedWork.memoizedState) ? warning$1(false, 'Expected instance state to match memoized state before ' + 'processing the update queue. This is likely due to a bug in React. ' + 'Please file an issue.') : void 0;
+            }
+          }
+          // We could update instance props and state here,
+          // but instead we rely on them being set during last render.
+          // TODO: revisit this when we implement resuming.
           commitUpdateQueue(finishedWork, updateQueue, instance, committedExpirationTime);
         }
         return;
@@ -103971,47 +104227,7 @@ function commitLifeCycles(finishedRoot, current$$1, finishedWork, committedExpir
         return;
       }
     case SuspenseComponent:
-      {
-        if (finishedWork.effectTag & Callback) {
-          // In non-strict mode, a suspense boundary times out by commiting
-          // twice: first, by committing the children in an inconsistent state,
-          // then hiding them and showing the fallback children in a subsequent
-          var _newState = {
-            alreadyCaptured: true,
-            didTimeout: false,
-            timedOutAt: NoWork
-          };
-          finishedWork.memoizedState = _newState;
-          scheduleWork(finishedWork, Sync);
-          return;
-        }
-        var oldState = current$$1 !== null ? current$$1.memoizedState : null;
-        var newState = finishedWork.memoizedState;
-        var oldDidTimeout = oldState !== null ? oldState.didTimeout : false;
-
-        var newDidTimeout = void 0;
-        var primaryChildParent = finishedWork;
-        if (newState === null) {
-          newDidTimeout = false;
-        } else {
-          newDidTimeout = newState.didTimeout;
-          if (newDidTimeout) {
-            primaryChildParent = finishedWork.child;
-            newState.alreadyCaptured = false;
-            if (newState.timedOutAt === NoWork) {
-              // If the children had not already timed out, record the time.
-              // This is used to compute the elapsed time during subsequent
-              // attempts to render the children.
-              newState.timedOutAt = requestCurrentTime();
-            }
-          }
-        }
-
-        if (newDidTimeout !== oldDidTimeout && primaryChildParent !== null) {
-          hideOrUnhideAllChildren(primaryChildParent, newDidTimeout);
-        }
-        return;
-      }
+      break;
     case IncompleteClassComponent:
       break;
     default:
@@ -104040,6 +104256,12 @@ function hideOrUnhideAllChildren(finishedWork, isHidden) {
         } else {
           unhideTextInstance(_instance3, node.memoizedProps);
         }
+      } else if (node.tag === SuspenseComponent && node.memoizedState !== null) {
+        // Found a nested Suspense component that timed out. Skip over the
+        var fallbackChildFragment = node.child.sibling;
+        fallbackChildFragment.return = node;
+        node = fallbackChildFragment;
+        continue;
       } else if (node.child !== null) {
         node.child.return = node;
         node = node.child;
@@ -104104,6 +104326,28 @@ function commitUnmount(current$$1) {
   onCommitUnmount(current$$1);
 
   switch (current$$1.tag) {
+    case FunctionComponent:
+    case ForwardRef:
+    case MemoComponent:
+    case SimpleMemoComponent:
+      {
+        var updateQueue = current$$1.updateQueue;
+        if (updateQueue !== null) {
+          var lastEffect = updateQueue.lastEffect;
+          if (lastEffect !== null) {
+            var firstEffect = lastEffect.next;
+            var effect = firstEffect;
+            do {
+              var destroy = effect.destroy;
+              if (destroy !== null) {
+                safelyCallDestroy(current$$1, destroy);
+              }
+              effect = effect.next;
+            } while (effect !== firstEffect);
+          }
+        }
+        break;
+      }
     case ClassComponent:
       {
         safelyDetachRef(current$$1);
@@ -104458,11 +104702,30 @@ function commitDeletion(current$$1) {
 
 function commitWork(current$$1, finishedWork) {
   if (!supportsMutation) {
+    switch (finishedWork.tag) {
+      case FunctionComponent:
+      case ForwardRef:
+      case MemoComponent:
+      case SimpleMemoComponent:
+        {
+          commitHookEffectList(UnmountMutation, MountMutation, finishedWork);
+          return;
+        }
+    }
+
     commitContainer(finishedWork);
     return;
   }
 
   switch (finishedWork.tag) {
+    case FunctionComponent:
+    case ForwardRef:
+    case MemoComponent:
+    case SimpleMemoComponent:
+      {
+        commitHookEffectList(UnmountMutation, MountMutation, finishedWork);
+        return;
+      }
     case ClassComponent:
       {
         return;
@@ -104509,6 +104772,26 @@ function commitWork(current$$1, finishedWork) {
       }
     case SuspenseComponent:
       {
+        var newState = finishedWork.memoizedState;
+
+        var newDidTimeout = void 0;
+        var primaryChildParent = finishedWork;
+        if (newState === null) {
+          newDidTimeout = false;
+        } else {
+          newDidTimeout = true;
+          primaryChildParent = finishedWork.child;
+          if (newState.timedOutAt === NoWork) {
+            // If the children had not already timed out, record the time.
+            // This is used to compute the elapsed time during subsequent
+            // attempts to render the children.
+            newState.timedOutAt = requestCurrentTime();
+          }
+        }
+
+        if (primaryChildParent !== null) {
+          hideOrUnhideAllChildren(primaryChildParent, newDidTimeout);
+        }
         return;
       }
     case IncompleteClassComponent:
@@ -104605,10 +104888,10 @@ function throwException(root, returnFiber, sourceFiber, value, renderExpirationT
     var startTimeMs = -1;
     do {
       if (_workInProgress.tag === SuspenseComponent) {
-        var current = _workInProgress.alternate;
-        if (current !== null) {
-          var currentState = current.memoizedState;
-          if (currentState !== null && currentState.didTimeout) {
+        var current$$1 = _workInProgress.alternate;
+        if (current$$1 !== null) {
+          var currentState = current$$1.memoizedState;
+          if (currentState !== null) {
             // Reached a boundary that already timed out. Do not search
             // any further.
             var timedOutAt = currentState.timedOutAt;
@@ -104655,26 +104938,26 @@ function throwException(root, returnFiber, sourceFiber, value, renderExpirationT
         // inside a concurrent mode tree. If the Suspense is outside of it, we
         // should *not* suspend the commit.
         if ((_workInProgress.mode & ConcurrentMode) === NoEffect) {
-          _workInProgress.effectTag |= Callback;
+          _workInProgress.effectTag |= DidCapture;
 
-          // Unmount the source fiber's children
-          var nextChildren = null;
-          reconcileChildren(sourceFiber.alternate, sourceFiber, nextChildren, renderExpirationTime);
-          sourceFiber.effectTag &= ~Incomplete;
+          // We're going to commit this fiber even though it didn't complete.
+          // But we shouldn't call any lifecycle methods or callbacks. Remove
+          // all lifecycle effect tags.
+          sourceFiber.effectTag &= ~(LifecycleEffectMask | Incomplete);
 
           if (sourceFiber.tag === ClassComponent) {
-            // We're going to commit this fiber even though it didn't complete.
-            // But we shouldn't call any lifecycle methods or callbacks. Remove
-            // all lifecycle effect tags.
-            sourceFiber.effectTag &= ~LifecycleEffectMask;
             var _current = sourceFiber.alternate;
             if (_current === null) {
               // This is a new mount. Change the tag so it's not mistaken for a
-              // completed component. For example, we should not call
+              // completed class component. For example, we should not call
               // componentWillUnmount if it is deleted.
               sourceFiber.tag = IncompleteClassComponent;
             }
           }
+
+          // The source fiber did not complete. Mark it with the current
+          // render priority to indicate that it still has pending work.
+          sourceFiber.expirationTime = renderExpirationTime;
 
           // Exit without suspending.
           return;
@@ -104722,7 +105005,8 @@ function throwException(root, returnFiber, sourceFiber, value, renderExpirationT
       _workInProgress = _workInProgress.return;
     } while (_workInProgress !== null);
     // No boundary was found. Fallthrough to error mode.
-    value = new Error('An update was suspended, but no placeholder UI was provided.');
+    // TODO: Use invariant so the message is stripped in prod?
+    value = new Error((getComponentName(sourceFiber.type) || 'A React component') + ' suspended while rendering, but no fallback UI was specified.\n' + '\n' + 'Add a <Suspense fallback=...> component higher in the tree to ' + 'provide a loading indicator or placeholder to display.' + getStackByFiberInDevAndProd(sourceFiber));
   }
 
   // We didn't find a boundary that could handle this type of exception. Start
@@ -104797,32 +105081,7 @@ function unwindWork(workInProgress, renderExpirationTime) {
         var _effectTag2 = workInProgress.effectTag;
         if (_effectTag2 & ShouldCapture) {
           workInProgress.effectTag = _effectTag2 & ~ShouldCapture | DidCapture;
-          // Captured a suspense effect. Set the boundary's `alreadyCaptured`
-          // state to true so we know to render the fallback.
-          var current = workInProgress.alternate;
-          var currentState = current !== null ? current.memoizedState : null;
-          var nextState = workInProgress.memoizedState;
-          if (nextState === null) {
-            // No existing state. Create a new object.
-            nextState = {
-              alreadyCaptured: true,
-              didTimeout: false,
-              timedOutAt: NoWork
-            };
-          } else if (currentState === nextState) {
-            // There is an existing state but it's the same as the current tree's.
-            // Clone the object.
-            nextState = {
-              alreadyCaptured: true,
-              didTimeout: nextState.didTimeout,
-              timedOutAt: nextState.timedOutAt
-            };
-          } else {
-            // Already have a clone, so it's safe to mutate.
-            nextState.alreadyCaptured = true;
-          }
-          workInProgress.memoizedState = nextState;
-          // Re-render the boundary.
+          // Captured a suspense effect. Re-render the boundary.
           return workInProgress;
         }
         return null;
@@ -104871,6 +105130,19 @@ function unwindInterruptedWork(interruptedWork) {
 }
 
 var Dispatcher = {
+  readContext: readContext,
+  useCallback: useCallback,
+  useContext: useContext,
+  useEffect: useEffect,
+  useImperativeMethods: useImperativeMethods,
+  useLayoutEffect: useLayoutEffect,
+  useMemo: useMemo,
+  useMutationEffect: useMutationEffect,
+  useReducer: useReducer,
+  useRef: useRef,
+  useState: useState
+};
+var DispatcherWithoutHooks = {
   readContext: readContext
 };
 
@@ -104884,8 +105156,8 @@ var warnAboutInvalidUpdates = void 0;
 
 if (enableSchedulerTracing) {
   // Provide explicit error message when production+profiling bundle of e.g. react-dom
-  // is used with production (non-profiling) bundle of schedule/tracing
-  !(tracing.__interactionsRef != null && tracing.__interactionsRef.current != null) ? invariant(false, 'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `schedule/tracing` module with `schedule/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling') : void 0;
+  // is used with production (non-profiling) bundle of scheduler/tracing
+  !(tracing.__interactionsRef != null && tracing.__interactionsRef.current != null) ? invariant(false, 'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `scheduler/tracing` module with `scheduler/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling') : void 0;
 }
 
 {
@@ -104893,14 +105165,14 @@ if (enableSchedulerTracing) {
   didWarnSetStateChildContext = false;
   var didWarnStateUpdateForUnmountedComponent = {};
 
-  warnAboutUpdateOnUnmounted = function (fiber) {
+  warnAboutUpdateOnUnmounted = function (fiber, isClass) {
     // We show the whole stack but dedupe on the top component's name because
     // the problematic code almost always lies inside that component.
-    var componentName = getComponentName(fiber.type) || 'ReactClass';
+    var componentName = getComponentName(fiber.type) || 'ReactComponent';
     if (didWarnStateUpdateForUnmountedComponent[componentName]) {
       return;
     }
-    warningWithoutStack$1(false, "Can't call setState (or forceUpdate) on an unmounted component. This " + 'is a no-op, but it indicates a memory leak in your application. To ' + 'fix, cancel all subscriptions and asynchronous tasks in the ' + 'componentWillUnmount method.%s', getStackByFiberInDevAndProd(fiber));
+    warningWithoutStack$1(false, "Can't perform a React state update on an unmounted component. This " + 'is a no-op, but it indicates a memory leak in your application. To ' + 'fix, cancel all subscriptions and asynchronous tasks in %s.%s', isClass ? 'the componentWillUnmount method' : 'a useEffect cleanup function', getStackByFiberInDevAndProd(fiber));
     didWarnStateUpdateForUnmountedComponent[componentName] = true;
   };
 
@@ -104924,8 +105196,8 @@ if (enableSchedulerTracing) {
   };
 }
 
-// Used to ensure computeUniqueAsyncExpiration is monotonically increasing.
-var lastUniqueAsyncExpiration = 0;
+// Used to ensure computeUniqueAsyncExpiration is monotonically decreasing.
+var lastUniqueAsyncExpiration = Sync - 1;
 
 // Represents the expiration time that incoming updates should use. (If this
 // is NoWork, use the default strategy: async updates in async mode, sync
@@ -104946,6 +105218,9 @@ var nextRenderDidError = false;
 var nextEffect = null;
 
 var isCommitting$1 = false;
+var rootWithPendingPassiveEffects = null;
+var passiveEffectCallbackHandle = null;
+var passiveEffectCallback = null;
 
 var legacyErrorBoundariesThatAlreadyFailed = null;
 
@@ -104954,11 +105229,13 @@ var interruptedBy = null;
 
 var stashedWorkInProgressProperties = void 0;
 var replayUnitOfWork = void 0;
+var mayReplayFailedUnitOfWork = void 0;
 var isReplayingFailedUnitOfWork = void 0;
 var originalReplayError = void 0;
 var rethrowOriginalError = void 0;
 if ( true && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
   stashedWorkInProgressProperties = null;
+  mayReplayFailedUnitOfWork = true;
   isReplayingFailedUnitOfWork = false;
   originalReplayError = null;
   replayUnitOfWork = function (failedUnitOfWork, thrownValue, isYieldy) {
@@ -105135,8 +105412,6 @@ function commitBeforeMutationLifecycles() {
       commitBeforeMutationLifeCycles(current$$1, nextEffect);
     }
 
-    // Don't cleanup effects yet;
-    // This will be done by commitAllLifeCycles()
     nextEffect = nextEffect.nextEffect;
   }
 
@@ -105168,15 +105443,48 @@ function commitAllLifeCycles(finishedRoot, committedExpirationTime) {
       commitAttachRef(nextEffect);
     }
 
-    var next = nextEffect.nextEffect;
-    // Ensure that we clean these up so that we don't accidentally keep them.
-    // I'm not actually sure this matters because we can't reset firstEffect
-    // and lastEffect since they're on every node, not just the effectful
-    // ones. So we have to clean everything as we reuse nodes anyway.
-    nextEffect.nextEffect = null;
-    // Ensure that we reset the effectTag here so that we can rely on effect
-    // tags to reason about the current life-cycle.
-    nextEffect = next;
+    if (enableHooks && effectTag & Passive) {
+      rootWithPendingPassiveEffects = finishedRoot;
+    }
+
+    nextEffect = nextEffect.nextEffect;
+  }
+}
+
+function commitPassiveEffects(root, firstEffect) {
+  rootWithPendingPassiveEffects = null;
+  passiveEffectCallbackHandle = null;
+  passiveEffectCallback = null;
+
+  // Set this to true to prevent re-entrancy
+  var previousIsRendering = isRendering;
+  isRendering = true;
+
+  var effect = firstEffect;
+  do {
+    if (effect.effectTag & Passive) {
+      var didError = false;
+      var error = void 0;
+      {
+        invokeGuardedCallback(null, commitPassiveHookEffects, null, effect);
+        if (hasCaughtError()) {
+          didError = true;
+          error = clearCaughtError();
+        }
+      }
+      if (didError) {
+        captureCommitPhaseError(effect, error);
+      }
+    }
+    effect = effect.nextEffect;
+  } while (effect !== null);
+
+  isRendering = previousIsRendering;
+
+  // Check if work was scheduled by one of the effects
+  var rootExpirationTime = root.expirationTime;
+  if (rootExpirationTime !== NoWork) {
+    requestWork(root, rootExpirationTime);
   }
 }
 
@@ -105189,6 +105497,15 @@ function markLegacyErrorBoundaryAsFailed(instance) {
     legacyErrorBoundariesThatAlreadyFailed = new Set([instance]);
   } else {
     legacyErrorBoundariesThatAlreadyFailed.add(instance);
+  }
+}
+
+function flushPassiveEffects() {
+  if (passiveEffectCallback !== null) {
+    scheduler.unstable_cancelCallback(passiveEffectCallbackHandle);
+    // We call the scheduled callback instead of commitPassiveEffects directly
+    // to ensure tracing works correctly.
+    passiveEffectCallback();
   }
 }
 
@@ -105207,7 +105524,7 @@ function commitRoot(root, finishedWork) {
   // they may schedule additional updates.
   var updateExpirationTimeBeforeCommit = finishedWork.expirationTime;
   var childExpirationTimeBeforeCommit = finishedWork.childExpirationTime;
-  var earliestRemainingTimeBeforeCommit = updateExpirationTimeBeforeCommit === NoWork || childExpirationTimeBeforeCommit !== NoWork && childExpirationTimeBeforeCommit < updateExpirationTimeBeforeCommit ? childExpirationTimeBeforeCommit : updateExpirationTimeBeforeCommit;
+  var earliestRemainingTimeBeforeCommit = childExpirationTimeBeforeCommit > updateExpirationTimeBeforeCommit ? childExpirationTimeBeforeCommit : updateExpirationTimeBeforeCommit;
   markCommittedPriorityLevels(root, earliestRemainingTimeBeforeCommit);
 
   var prevInteractions = null;
@@ -105329,6 +105646,22 @@ function commitRoot(root, finishedWork) {
     }
   }
 
+  if (enableHooks && firstEffect !== null && rootWithPendingPassiveEffects !== null) {
+    // This commit included a passive effect. These do not need to fire until
+    // after the next paint. Schedule an callback to fire them in an async
+    // event. To ensure serial execution, the callback will be flushed early if
+    // we enter rootWithPendingPassiveEffects commit phase before then.
+    var callback = commitPassiveEffects.bind(null, root, firstEffect);
+    if (enableSchedulerTracing) {
+      // TODO: Avoid this extra callback by mutating the tracing ref directly,
+      // like we do at the beginning of commitRoot. I've opted not to do that
+      // here because that code is still in flux.
+      callback = tracing.unstable_wrap(callback);
+    }
+    passiveEffectCallbackHandle = scheduler.unstable_scheduleCallback(callback);
+    passiveEffectCallback = callback;
+  }
+
   isCommitting$1 = false;
   isWorking = false;
   stopCommitLifeCyclesTimer();
@@ -105340,7 +105673,7 @@ function commitRoot(root, finishedWork) {
 
   var updateExpirationTimeAfterCommit = finishedWork.expirationTime;
   var childExpirationTimeAfterCommit = finishedWork.childExpirationTime;
-  var earliestRemainingTimeAfterCommit = updateExpirationTimeAfterCommit === NoWork || childExpirationTimeAfterCommit !== NoWork && childExpirationTimeAfterCommit < updateExpirationTimeAfterCommit ? childExpirationTimeAfterCommit : updateExpirationTimeAfterCommit;
+  var earliestRemainingTimeAfterCommit = childExpirationTimeAfterCommit > updateExpirationTimeAfterCommit ? childExpirationTimeAfterCommit : updateExpirationTimeAfterCommit;
   if (earliestRemainingTimeAfterCommit === NoWork) {
     // If there's no remaining work, we can clear the set of already failed
     // error boundaries.
@@ -105375,7 +105708,7 @@ function commitRoot(root, finishedWork) {
         // Only decrement the pending interaction count if we're done.
         // If there's still work at the current priority,
         // That indicates that we are waiting for suspense data.
-        if (earliestRemainingTimeAfterCommit === NoWork || scheduledExpirationTime < earliestRemainingTimeAfterCommit) {
+        if (scheduledExpirationTime > earliestRemainingTimeAfterCommit) {
           pendingInteractionMap.delete(scheduledExpirationTime);
 
           scheduledInteractions.forEach(function (interaction) {
@@ -105429,10 +105762,10 @@ function resetChildExpirationTime(workInProgress, renderTime) {
     while (child !== null) {
       var childUpdateExpirationTime = child.expirationTime;
       var childChildExpirationTime = child.childExpirationTime;
-      if (newChildExpirationTime === NoWork || childUpdateExpirationTime !== NoWork && childUpdateExpirationTime < newChildExpirationTime) {
+      if (childUpdateExpirationTime > newChildExpirationTime) {
         newChildExpirationTime = childUpdateExpirationTime;
       }
-      if (newChildExpirationTime === NoWork || childChildExpirationTime !== NoWork && childChildExpirationTime < newChildExpirationTime) {
+      if (childChildExpirationTime > newChildExpirationTime) {
         newChildExpirationTime = childChildExpirationTime;
       }
       if (shouldBubbleActualDurations) {
@@ -105448,10 +105781,10 @@ function resetChildExpirationTime(workInProgress, renderTime) {
     while (_child !== null) {
       var _childUpdateExpirationTime = _child.expirationTime;
       var _childChildExpirationTime = _child.childExpirationTime;
-      if (newChildExpirationTime === NoWork || _childUpdateExpirationTime !== NoWork && _childUpdateExpirationTime < newChildExpirationTime) {
+      if (_childUpdateExpirationTime > newChildExpirationTime) {
         newChildExpirationTime = _childUpdateExpirationTime;
       }
-      if (newChildExpirationTime === NoWork || _childChildExpirationTime !== NoWork && _childChildExpirationTime < newChildExpirationTime) {
+      if (_childChildExpirationTime > newChildExpirationTime) {
         newChildExpirationTime = _childChildExpirationTime;
       }
       _child = _child.sibling;
@@ -105479,14 +105812,18 @@ function completeUnitOfWork(workInProgress) {
     var siblingFiber = workInProgress.sibling;
 
     if ((workInProgress.effectTag & Incomplete) === NoEffect) {
+      if ( true && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+        // Don't replay if it fails during completion phase.
+        mayReplayFailedUnitOfWork = false;
+      }
       // This fiber completed.
+      // Remember we're completing this unit so we can find a boundary if it fails.
+      nextUnitOfWork = workInProgress;
       if (enableProfilerTimer) {
         if (workInProgress.mode & ProfileMode) {
           startProfilerTimer(workInProgress);
         }
-
         nextUnitOfWork = completeWork(current$$1, workInProgress, nextRenderExpirationTime);
-
         if (workInProgress.mode & ProfileMode) {
           // Update render duration assuming we didn't error.
           stopProfilerTimerIfRunningAndRecordDelta(workInProgress, false);
@@ -105494,10 +105831,19 @@ function completeUnitOfWork(workInProgress) {
       } else {
         nextUnitOfWork = completeWork(current$$1, workInProgress, nextRenderExpirationTime);
       }
+      if ( true && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+        // We're out of completion phase so replaying is fine now.
+        mayReplayFailedUnitOfWork = true;
+      }
       stopWorkTimer(workInProgress);
       resetChildExpirationTime(workInProgress, nextRenderExpirationTime);
       {
         resetCurrentFiber();
+      }
+
+      if (nextUnitOfWork !== null) {
+        // Completing this fiber spawned new work. Work on that next.
+        return nextUnitOfWork;
       }
 
       if (returnFiber !== null &&
@@ -105551,9 +105897,18 @@ function completeUnitOfWork(workInProgress) {
         return null;
       }
     } else {
-      if (workInProgress.mode & ProfileMode) {
+      if (enableProfilerTimer && workInProgress.mode & ProfileMode) {
         // Record the render duration for the fiber that errored.
         stopProfilerTimerIfRunningAndRecordDelta(workInProgress, false);
+
+        // Include the time spent working on failed children before continuing.
+        var actualDuration = workInProgress.actualDuration;
+        var child = workInProgress.child;
+        while (child !== null) {
+          actualDuration += child.actualDuration;
+          child = child.sibling;
+        }
+        workInProgress.actualDuration = actualDuration;
       }
 
       // This fiber did not complete because something threw. Pop values off
@@ -105576,19 +105931,6 @@ function completeUnitOfWork(workInProgress) {
         stopWorkTimer(workInProgress);
         if ( true && ReactFiberInstrumentation_1.debugTool) {
           ReactFiberInstrumentation_1.debugTool.onCompleteWork(workInProgress);
-        }
-
-        if (enableProfilerTimer) {
-          // Include the time spent working on failed children before continuing.
-          if (next.mode & ProfileMode) {
-            var actualDuration = next.actualDuration;
-            var child = next.child;
-            while (child !== null) {
-              actualDuration += child.actualDuration;
-              child = child.sibling;
-            }
-            next.actualDuration = actualDuration;
-          }
         }
 
         // If completing this work spawned new work, do that next. We'll come
@@ -105694,17 +106036,24 @@ function workLoop(isYieldy) {
       nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
     }
   } else {
-    // Flush asynchronous work until the deadline runs out of time.
-    while (nextUnitOfWork !== null && !shouldYield()) {
+    // Flush asynchronous work until there's a higher priority event
+    while (nextUnitOfWork !== null && !shouldYieldToRenderer()) {
       nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
     }
   }
 }
 
-function renderRoot(root, isYieldy, isExpired) {
+function renderRoot(root, isYieldy) {
   !!isWorking ? invariant(false, 'renderRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.') : void 0;
+
+  flushPassiveEffects();
+
   isWorking = true;
-  ReactCurrentOwner$2.currentDispatcher = Dispatcher;
+  if (enableHooks) {
+    ReactCurrentOwner$2.currentDispatcher = Dispatcher;
+  } else {
+    ReactCurrentOwner$2.currentDispatcher = DispatcherWithoutHooks;
+  }
 
   var expirationTime = root.nextExpirationTimeToWorkOn;
 
@@ -105723,7 +106072,7 @@ function renderRoot(root, isYieldy, isExpired) {
       // So that we can accurately attribute time spent working on it,
       var interactions = new Set();
       root.pendingInteractionMap.forEach(function (scheduledInteractions, scheduledExpirationTime) {
-        if (scheduledExpirationTime <= expirationTime) {
+        if (scheduledExpirationTime >= expirationTime) {
           scheduledInteractions.forEach(function (interaction) {
             return interactions.add(interaction);
           });
@@ -105772,20 +106121,39 @@ function renderRoot(root, isYieldy, isExpired) {
     try {
       workLoop(isYieldy);
     } catch (thrownValue) {
+      resetContextDependences();
+      resetHooks();
+
+      // Reset in case completion throws.
+      // This is only used in DEV and when replaying is on.
+      var mayReplay = void 0;
+      if ( true && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+        mayReplay = mayReplayFailedUnitOfWork;
+        mayReplayFailedUnitOfWork = true;
+      }
+
       if (nextUnitOfWork === null) {
         // This is a fatal error.
         didFatal = true;
         onUncaughtError(thrownValue);
       } else {
+        if (enableProfilerTimer && nextUnitOfWork.mode & ProfileMode) {
+          // Record the time spent rendering before an error was thrown.
+          // This avoids inaccurate Profiler durations in the case of a suspended render.
+          stopProfilerTimerIfRunningAndRecordDelta(nextUnitOfWork, true);
+        }
+
         {
           // Reset global debug state
           // We assume this is defined in DEV
           resetCurrentlyProcessingQueue();
         }
 
-        var failedUnitOfWork = nextUnitOfWork;
         if ( true && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
-          replayUnitOfWork(failedUnitOfWork, thrownValue, isYieldy);
+          if (mayReplay) {
+            var failedUnitOfWork = nextUnitOfWork;
+            replayUnitOfWork(failedUnitOfWork, thrownValue, isYieldy);
+          }
         }
 
         // TODO: we already know this isn't true in some cases.
@@ -105823,6 +106191,7 @@ function renderRoot(root, isYieldy, isExpired) {
   isWorking = false;
   ReactCurrentOwner$2.currentDispatcher = null;
   resetContextDependences();
+  resetHooks();
 
   // Yield back to main thread.
   if (didFatal) {
@@ -105884,7 +106253,7 @@ function renderRoot(root, isYieldy, isExpired) {
     // Synchronsouly attempt to render the same level one more time. This is
     // similar to a suspend, but without a timeout because we're not waiting
     // for a promise to resolve.
-    !root.didError && !isExpired) {
+    !root.didError && isYieldy) {
       root.didError = true;
       var _suspendedExpirationTime = root.nextExpirationTimeToWorkOn = expirationTime;
       var _rootExpirationTime = root.expirationTime = Sync;
@@ -105894,7 +106263,7 @@ function renderRoot(root, isYieldy, isExpired) {
     }
   }
 
-  if (!isExpired && nextLatestAbsoluteTimeoutMs !== -1) {
+  if (isYieldy && nextLatestAbsoluteTimeoutMs !== -1) {
     // The tree was suspended.
     var _suspendedExpirationTime2 = expirationTime;
     markSuspendedPriorityLevel(root, _suspendedExpirationTime2);
@@ -105927,9 +106296,8 @@ function renderRoot(root, isYieldy, isExpired) {
   onComplete(root, rootWorkInProgress, expirationTime);
 }
 
-function dispatch(sourceFiber, value, expirationTime) {
-  !(!isWorking || isCommitting$1) ? invariant(false, 'dispatch: Cannot dispatch during the render phase.') : void 0;
-
+function captureCommitPhaseError(sourceFiber, value) {
+  var expirationTime = Sync;
   var fiber = sourceFiber.return;
   while (fiber !== null) {
     switch (fiber.tag) {
@@ -105967,10 +106335,6 @@ function dispatch(sourceFiber, value, expirationTime) {
   }
 }
 
-function captureCommitPhaseError(fiber, error) {
-  return dispatch(fiber, error, Sync);
-}
-
 function computeThreadID(expirationTime, interactionThreadID) {
   // Interaction threads are unique per root and expiration time.
   return expirationTime * 1000 + interactionThreadID;
@@ -105980,11 +106344,11 @@ function computeThreadID(expirationTime, interactionThreadID) {
 function computeUniqueAsyncExpiration() {
   var currentTime = requestCurrentTime();
   var result = computeAsyncExpiration(currentTime);
-  if (result <= lastUniqueAsyncExpiration) {
+  if (result >= lastUniqueAsyncExpiration) {
     // Since we assume the current time monotonically increases, we only hit
     // this branch when computeUniqueAsyncExpiration is fired multiple times
     // within a 200ms window (or whatever the async bucket size is).
-    result = lastUniqueAsyncExpiration + 1;
+    result = lastUniqueAsyncExpiration - 1;
   }
   lastUniqueAsyncExpiration = result;
   return lastUniqueAsyncExpiration;
@@ -106019,7 +106383,7 @@ function computeExpirationForFiber(currentTime, fiber) {
       // If we're in the middle of rendering a tree, do not update at the same
       // expiration time that is already rendering.
       if (nextRoot !== null && expirationTime === nextRenderExpirationTime) {
-        expirationTime += 1;
+        expirationTime -= 1;
       }
     } else {
       // This is a sync update
@@ -106030,7 +106394,7 @@ function computeExpirationForFiber(currentTime, fiber) {
     // This is an interactive update. Keep track of the lowest pending
     // interactive expiration time. This allows us to synchronously flush
     // all interactive updates when needed.
-    if (expirationTime > lowestPriorityPendingInteractiveExpirationTime) {
+    if (lowestPriorityPendingInteractiveExpirationTime === NoWork || expirationTime < lowestPriorityPendingInteractiveExpirationTime) {
       lowestPriorityPendingInteractiveExpirationTime = expirationTime;
     }
   }
@@ -106112,11 +106476,11 @@ function scheduleWorkToRoot(fiber, expirationTime) {
   }
 
   // Update the source fiber's expiration time
-  if (fiber.expirationTime === NoWork || fiber.expirationTime > expirationTime) {
+  if (fiber.expirationTime < expirationTime) {
     fiber.expirationTime = expirationTime;
   }
   var alternate = fiber.alternate;
-  if (alternate !== null && (alternate.expirationTime === NoWork || alternate.expirationTime > expirationTime)) {
+  if (alternate !== null && alternate.expirationTime < expirationTime) {
     alternate.expirationTime = expirationTime;
   }
   // Walk the parent path to the root and update the child expiration time.
@@ -106127,12 +106491,12 @@ function scheduleWorkToRoot(fiber, expirationTime) {
   } else {
     while (node !== null) {
       alternate = node.alternate;
-      if (node.childExpirationTime === NoWork || node.childExpirationTime > expirationTime) {
+      if (node.childExpirationTime < expirationTime) {
         node.childExpirationTime = expirationTime;
-        if (alternate !== null && (alternate.childExpirationTime === NoWork || alternate.childExpirationTime > expirationTime)) {
+        if (alternate !== null && alternate.childExpirationTime < expirationTime) {
           alternate.childExpirationTime = expirationTime;
         }
-      } else if (alternate !== null && (alternate.childExpirationTime === NoWork || alternate.childExpirationTime > expirationTime)) {
+      } else if (alternate !== null && alternate.childExpirationTime < expirationTime) {
         alternate.childExpirationTime = expirationTime;
       }
       if (node.return === null && node.tag === HostRoot) {
@@ -106143,54 +106507,61 @@ function scheduleWorkToRoot(fiber, expirationTime) {
     }
   }
 
-  if (root === null) {
-    if ( true && fiber.tag === ClassComponent) {
-      warnAboutUpdateOnUnmounted(fiber);
-    }
-    return null;
-  }
-
   if (enableSchedulerTracing) {
-    var interactions = tracing.__interactionsRef.current;
-    if (interactions.size > 0) {
-      var pendingInteractionMap = root.pendingInteractionMap;
-      var pendingInteractions = pendingInteractionMap.get(expirationTime);
-      if (pendingInteractions != null) {
-        interactions.forEach(function (interaction) {
-          if (!pendingInteractions.has(interaction)) {
-            // Update the pending async work count for previously unscheduled interaction.
+    if (root !== null) {
+      var interactions = tracing.__interactionsRef.current;
+      if (interactions.size > 0) {
+        var pendingInteractionMap = root.pendingInteractionMap;
+        var pendingInteractions = pendingInteractionMap.get(expirationTime);
+        if (pendingInteractions != null) {
+          interactions.forEach(function (interaction) {
+            if (!pendingInteractions.has(interaction)) {
+              // Update the pending async work count for previously unscheduled interaction.
+              interaction.__count++;
+            }
+
+            pendingInteractions.add(interaction);
+          });
+        } else {
+          pendingInteractionMap.set(expirationTime, new Set(interactions));
+
+          // Update the pending async work count for the current interactions.
+          interactions.forEach(function (interaction) {
             interaction.__count++;
-          }
+          });
+        }
 
-          pendingInteractions.add(interaction);
-        });
-      } else {
-        pendingInteractionMap.set(expirationTime, new Set(interactions));
-
-        // Update the pending async work count for the current interactions.
-        interactions.forEach(function (interaction) {
-          interaction.__count++;
-        });
-      }
-
-      var subscriber = tracing.__subscriberRef.current;
-      if (subscriber !== null) {
-        var threadID = computeThreadID(expirationTime, root.interactionThreadID);
-        subscriber.onWorkScheduled(interactions, threadID);
+        var subscriber = tracing.__subscriberRef.current;
+        if (subscriber !== null) {
+          var threadID = computeThreadID(expirationTime, root.interactionThreadID);
+          subscriber.onWorkScheduled(interactions, threadID);
+        }
       }
     }
   }
-
   return root;
 }
 
 function scheduleWork(fiber, expirationTime) {
   var root = scheduleWorkToRoot(fiber, expirationTime);
   if (root === null) {
+    {
+      switch (fiber.tag) {
+        case ClassComponent:
+          warnAboutUpdateOnUnmounted(fiber, true);
+          break;
+        case FunctionComponent:
+        case ForwardRef:
+        case MemoComponent:
+        case SimpleMemoComponent:
+          warnAboutUpdateOnUnmounted(fiber, false);
+          break;
+      }
+    }
     return;
   }
 
-  if (!isWorking && nextRenderExpirationTime !== NoWork && expirationTime < nextRenderExpirationTime) {
+  if (!isWorking && nextRenderExpirationTime !== NoWork && expirationTime > nextRenderExpirationTime) {
     // This is an interruption. (Used for performance tracking.)
     interruptedBy = fiber;
     resetStack();
@@ -106235,10 +106606,8 @@ var isRendering = false;
 var nextFlushedRoot = null;
 var nextFlushedExpirationTime = NoWork;
 var lowestPriorityPendingInteractiveExpirationTime = NoWork;
-var deadlineDidExpire = false;
 var hasUnhandledError = false;
 var unhandledError = null;
-var deadline = null;
 
 var isBatchingUpdates = false;
 var isUnbatchingUpdates = false;
@@ -106255,8 +106624,6 @@ var NESTED_UPDATE_LIMIT = 50;
 var nestedUpdateCount = 0;
 var lastCommittedRootDuringThisBatch = null;
 
-var timeHeuristicForUnitOfWork = 1;
-
 function recomputeCurrentRendererTime() {
   var currentTimeMs = scheduler.unstable_now() - originalStartTimeMs;
   currentRendererTime = msToExpirationTime(currentTimeMs);
@@ -106265,7 +106632,7 @@ function recomputeCurrentRendererTime() {
 function scheduleCallbackWithExpirationTime(root, expirationTime) {
   if (callbackExpirationTime !== NoWork) {
     // A callback is already scheduled. Check its expiration time (timeout).
-    if (expirationTime > callbackExpirationTime) {
+    if (expirationTime < callbackExpirationTime) {
       // Existing callback has sufficient timeout. Exit.
       return;
     } else {
@@ -106302,7 +106669,7 @@ function onComplete(root, finishedWork, expirationTime) {
 
 function onSuspend(root, finishedWork, suspendedExpirationTime, rootExpirationTime, msUntilTimeout) {
   root.expirationTime = rootExpirationTime;
-  if (msUntilTimeout === 0 && !shouldYield()) {
+  if (msUntilTimeout === 0 && !shouldYieldToRenderer()) {
     // Don't wait an additional tick. Commit the tree immediately.
     root.pendingCommitExpirationTime = suspendedExpirationTime;
     root.finishedWork = finishedWork;
@@ -106391,7 +106758,7 @@ function requestWork(root, expirationTime) {
       // flush it now.
       nextFlushedRoot = root;
       nextFlushedExpirationTime = Sync;
-      performWorkOnRoot(root, Sync, true);
+      performWorkOnRoot(root, Sync, false);
     }
     return;
   }
@@ -106421,7 +106788,7 @@ function addRootToSchedule(root, expirationTime) {
   } else {
     // This root is already scheduled, but its priority may have increased.
     var remainingExpirationTime = root.expirationTime;
-    if (remainingExpirationTime === NoWork || expirationTime < remainingExpirationTime) {
+    if (expirationTime > remainingExpirationTime) {
       // Update the priority.
       root.expirationTime = expirationTime;
     }
@@ -106466,7 +106833,7 @@ function findHighestPriorityRoot() {
         }
         root = previousScheduledRoot.nextScheduledRoot;
       } else {
-        if (highestPriorityWork === NoWork || remainingExpirationTime < highestPriorityWork) {
+        if (remainingExpirationTime > highestPriorityWork) {
           // Update the priority, if it's higher
           highestPriorityWork = remainingExpirationTime;
           highestPriorityRoot = root;
@@ -106489,56 +106856,73 @@ function findHighestPriorityRoot() {
   nextFlushedExpirationTime = highestPriorityWork;
 }
 
-function performAsyncWork(dl) {
-  if (dl.didTimeout) {
-    // The callback timed out. That means at least one update has expired.
-    // Iterate through the root schedule. If they contain expired work, set
-    // the next render expiration time to the current time. This has the effect
-    // of flushing all expired work in a single batch, instead of flushing each
-    // level one at a time.
-    if (firstScheduledRoot !== null) {
-      recomputeCurrentRendererTime();
-      var root = firstScheduledRoot;
-      do {
-        didExpireAtExpirationTime(root, currentRendererTime);
-        // The root schedule is circular, so this is never null.
-        root = root.nextScheduledRoot;
-      } while (root !== firstScheduledRoot);
-    }
+// TODO: This wrapper exists because many of the older tests (the ones that use
+// flushDeferredPri) rely on the number of times `shouldYield` is called. We
+// should get rid of it.
+var didYield = false;
+function shouldYieldToRenderer() {
+  if (didYield) {
+    return true;
   }
-  performWork(NoWork, dl);
+  if (scheduler.unstable_shouldYield()) {
+    didYield = true;
+    return true;
+  }
+  return false;
+}
+
+function performAsyncWork() {
+  try {
+    if (!shouldYieldToRenderer()) {
+      // The callback timed out. That means at least one update has expired.
+      // Iterate through the root schedule. If they contain expired work, set
+      // the next render expiration time to the current time. This has the effect
+      // of flushing all expired work in a single batch, instead of flushing each
+      // level one at a time.
+      if (firstScheduledRoot !== null) {
+        recomputeCurrentRendererTime();
+        var root = firstScheduledRoot;
+        do {
+          didExpireAtExpirationTime(root, currentRendererTime);
+          // The root schedule is circular, so this is never null.
+          root = root.nextScheduledRoot;
+        } while (root !== firstScheduledRoot);
+      }
+    }
+    performWork(NoWork, true);
+  } finally {
+    didYield = false;
+  }
 }
 
 function performSyncWork() {
-  performWork(Sync, null);
+  performWork(Sync, false);
 }
 
-function performWork(minExpirationTime, dl) {
-  deadline = dl;
-
-  // Keep working on roots until there's no more work, or until we reach
-  // the deadline.
+function performWork(minExpirationTime, isYieldy) {
+  // Keep working on roots until there's no more work, or until there's a higher
+  // priority event.
   findHighestPriorityRoot();
 
-  if (deadline !== null) {
+  if (isYieldy) {
     recomputeCurrentRendererTime();
     currentSchedulerTime = currentRendererTime;
 
     if (enableUserTimingAPI) {
-      var didExpire = nextFlushedExpirationTime < currentRendererTime;
+      var didExpire = nextFlushedExpirationTime > currentRendererTime;
       var timeout = expirationTimeToMs(nextFlushedExpirationTime);
       stopRequestCallbackTimer(didExpire, timeout);
     }
 
-    while (nextFlushedRoot !== null && nextFlushedExpirationTime !== NoWork && (minExpirationTime === NoWork || minExpirationTime >= nextFlushedExpirationTime) && (!deadlineDidExpire || currentRendererTime >= nextFlushedExpirationTime)) {
-      performWorkOnRoot(nextFlushedRoot, nextFlushedExpirationTime, currentRendererTime >= nextFlushedExpirationTime);
+    while (nextFlushedRoot !== null && nextFlushedExpirationTime !== NoWork && minExpirationTime <= nextFlushedExpirationTime && !(didYield && currentRendererTime > nextFlushedExpirationTime)) {
+      performWorkOnRoot(nextFlushedRoot, nextFlushedExpirationTime, currentRendererTime > nextFlushedExpirationTime);
       findHighestPriorityRoot();
       recomputeCurrentRendererTime();
       currentSchedulerTime = currentRendererTime;
     }
   } else {
-    while (nextFlushedRoot !== null && nextFlushedExpirationTime !== NoWork && (minExpirationTime === NoWork || minExpirationTime >= nextFlushedExpirationTime)) {
-      performWorkOnRoot(nextFlushedRoot, nextFlushedExpirationTime, true);
+    while (nextFlushedRoot !== null && nextFlushedExpirationTime !== NoWork && minExpirationTime <= nextFlushedExpirationTime) {
+      performWorkOnRoot(nextFlushedRoot, nextFlushedExpirationTime, false);
       findHighestPriorityRoot();
     }
   }
@@ -106547,7 +106931,7 @@ function performWork(minExpirationTime, dl) {
   // or there's no more work left with sufficient priority.
 
   // If we're inside a callback, set this to false since we just completed it.
-  if (deadline !== null) {
+  if (isYieldy) {
     callbackExpirationTime = NoWork;
     callbackID = null;
   }
@@ -106557,9 +106941,6 @@ function performWork(minExpirationTime, dl) {
   }
 
   // Clean-up.
-  deadline = null;
-  deadlineDidExpire = false;
-
   finishRendering();
 }
 
@@ -106570,7 +106951,7 @@ function flushRoot(root, expirationTime) {
   // including the given time.
   nextFlushedRoot = root;
   nextFlushedExpirationTime = expirationTime;
-  performWorkOnRoot(root, expirationTime, true);
+  performWorkOnRoot(root, expirationTime, false);
   // Flush any sync work that was scheduled by lifecycles
   performSyncWork();
 }
@@ -106603,13 +106984,13 @@ function finishRendering() {
   }
 }
 
-function performWorkOnRoot(root, expirationTime, isExpired) {
+function performWorkOnRoot(root, expirationTime, isYieldy) {
   !!isRendering ? invariant(false, 'performWorkOnRoot was called recursively. This error is likely caused by a bug in React. Please file an issue.') : void 0;
 
   isRendering = true;
 
   // Check if this is async work or sync/expired work.
-  if (deadline === null || isExpired) {
+  if (!isYieldy) {
     // Flush work without yielding.
     // TODO: Non-yieldy work does not necessarily imply expired work. A renderer
     // may want to perform some work without yielding, but also without
@@ -106629,8 +107010,7 @@ function performWorkOnRoot(root, expirationTime, isExpired) {
         // $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
         cancelTimeout(timeoutHandle);
       }
-      var isYieldy = false;
-      renderRoot(root, isYieldy, isExpired);
+      renderRoot(root, isYieldy);
       finishedWork = root.finishedWork;
       if (finishedWork !== null) {
         // We've completed the root. Commit it.
@@ -106653,13 +107033,12 @@ function performWorkOnRoot(root, expirationTime, isExpired) {
         // $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
         cancelTimeout(_timeoutHandle);
       }
-      var _isYieldy = true;
-      renderRoot(root, _isYieldy, isExpired);
+      renderRoot(root, isYieldy);
       _finishedWork = root.finishedWork;
       if (_finishedWork !== null) {
-        // We've completed the root. Check the deadline one more time
+        // We've completed the root. Check the if we should yield one more time
         // before committing.
-        if (!shouldYield()) {
+        if (!shouldYieldToRenderer()) {
           // Still time left. Commit the root.
           completeRoot(root, _finishedWork, expirationTime);
         } else {
@@ -106677,7 +107056,7 @@ function performWorkOnRoot(root, expirationTime, isExpired) {
 function completeRoot(root, finishedWork, expirationTime) {
   // Check if there's a batch that matches this expiration time.
   var firstBatch = root.firstBatch;
-  if (firstBatch !== null && firstBatch._expirationTime <= expirationTime) {
+  if (firstBatch !== null && firstBatch._expirationTime >= expirationTime) {
     if (completedBatches === null) {
       completedBatches = [firstBatch];
     } else {
@@ -106707,21 +107086,6 @@ function completeRoot(root, finishedWork, expirationTime) {
     nestedUpdateCount = 0;
   }
   commitRoot(root, finishedWork);
-}
-
-// When working on async work, the reconciler asks the renderer if it should
-// yield execution. For DOM, we implement this with requestIdleCallback.
-function shouldYield() {
-  if (deadlineDidExpire) {
-    return true;
-  }
-  if (deadline === null || deadline.timeRemaining() > timeHeuristicForUnitOfWork) {
-    // Disregard deadline.didTimeout. Only expired work should be flushed
-    // during a timeout. This path is only hit for non-expired work.
-    return false;
-  }
-  deadlineDidExpire = true;
-  return true;
 }
 
 function onUncaughtError(error) {
@@ -106788,7 +107152,7 @@ function interactiveUpdates$1(fn, a, b) {
   // this event.
   if (!isBatchingUpdates && !isRendering && lowestPriorityPendingInteractiveExpirationTime !== NoWork) {
     // Synchronously flush pending interactive updates.
-    performWork(lowestPriorityPendingInteractiveExpirationTime, null);
+    performWork(lowestPriorityPendingInteractiveExpirationTime, false);
     lowestPriorityPendingInteractiveExpirationTime = NoWork;
   }
   var previousIsBatchingInteractiveUpdates = isBatchingInteractiveUpdates;
@@ -106809,7 +107173,7 @@ function interactiveUpdates$1(fn, a, b) {
 function flushInteractiveUpdates$1() {
   if (!isRendering && lowestPriorityPendingInteractiveExpirationTime !== NoWork) {
     // Synchronously flush pending interactive updates.
-    performWork(lowestPriorityPendingInteractiveExpirationTime, null);
+    performWork(lowestPriorityPendingInteractiveExpirationTime, false);
     lowestPriorityPendingInteractiveExpirationTime = NoWork;
   }
 }
@@ -106875,9 +107239,11 @@ function scheduleRootUpdate(current$$1, element, expirationTime, callback) {
     !(typeof callback === 'function') ? warningWithoutStack$1(false, 'render(...): Expected the last optional `callback` argument to be a ' + 'function. Instead received: %s.', callback) : void 0;
     update.callback = callback;
   }
-  enqueueUpdate(current$$1, update);
 
+  flushPassiveEffects();
+  enqueueUpdate(current$$1, update);
   scheduleWork(current$$1, expirationTime);
+
   return expirationTime;
 }
 
@@ -107026,7 +107392,7 @@ implementation) {
 
 // TODO: this is special because it gets imported during build.
 
-var ReactVersion = '16.6.0';
+var ReactVersion = '16.6.3';
 
 // TODO: This type is shared between the reconciler and ReactDOM, but will
 // eventually be lifted out to the renderer.
@@ -107265,7 +107631,7 @@ ReactRoot.prototype.createBatch = function () {
     // Insert sorted by expiration time then insertion order
     var insertAfter = null;
     var insertBefore = firstBatch;
-    while (insertBefore !== null && insertBefore._expirationTime <= expirationTime) {
+    while (insertBefore !== null && insertBefore._expirationTime >= expirationTime) {
       insertAfter = insertBefore;
       insertBefore = insertBefore._next;
     }
@@ -107487,11 +107853,18 @@ var ReactDOM = {
   }
 };
 
-ReactDOM.unstable_createRoot = function createRoot(container, options) {
-  !isValidContainer(container) ? invariant(false, 'unstable_createRoot(...): Target container is not a DOM element.') : void 0;
+function createRoot(container, options) {
+  var functionName = enableStableConcurrentModeAPIs ? 'createRoot' : 'unstable_createRoot';
+  !isValidContainer(container) ? invariant(false, '%s(...): Target container is not a DOM element.', functionName) : void 0;
   var hydrate = options != null && options.hydrate === true;
   return new ReactRoot(container, true, hydrate);
-};
+}
+
+if (enableStableConcurrentModeAPIs) {
+  ReactDOM.createRoot = createRoot;
+} else {
+  ReactDOM.unstable_createRoot = createRoot;
+}
 
 var foundDevTools = injectIntoDevTools({
   findFiberByHostInstance: getClosestInstanceFromNode,
@@ -107585,7 +107958,7 @@ if (false) {} else {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v16.6.1
  * react-is.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -107615,6 +107988,7 @@ var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeac
 var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
 var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
 var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
 var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
 var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
 var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
@@ -107689,6 +108063,7 @@ function typeOf(object) {
         var type = object.type;
 
         switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
           case REACT_CONCURRENT_MODE_TYPE:
           case REACT_FRAGMENT_TYPE:
           case REACT_PROFILER_TYPE:
@@ -107714,8 +108089,8 @@ function typeOf(object) {
   return undefined;
 }
 
-// AsyncMode alias is deprecated along with isAsyncMode
-var AsyncMode = REACT_CONCURRENT_MODE_TYPE;
+// AsyncMode is deprecated along with isAsyncMode
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
 var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
 var ContextConsumer = REACT_CONTEXT_TYPE;
 var ContextProvider = REACT_PROVIDER_TYPE;
@@ -107736,7 +108111,7 @@ function isAsyncMode(object) {
       lowPriorityWarning$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
     }
   }
-  return isConcurrentMode(object);
+  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
 }
 function isConcurrentMode(object) {
   return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
@@ -108128,12 +108503,10 @@ function (_Path) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
-/* harmony import */ var lodash_es_isFunction__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash-es/isFunction */ "./node_modules/lodash-es/isFunction.js");
-/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
-/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _context__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./context */ "./node_modules/react-leaflet/es/context.js");
-/* harmony import */ var _Path__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Path */ "./node_modules/react-leaflet/es/Path.js");
-
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _context__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./context */ "./node_modules/react-leaflet/es/context.js");
+/* harmony import */ var _Path__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Path */ "./node_modules/react-leaflet/es/Path.js");
 
 
 
@@ -108153,11 +108526,11 @@ function (_Path) {
   var _proto = GeoJSON.prototype;
 
   _proto.createLeafletElement = function createLeafletElement(props) {
-    return new leaflet__WEBPACK_IMPORTED_MODULE_2__["GeoJSON"](props.data, this.getOptions(props));
+    return new leaflet__WEBPACK_IMPORTED_MODULE_1__["GeoJSON"](props.data, this.getOptions(props));
   };
 
   _proto.updateLeafletElement = function updateLeafletElement(fromProps, toProps) {
-    if (Object(lodash_es_isFunction__WEBPACK_IMPORTED_MODULE_1__["default"])(toProps.style)) {
+    if (typeof toProps.style === 'function') {
       this.setStyle(toProps.style);
     } else {
       this.setStyleIfChanged(fromProps, toProps);
@@ -108165,9 +108538,9 @@ function (_Path) {
   };
 
   return GeoJSON;
-}(_Path__WEBPACK_IMPORTED_MODULE_4__["default"]);
+}(_Path__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(_context__WEBPACK_IMPORTED_MODULE_3__["withLeaflet"])(GeoJSON));
+/* harmony default export */ __webpack_exports__["default"] = (Object(_context__WEBPACK_IMPORTED_MODULE_2__["withLeaflet"])(GeoJSON));
 
 /***/ }),
 
@@ -109388,6 +109761,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var warning__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! warning */ "./node_modules/warning/warning.js");
 /* harmony import */ var warning__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(warning__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _context__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./context */ "./node_modules/react-leaflet/es/context.js");
+/* harmony import */ var _utils_updateClassName__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./utils/updateClassName */ "./node_modules/react-leaflet/es/utils/updateClassName.js");
+
 
 
 
@@ -109443,7 +109818,7 @@ function (_Component) {
 
       if (pane) {
         if (className) {
-          pane.classList.add(className);
+          Object(_utils_updateClassName__WEBPACK_IMPORTED_MODULE_10__["addClassName"])(pane, className);
         }
 
         if (style) {
@@ -109479,10 +109854,10 @@ function (_Component) {
       // Remove the previous css class name from the pane if it has changed.
       // setStyle() will take care of adding in the updated className
       if (prevProps.className && this.props.className !== prevProps.className) {
-        var pane = this.getPane();
+        var pane = this.getPane(this.state.name);
 
         if (pane != null && prevProps.className != null) {
-          pane.classList.remove(prevProps.className);
+          Object(_utils_updateClassName__WEBPACK_IMPORTED_MODULE_10__["removeClassName"])(pane, prevProps.className);
         }
       } // Update the pane's DOM node style and class
 
@@ -110224,14 +110599,12 @@ function (_MapLayer) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
 /* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
-/* harmony import */ var lodash_es_reduce__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash-es/reduce */ "./node_modules/lodash-es/reduce.js");
-/* harmony import */ var lodash_es_isEqual__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash-es/isEqual */ "./node_modules/lodash-es/isEqual.js");
-/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
-/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _context__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./context */ "./node_modules/react-leaflet/es/context.js");
-/* harmony import */ var _GridLayer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./GridLayer */ "./node_modules/react-leaflet/es/GridLayer.js");
-/* harmony import */ var _MapEvented__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./MapEvented */ "./node_modules/react-leaflet/es/MapEvented.js");
-
+/* harmony import */ var lodash_es_isEqual__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash-es/isEqual */ "./node_modules/lodash-es/isEqual.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _context__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./context */ "./node_modules/react-leaflet/es/context.js");
+/* harmony import */ var _GridLayer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./GridLayer */ "./node_modules/react-leaflet/es/GridLayer.js");
+/* harmony import */ var _MapEvented__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MapEvented */ "./node_modules/react-leaflet/es/MapEvented.js");
 
 
 
@@ -110257,7 +110630,7 @@ function (_GridLayer) {
     var url = props.url,
         params = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(props, ["url"]);
 
-    return new leaflet__WEBPACK_IMPORTED_MODULE_4__["TileLayer"].WMS(url, this.getOptions(params));
+    return new leaflet__WEBPACK_IMPORTED_MODULE_3__["TileLayer"].WMS(url, this.getOptions(params));
   };
 
   _proto.updateLeafletElement = function updateLeafletElement(fromProps, toProps) {
@@ -110277,15 +110650,17 @@ function (_GridLayer) {
       this.leafletElement.setUrl(url);
     }
 
-    if (!Object(lodash_es_isEqual__WEBPACK_IMPORTED_MODULE_3__["default"])(params, prevParams)) {
+    if (!Object(lodash_es_isEqual__WEBPACK_IMPORTED_MODULE_2__["default"])(params, prevParams)) {
       this.leafletElement.setParams(params);
     }
   };
 
   _proto.getOptions = function getOptions(params) {
-    return Object(lodash_es_reduce__WEBPACK_IMPORTED_MODULE_2__["default"])(_GridLayer.prototype.getOptions.call(this, params), function (options, value, key) {
-      if (!_MapEvented__WEBPACK_IMPORTED_MODULE_7__["EVENTS_RE"].test(key)) {
-        options[key] = value;
+    var superOptions = _GridLayer.prototype.getOptions.call(this, params);
+
+    return Object.keys(superOptions).reduce(function (options, key) {
+      if (!_MapEvented__WEBPACK_IMPORTED_MODULE_6__["EVENTS_RE"].test(key)) {
+        options[key] = superOptions[key];
       }
 
       return options;
@@ -110293,9 +110668,9 @@ function (_GridLayer) {
   };
 
   return WMSTileLayer;
-}(_GridLayer__WEBPACK_IMPORTED_MODULE_6__["default"]);
+}(_GridLayer__WEBPACK_IMPORTED_MODULE_5__["default"]);
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(_context__WEBPACK_IMPORTED_MODULE_5__["withLeaflet"])(WMSTileLayer));
+/* harmony default export */ __webpack_exports__["default"] = (Object(_context__WEBPACK_IMPORTED_MODULE_4__["withLeaflet"])(WMSTileLayer));
 
 /***/ }),
 
@@ -110531,11 +110906,13 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************************************************!*\
   !*** ./node_modules/react-leaflet/es/utils/updateClassName.js ***!
   \****************************************************************/
-/*! exports provided: default */
+/*! exports provided: addClassName, removeClassName, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addClassName", function() { return addClassName; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeClassName", function() { return removeClassName; });
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -110550,18 +110927,24 @@ var splitClassName = function splitClassName(className) {
   return className.split(' ').filter(Boolean);
 };
 
+var addClassName = function addClassName(container, className) {
+  splitClassName(className).forEach(function (cls) {
+    leaflet__WEBPACK_IMPORTED_MODULE_0__["DomUtil"].addClass(container, cls);
+  });
+};
+var removeClassName = function removeClassName(container, className) {
+  splitClassName(className).forEach(function (cls) {
+    leaflet__WEBPACK_IMPORTED_MODULE_0__["DomUtil"].removeClass(container, cls);
+  });
+};
 /* harmony default export */ __webpack_exports__["default"] = (function (container, prevClassName, nextClassName) {
   if (container != null && nextClassName !== prevClassName) {
     if (prevClassName != null && prevClassName.length > 0) {
-      splitClassName(prevClassName).forEach(function (cls) {
-        leaflet__WEBPACK_IMPORTED_MODULE_0__["DomUtil"].removeClass(container, cls);
-      });
+      removeClassName(container, prevClassName);
     }
 
     if (nextClassName != null && nextClassName.length > 0) {
-      splitClassName(nextClassName).forEach(function (cls) {
-        leaflet__WEBPACK_IMPORTED_MODULE_0__["DomUtil"].addClass(container, cls);
-      });
+      addClassName(container, nextClassName);
     }
   }
 });
@@ -111788,7 +112171,7 @@ exports.classNamesShape = classNamesShape;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v16.6.1
  * react.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -111810,7 +112193,7 @@ var checkPropTypes = __webpack_require__(/*! prop-types/checkPropTypes */ "./nod
 
 // TODO: this is special because it gets imported during build.
 
-var ReactVersion = '16.6.0';
+var ReactVersion = '16.6.3';
 
 // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
 // nor polyfill, then a plain number is used for performance.
@@ -111823,6 +112206,7 @@ var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeac
 var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
 var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
 var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
+
 var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
 var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
 var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
@@ -111842,6 +112226,43 @@ function getIteratorFn(maybeIterable) {
   }
   return null;
 }
+
+var enableHooks = false;
+// Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
+
+
+// In some cases, StrictMode should also double-render lifecycles.
+// This can be confusing for tests though,
+// And it can be bad for performance in production.
+// This feature flag can be used to control the behavior:
+
+
+// To preserve the "Pause on caught exceptions" behavior of the debugger, we
+// replay the begin phase of a failed component inside invokeGuardedCallback.
+
+
+// Warn about deprecated, async-unsafe lifecycles; relates to RFC #6:
+
+
+// Gather advanced timing metrics for Profiler subtrees.
+
+
+// Trace which interactions trigger each commit.
+
+
+// Only used in www builds.
+
+
+// Only used in www builds.
+
+
+// React Fire: prevent the value and checked attributes from syncing
+// with their related DOM properties
+
+
+// These APIs will no longer be "unstable" in the upcoming 16.7 release,
+// Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
+var enableStableConcurrentModeAPIs = false;
 
 /**
  * Use invariant() to assert state which your program assumes to be true.
@@ -111967,63 +112388,24 @@ var warningWithoutStack = function () {};
       return;
     }
     if (typeof console !== 'undefined') {
-      var _args$map = args.map(function (item) {
+      var argsWithFormat = args.map(function (item) {
         return '' + item;
-      }),
-          a = _args$map[0],
-          b = _args$map[1],
-          c = _args$map[2],
-          d = _args$map[3],
-          e = _args$map[4],
-          f = _args$map[5],
-          g = _args$map[6],
-          h = _args$map[7];
+      });
+      argsWithFormat.unshift('Warning: ' + format);
 
-      var message = 'Warning: ' + format;
-
-      // We intentionally don't use spread (or .apply) because it breaks IE9:
-      // https://github.com/facebook/react/issues/13610
-      switch (args.length) {
-        case 0:
-          console.error(message);
-          break;
-        case 1:
-          console.error(message, a);
-          break;
-        case 2:
-          console.error(message, a, b);
-          break;
-        case 3:
-          console.error(message, a, b, c);
-          break;
-        case 4:
-          console.error(message, a, b, c, d);
-          break;
-        case 5:
-          console.error(message, a, b, c, d, e);
-          break;
-        case 6:
-          console.error(message, a, b, c, d, e, f);
-          break;
-        case 7:
-          console.error(message, a, b, c, d, e, f, g);
-          break;
-        case 8:
-          console.error(message, a, b, c, d, e, f, g, h);
-          break;
-        default:
-          throw new Error('warningWithoutStack() currently supports at most 8 arguments.');
-      }
+      // We intentionally don't use spread (or .apply) directly because it
+      // breaks IE9: https://github.com/facebook/react/issues/13610
+      Function.prototype.apply.call(console.error, console, argsWithFormat);
     }
     try {
       // --- Welcome to debugging React ---
       // This error was thrown as a convenience so that you can use this stack
       // to find the callsite that caused this warning to fire.
       var argIndex = 0;
-      var _message = 'Warning: ' + format.replace(/%s/g, function () {
+      var message = 'Warning: ' + format.replace(/%s/g, function () {
         return args[argIndex++];
       });
-      throw new Error(_message);
+      throw new Error(message);
     } catch (x) {}
   };
 }
@@ -113073,6 +113455,9 @@ function createContext(defaultValue, calculateChangedBits) {
     // Secondary renderers store their context values on separate fields.
     _currentValue: defaultValue,
     _currentValue2: defaultValue,
+    // Used to track how many concurrent renderers this context currently
+    // supports within in a single renderer. Such as parallel server rendering.
+    _threadCount: 0,
     // These are circular
     Provider: null,
     Consumer: null
@@ -113125,6 +113510,14 @@ function createContext(defaultValue, calculateChangedBits) {
           context._currentValue2 = _currentValue2;
         }
       },
+      _threadCount: {
+        get: function () {
+          return context._threadCount;
+        },
+        set: function (_threadCount) {
+          context._threadCount = _threadCount;
+        }
+      },
       Consumer: {
         get: function () {
           if (!hasWarnedAboutUsingNestedContextConsumers) {
@@ -113159,7 +113552,9 @@ function lazy(ctor) {
 
 function forwardRef(render) {
   {
-    if (typeof render !== 'function') {
+    if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
+      warningWithoutStack$1(false, 'forwardRef requires a render function but received a `memo` ' + 'component. Instead of forwardRef(memo(...)), use ' + 'memo(forwardRef(...)).');
+    } else if (typeof render !== 'function') {
       warningWithoutStack$1(false, 'forwardRef requires a render function but was given %s.', render === null ? 'null' : typeof render);
     } else {
       !(
@@ -113195,6 +113590,75 @@ function memo(type, compare) {
     type: type,
     compare: compare === undefined ? null : compare
   };
+}
+
+function resolveDispatcher() {
+  var dispatcher = ReactCurrentOwner.currentDispatcher;
+  !(dispatcher !== null) ? invariant(false, 'Hooks can only be called inside the body of a function component.') : void 0;
+  return dispatcher;
+}
+
+function useContext(Context, observedBits) {
+  var dispatcher = resolveDispatcher();
+  {
+    // TODO: add a more generic warning for invalid values.
+    if (Context._context !== undefined) {
+      var realContext = Context._context;
+      // Don't deduplicate because this legitimately causes bugs
+      // and nobody should be using this in existing code.
+      if (realContext.Consumer === Context) {
+        warning$1(false, 'Calling useContext(Context.Consumer) is not supported, may cause bugs, and will be ' + 'removed in a future major release. Did you mean to call useContext(Context) instead?');
+      } else if (realContext.Provider === Context) {
+        warning$1(false, 'Calling useContext(Context.Provider) is not supported. ' + 'Did you mean to call useContext(Context) instead?');
+      }
+    }
+  }
+  return dispatcher.useContext(Context, observedBits);
+}
+
+function useState(initialState) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useState(initialState);
+}
+
+function useReducer(reducer, initialState, initialAction) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useReducer(reducer, initialState, initialAction);
+}
+
+function useRef(initialValue) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useRef(initialValue);
+}
+
+function useEffect(create, inputs) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useEffect(create, inputs);
+}
+
+function useMutationEffect(create, inputs) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useMutationEffect(create, inputs);
+}
+
+function useLayoutEffect(create, inputs) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useLayoutEffect(create, inputs);
+}
+
+function useCallback(callback, inputs) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useCallback(callback, inputs);
+}
+
+function useMemo(create, inputs) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useMemo(create, inputs);
+}
+
+function useImperativeMethods(ref, create, inputs) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useImperativeMethods(ref, create, inputs);
 }
 
 /**
@@ -113499,9 +113963,7 @@ var React = {
 
   Fragment: REACT_FRAGMENT_TYPE,
   StrictMode: REACT_STRICT_MODE_TYPE,
-  unstable_ConcurrentMode: REACT_CONCURRENT_MODE_TYPE,
   Suspense: REACT_SUSPENSE_TYPE,
-  unstable_Profiler: REACT_PROFILER_TYPE,
 
   createElement: createElementWithValidation,
   cloneElement: cloneElementWithValidation,
@@ -113512,6 +113974,27 @@ var React = {
 
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: ReactSharedInternals
 };
+
+if (enableStableConcurrentModeAPIs) {
+  React.ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+  React.Profiler = REACT_PROFILER_TYPE;
+} else {
+  React.unstable_ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+  React.unstable_Profiler = REACT_PROFILER_TYPE;
+}
+
+if (enableHooks) {
+  React.useCallback = useCallback;
+  React.useContext = useContext;
+  React.useEffect = useEffect;
+  React.useImperativeMethods = useImperativeMethods;
+  React.useLayoutEffect = useLayoutEffect;
+  React.useMemo = useMemo;
+  React.useMutationEffect = useMutationEffect;
+  React.useReducer = useReducer;
+  React.useRef = useRef;
+  React.useState = useState;
+}
 
 
 
@@ -115957,62 +116440,6 @@ module.exports = __webpack_require__(/*! ./lib/_stream_writable.js */ "./node_mo
 
 /***/ }),
 
-/***/ "./node_modules/recompose/getDisplayName.js":
-/*!**************************************************!*\
-  !*** ./node_modules/recompose/getDisplayName.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.default = void 0;
-
-var getDisplayName = function getDisplayName(Component) {
-  if (typeof Component === 'string') {
-    return Component;
-  }
-
-  if (!Component) {
-    return undefined;
-  }
-
-  return Component.displayName || Component.name || 'Component';
-};
-
-var _default = getDisplayName;
-exports.default = _default;
-
-/***/ }),
-
-/***/ "./node_modules/recompose/wrapDisplayName.js":
-/*!***************************************************!*\
-  !*** ./node_modules/recompose/wrapDisplayName.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-
-exports.__esModule = true;
-exports.default = void 0;
-
-var _getDisplayName = _interopRequireDefault(__webpack_require__(/*! ./getDisplayName */ "./node_modules/recompose/getDisplayName.js"));
-
-var wrapDisplayName = function wrapDisplayName(BaseComponent, hocName) {
-  return hocName + "(" + (0, _getDisplayName.default)(BaseComponent) + ")";
-};
-
-var _default = wrapDisplayName;
-exports.default = _default;
-
-/***/ }),
-
 /***/ "./node_modules/rimraf/rimraf.js":
 /*!***************************************!*\
   !*** ./node_modules/rimraf/rimraf.js ***!
@@ -116529,7 +116956,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v16.6.1
  * scheduler-tracing.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -116578,6 +117005,10 @@ var enableSchedulerTracing = true;
 
 // React Fire: prevent the value and checked attributes from syncing
 // with their related DOM properties
+
+
+// These APIs will no longer be "unstable" in the upcoming 16.7 release,
+// Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
 
 var DEFAULT_THREAD_ID = 0;
 
@@ -116957,7 +117388,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v16.6.0
+/** @license React v16.6.1
  * scheduler.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -116982,7 +117413,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var ImmediatePriority = 1;
 var UserBlockingPriority = 2;
 var NormalPriority = 3;
-var IdlePriority = 4;
+var LowPriority = 4;
+var IdlePriority = 5;
 
 // Max 31 bit integer. The max integer size in V8 for 32-bit systems.
 // Math.pow(2, 30) - 1
@@ -116994,12 +117426,14 @@ var IMMEDIATE_PRIORITY_TIMEOUT = -1;
 // Eventually times out
 var USER_BLOCKING_PRIORITY = 250;
 var NORMAL_PRIORITY_TIMEOUT = 5000;
+var LOW_PRIORITY_TIMEOUT = 10000;
 // Never times out
 var IDLE_PRIORITY = maxSigned31BitInt;
 
 // Callbacks are stored as a circular, doubly linked list.
 var firstCallbackNode = null;
 
+var currentDidTimeout = false;
 var currentPriorityLevel = NormalPriority;
 var currentEventStartTime = -1;
 var currentExpirationTime = -1;
@@ -117010,35 +117444,6 @@ var isExecutingCallback = false;
 var isHostCallbackScheduled = false;
 
 var hasNativePerformanceNow = typeof performance === 'object' && typeof performance.now === 'function';
-
-var timeRemaining;
-if (hasNativePerformanceNow) {
-  timeRemaining = function () {
-    if (firstCallbackNode !== null && firstCallbackNode.expirationTime < currentExpirationTime) {
-      // A higher priority callback was scheduled. Yield so we can switch to
-      // working on that.
-      return 0;
-    }
-    // We assume that if we have a performance timer that the rAF callback
-    // gets a performance timer value. Not sure if this is always true.
-    var remaining = getFrameDeadline() - performance.now();
-    return remaining > 0 ? remaining : 0;
-  };
-} else {
-  timeRemaining = function () {
-    // Fallback to Date.now()
-    if (firstCallbackNode !== null && firstCallbackNode.expirationTime < currentExpirationTime) {
-      return 0;
-    }
-    var remaining = getFrameDeadline() - Date.now();
-    return remaining > 0 ? remaining : 0;
-  };
-}
-
-var deadlineObject = {
-  timeRemaining: timeRemaining,
-  didTimeout: false
-};
 
 function ensureHostCallbackIsScheduled() {
   if (isExecutingCallback) {
@@ -117084,7 +117489,7 @@ function flushFirstCallback() {
   currentExpirationTime = expirationTime;
   var continuationCallback;
   try {
-    continuationCallback = callback(deadlineObject);
+    continuationCallback = callback();
   } finally {
     currentPriorityLevel = previousPriorityLevel;
     currentExpirationTime = previousExpirationTime;
@@ -117144,7 +117549,6 @@ function flushImmediateWork() {
   // Confirm we've exited the outer most event handler
   currentEventStartTime === -1 && firstCallbackNode !== null && firstCallbackNode.priorityLevel === ImmediatePriority) {
     isExecutingCallback = true;
-    deadlineObject.didTimeout = true;
     try {
       do {
         flushFirstCallback();
@@ -117165,7 +117569,8 @@ function flushImmediateWork() {
 
 function flushWork(didTimeout) {
   isExecutingCallback = true;
-  deadlineObject.didTimeout = didTimeout;
+  var previousDidTimeout = currentDidTimeout;
+  currentDidTimeout = didTimeout;
   try {
     if (didTimeout) {
       // Flush all the expired callbacks without yielding.
@@ -117187,11 +117592,12 @@ function flushWork(didTimeout) {
       if (firstCallbackNode !== null) {
         do {
           flushFirstCallback();
-        } while (firstCallbackNode !== null && getFrameDeadline() - exports.unstable_now() > 0);
+        } while (firstCallbackNode !== null && !shouldYieldToHost());
       }
     }
   } finally {
     isExecutingCallback = false;
+    currentDidTimeout = previousDidTimeout;
     if (firstCallbackNode !== null) {
       // There's still work remaining. Request another callback.
       ensureHostCallbackIsScheduled();
@@ -117208,6 +117614,7 @@ function unstable_runWithPriority(priorityLevel, eventHandler) {
     case ImmediatePriority:
     case UserBlockingPriority:
     case NormalPriority:
+    case LowPriority:
     case IdlePriority:
       break;
     default:
@@ -117266,6 +117673,9 @@ function unstable_scheduleCallback(callback, deprecated_options) {
         break;
       case IdlePriority:
         expirationTime = startTime + IDLE_PRIORITY;
+        break;
+      case LowPriority:
+        expirationTime = startTime + LOW_PRIORITY_TIMEOUT;
         break;
       case NormalPriority:
       default:
@@ -117346,6 +117756,10 @@ function unstable_getCurrentPriorityLevel() {
   return currentPriorityLevel;
 }
 
+function unstable_shouldYield() {
+  return !currentDidTimeout && (firstCallbackNode !== null && firstCallbackNode.expirationTime < currentExpirationTime || shouldYieldToHost());
+}
+
 // The remaining code is essentially a polyfill for requestIdleCallback. It
 // works by scheduling a requestAnimationFrame, storing the time for the start
 // of the frame, then scheduling a postMessage which gets scheduled after paint.
@@ -117406,14 +117820,14 @@ if (hasNativePerformanceNow) {
 
 var requestHostCallback;
 var cancelHostCallback;
-var getFrameDeadline;
+var shouldYieldToHost;
 
 if (typeof window !== 'undefined' && window._schedMock) {
   // Dynamic injection, only for testing purposes.
   var impl = window._schedMock;
   requestHostCallback = impl[0];
   cancelHostCallback = impl[1];
-  getFrameDeadline = impl[2];
+  shouldYieldToHost = impl[2];
 } else if (
 // If Scheduler runs in a non-DOM environment, it falls back to a naive
 // implementation using setTimeout.
@@ -117448,8 +117862,8 @@ typeof window.addEventListener !== 'function') {
   cancelHostCallback = function () {
     _callback = null;
   };
-  getFrameDeadline = function () {
-    return Infinity;
+  shouldYieldToHost = function () {
+    return false;
   };
   exports.unstable_now = function () {
     return _currentTime === -1 ? 0 : _currentTime;
@@ -117480,8 +117894,8 @@ typeof window.addEventListener !== 'function') {
   var previousFrameTime = 33;
   var activeFrameTime = 33;
 
-  getFrameDeadline = function () {
-    return frameDeadline;
+  shouldYieldToHost = function () {
+    return frameDeadline <= exports.unstable_now();
   };
 
   // We use the postMessage trick to defer idle work until after the repaint.
@@ -117604,11 +118018,13 @@ exports.unstable_ImmediatePriority = ImmediatePriority;
 exports.unstable_UserBlockingPriority = UserBlockingPriority;
 exports.unstable_NormalPriority = NormalPriority;
 exports.unstable_IdlePriority = IdlePriority;
+exports.unstable_LowPriority = LowPriority;
 exports.unstable_runWithPriority = unstable_runWithPriority;
 exports.unstable_scheduleCallback = unstable_scheduleCallback;
 exports.unstable_cancelCallback = unstable_cancelCallback;
 exports.unstable_wrapCallback = unstable_wrapCallback;
 exports.unstable_getCurrentPriorityLevel = unstable_getCurrentPriorityLevel;
+exports.unstable_shouldYield = unstable_shouldYield;
   })();
 }
 
