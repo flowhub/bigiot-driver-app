@@ -6,7 +6,6 @@ function navUrl(location) {
   const url = new URL('maps/dir/?api=1', 'https://www.google.com');
   url.searchParams.set('travelmode', 'driving');
   url.searchParams.set('destination', `${location.latitude},${location.longitude}`);
-  url.searchParams.set('origin', `${50.9578353},${6.8272381}`);
   return url.toString();
 }
 
