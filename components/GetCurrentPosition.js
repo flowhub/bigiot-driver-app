@@ -25,11 +25,10 @@ exports.getComponent = () => {
       return;
     }
     navigator.geolocation.getCurrentPosition((pos) => {
-
       output.sendDone({
         out: {
-          latitude: 50.9578353,
-          longitude: 6.8272381,
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
           accuracy: pos.coords.accuracy,
         },
       });
