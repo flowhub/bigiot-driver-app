@@ -40,3 +40,10 @@ Run the tests with:
 ```bash
 npm test
 ```
+
+## Supported by
+
+This project has received funding from the European Union’s Horizon 2020
+research and innovation programme under grant agreement `No. 688038`.
+
+![](./doc/img/eu-horizon-2020.jpg)
