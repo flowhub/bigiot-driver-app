@@ -12,7 +12,7 @@ and then get navigation directions using Google Maps.
 PackMyCar is a progressive webapp. It can be added to the homescreen, which
 will cache the assets for faster startup, remove the browser bar and show the app together with other running apps. 
 
-![](./doc/img/progressive-benefits.jpg)
+![](./doc/img/progressive-benefits.png)
 
 
 ## Live version
@@ -44,6 +44,6 @@ npm test
 ## Supported by
 
 This project has received funding from the European Union’s Horizon 2020
-research and innovation programme under grant agreement `No. 688038`.
+research and innovation programme under grant agreement No. 688038
 
 ![](./doc/img/eu-horizon-2020.jpg)
