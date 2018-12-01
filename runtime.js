@@ -77,7 +77,6 @@ function startNetwork(runtime, graph, options) {
   }
   return new Promise((resolve, reject) => {
     const graphName = `${runtime.options.namespace || 'default'}/${graph.name || 'main'}`;
-    console.log(graphName, runtime.options);
     runtime.graph.registerGraph(graphName, graph);
     // eslint-disable-next-line no-underscore-dangle
     runtime.network._startNetwork(graph, graphName, 'none', (err) => {
