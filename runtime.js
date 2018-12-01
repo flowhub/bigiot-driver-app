@@ -38,12 +38,10 @@ function loadGraph(json) {
 
 function startRuntime(graph, options = {}) {
   return new Promise((resolve, reject) => {
-    const noLoad = options.noLoad || (getParameterByName('fbp_noload') === 'true');
     const protocol = options.protocol || getParameterByName('fbp_protocol') || 'opener';
 
     const runtimeOptions = {
       ...options.runtimeOptions,
-      defaultGraph: noLoad ? null : graph,
     };
     if (!runtimeOptions.defaultPermissions) {
       runtimeOptions.defaultPermissions = defaultPermissions;
@@ -72,5 +70,27 @@ function startRuntime(graph, options = {}) {
   });
 }
 
+function startNetwork(runtime, graph, options) {
+  const noLoad = options.noLoad || (getParameterByName('fbp_noload') === 'true');
+  if (noLoad) {
+    return Promise.resolve(runtime);
+  }
+  return new Promise((resolve, reject) => {
+    const graphName = `${runtime.options.namespace || 'default'}/${graph.name || 'main'}`;
+    console.log(graphName, runtime.options);
+    runtime.graph.registerGraph(graphName, graph);
+    // eslint-disable-next-line no-underscore-dangle
+    runtime.network._startNetwork(graph, graphName, 'none', (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      runtime.runtime.setMainGraph(graphName, graph);
+      resolve(runtime);
+    });
+  });
+}
+
 module.exports = (graph, options) => loadGraph(graph)
-  .then(graphInstance => startRuntime(graphInstance, options));
+  .then(graphInstance => startRuntime(graphInstance, options)
+    .then(runtime => startNetwork(runtime, graphInstance, options)));
